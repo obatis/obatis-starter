@@ -139,7 +139,7 @@ public abstract class AbstractSqlHandleMethod {
 		if (filters != null && !filters.isEmpty()) {
 			Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 			Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
-			Map<String, Object> value = new HashMap<String, Object>();
+			Map<String, Object> value = new HashMap<>();
 			sql.WHERE(getFilterSql(QueryProvider.getLeftJoinParams(), null, null, "", filters, QueryProvider.getOrParams(), value, INDEX_DEFAULT, columnMap,
 					fieldMap, NOT_FIND));
 			// 放入值到map
@@ -246,7 +246,9 @@ public abstract class AbstractSqlHandleMethod {
 			}
 
 			if (i == 0) {
-				// 说明是第一个条件，直接拼接，不管是什么条件
+                /**
+                 * 第一个条件直接拼接，不用区分是 and 还是 or
+                 */
 				filterSql.append(sql);
 			} else {
 				filterSql.append(obj[3] + sql);
@@ -399,7 +401,7 @@ public abstract class AbstractSqlHandleMethod {
 
 		List<Object[]> filters = QueryProvider.getFilters();
 		if ((filters != null && !filters.isEmpty()) || (QueryProvider.getLeftJoinParams() != null && !QueryProvider.getLeftJoinParams().isEmpty())) {
-			Map<String, Object> value = new HashMap<String, Object>();
+			Map<String, Object> value = new HashMap<>();
 			String filterSql = getFilterSql(QueryProvider.getLeftJoinParams(), groups, orders, tableAsName, filters, QueryProvider.getOrParams(), value,
 					INDEX_DEFAULT, columnMap, fieldMap, DEFAULT_FIND);
 			if (!ValidateTool.isEmpty(filterSql)) {
@@ -547,10 +549,14 @@ public abstract class AbstractSqlHandleMethod {
 		}
 
 		tableAsName += ".";
-		List<String> column = new ArrayList<String>();
+		List<String> column = new ArrayList<>();
 		Map<String, String> notFields = QueryProvider.getNotFields();
 		if (allFlag) {
-			// 说明是 select * from SQL结构
+            /**
+             * 表示未查询全部字段，sql 语句例如：select * from demo ************
+             * 为提升查询效率，不建议 sql 查询所有字段，打印一条日志进行提醒开发人员
+             */
+            log.warn("*********** WARN : no suggest use sql >>>>>>>>>  select * from XXXXXX ********");
 			for (Map.Entry<String, String> entry : columnMap.entrySet()) {
 				String name = entry.getValue();
 				String key = entry.getKey();
@@ -770,17 +776,13 @@ public abstract class AbstractSqlHandleMethod {
 				replaceFlag = true;
 			}
 		}
-		// ((a + b +c)-(b+c))
-		//
 
-		// String subTableName = tableAsName.contains(".") ? tableAsName :
-		// tableAsName + ".";
 		if (replaceFlag) {
 			fieldName = fieldName.replaceAll(" ", "");
 			fieldNameTemp = fieldNameTemp.replaceAll(" ", "");
 			fieldName = "{" + fieldName + "}";
 			String[] fieldNameTempArr = fieldNameTemp.split(",");
-			Map<String, String> fieldNameTempMap = new HashMap<String, String>();
+			Map<String, String> fieldNameTempMap = new HashMap<>();
 			for (String name : fieldNameTempArr) {
 				if (ValidateTool.isEmpty(name)) {
 					continue;
@@ -867,7 +869,6 @@ public abstract class AbstractSqlHandleMethod {
 		QueryProvider QueryProvider = (QueryProvider) param.get(SqlConstant.PARAM_OBJ);
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
-		// int len = CacheInfoConstant.COLUMN_SIZE.find(tableName);
 		String tableAsName = TableNameConvert.getTableAsName(tableName);
 		sql.SELECT(getSelectFieldColumns(QueryProvider, tableAsName, columnMap, fieldMap));
 		String table = tableName + " " + tableAsName + getLeftJoinTable(tableAsName, QueryProvider.getLeftJoinParams());
@@ -878,15 +879,15 @@ public abstract class AbstractSqlHandleMethod {
 		countSql.FROM(table);
 
 		// 构造 group by 语句
-		List<String> groups = new ArrayList<String>();
+		List<String> groups = new ArrayList<>();
 		// 构造order by 语句
-		List<String> orders = new ArrayList<String>();
+		List<String> orders = new ArrayList<>();
 		this.getGroupBy(groups, tableAsName, columnMap, QueryProvider);
 		this.getOrder(orders, tableAsName, columnMap, QueryProvider);
 
 		List<Object[]> filters = QueryProvider.getFilters();
 		if ((filters != null && !filters.isEmpty()) || (QueryProvider.getLeftJoinParams() != null && !QueryProvider.getLeftJoinParams().isEmpty())) {
-			Map<String, Object> value = new HashMap<String, Object>();
+			Map<String, Object> value = new HashMap<>();
 			String filterSql = getFilterSql(QueryProvider.getLeftJoinParams(), groups, orders, tableAsName, filters, QueryProvider.getOrParams(), value,
 					INDEX_DEFAULT, columnMap, fieldMap, DEFAULT_FIND);
 			if (!ValidateTool.isEmpty(filterSql)) {

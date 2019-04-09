@@ -131,7 +131,7 @@ public class QueryProvider {
 	 */
 	public void setJoinTableName(String joinTableName) {
 		if (ValidateTool.isEmpty(joinTableName)) {
-			throw new HandleException("set joinTableName Error:joinTableName can't null(empty)!!!");
+			throw new HandleException("error: joinTableName is null");
 		}
 		this.joinTableName = joinTableName;
 	}
@@ -203,7 +203,7 @@ public class QueryProvider {
 	 */
 	public void addFieldCountDistinct(String fieldName) {
 		if(ValidateTool.isEmpty(fieldName)) {
-			throw new HandleException("add field Error:field can't null!!!");
+			throw new HandleException("error:field is null");
 		}
 		this.addFieldCountDistinct(fieldName, "");
 	}
@@ -216,7 +216,7 @@ public class QueryProvider {
 	 */
 	public void addFieldCountDistinct(String fieldName, String aliasName) {
 		if(ValidateTool.isEmpty(fieldName)) {
-			throw new HandleException("add field Error:field can't null!!!");
+			throw new HandleException("error: field is null");
 		}
 		this.addFieldValue(fieldName, SqlHandleEnum.HANDLE_COUNT, aliasName);
 	}
@@ -325,10 +325,10 @@ public class QueryProvider {
 	 */
 	private void addFieldValue(String fieldName, SqlHandleEnum fieldType, Object value) {
 		if (ValidateTool.isEmpty(fieldName) && !SqlHandleEnum.HANDLE_COUNT.equals(fieldType)) {
-			throw new HandleException("add field Error:field can't null!!!");
+			throw new HandleException("error: field is null");
 		}
 		if (this.fields == null) {
-			this.fields = new ArrayList<Object[]>();
+			this.fields = new ArrayList<>();
 		}
 		Object[] obj = { fieldName, fieldType, value };
 		this.fields.add(obj);
@@ -341,10 +341,10 @@ public class QueryProvider {
 	 */
 	public void addNotField(String fieldName) {
 		if (ValidateTool.isEmpty(fieldName)) {
-			throw new HandleException("add field Error:field can't null!!!");
+			throw new HandleException("error: field is null");
 		}
 		if (this.notFields == null) {
-			this.notFields = new HashMap<String, String>();
+			this.notFields = new HashMap<>();
 		}
 		this.notFields.put(fieldName, fieldName);
 	}
@@ -383,12 +383,12 @@ public class QueryProvider {
 	 */
 	private void addFilter(String filterName, FilterEnum filterType, Object value, String joinType) {
 		if (ValidateTool.isEmpty(filterName)) {
-			throw new HandleException("add filter Error:filter field can't null!!!");
+			throw new HandleException("error: filter field is null");
 		} else if (FilterEnum.FILTER_ISNULL.equals(filterType) && FilterEnum.FILTER_ISNOTNULL.equals(filterType) && null == value) {
-			throw new HandleException("add field value Error:field can't null!!!");
+			throw new HandleException("error: field is null");
 		}
 		if (this.filters == null) {
-			this.filters = new ArrayList<Object[]>();
+			this.filters = new ArrayList<>();
 		}
 		Object[] obj = {filterName, filterType, value, joinType};
 		this.filters.add(obj);
@@ -757,11 +757,11 @@ public class QueryProvider {
 	@Deprecated
 	public void addParam(QueryProvider param) {
 		if (param == null) {
-			throw new HandleException("add request Error:request can't null(empty)!!!");
+			throw new HandleException("error: request is null");
 		}
 
 		if (this.orParams == null) {
-			orParams = new ArrayList<QueryProvider>();
+			orParams = new ArrayList<>();
 		}
 
 		this.orParams.add(param);
@@ -776,7 +776,7 @@ public class QueryProvider {
 	 */
 	public void addOrParam(QueryProvider queryProvider) {
 		if (queryProvider == null) {
-			throw new HandleException("error: queryProvider can't null");
+			throw new HandleException("error: queryProvider is null");
 		}
 
 		if (this.orParams == null) {
@@ -795,16 +795,16 @@ public class QueryProvider {
 	 */
 	public void addLeftJoinParam(String fieldName, String paramFieldName, QueryProvider queryProvider) {
 		if (fieldName == null) {
-			throw new HandleException("error: left join fieldName can't null");
+			throw new HandleException("error: left join fieldName is null");
 		}
 		if (paramFieldName == null) {
-			throw new HandleException("error: left join paramFieldName can't null");
+			throw new HandleException("error: left join paramFieldName is null");
 		}
 		if (queryProvider == null) {
 			throw new HandleException("error: queryProvider can't null");
 		}
 		if (ValidateTool.isEmpty(queryProvider.getJoinTableName())) {
-			throw new HandleException("error: queryProvider joinTableName can't null");
+			throw new HandleException("error: queryProvider joinTableName is null");
 		}
 
 		if (this.leftJoinParams == null) {
@@ -826,17 +826,17 @@ public class QueryProvider {
 	public void addLeftJoinParam(String[] fieldName, String[] paramFieldName, QueryProvider queryProvider) {
 		int fieldLength = 0;
 		if (fieldName == null || (fieldLength = fieldName.length) == 0) {
-			throw new HandleException("error: left join fieldName can't null");
+			throw new HandleException("error: left join fieldName is null");
 		}
 		int paramFieldLength = 0;
 		if (paramFieldName == null || (paramFieldLength = paramFieldName.length) == 0) {
-			throw new HandleException("error: left join paramFieldName can't null");
+			throw new HandleException("error: left join paramFieldName is null");
 		}
 		if (fieldLength != paramFieldLength) {
-			throw new HandleException("error: left join 'on' filter length must be equa!!!");
+			throw new HandleException("error: left join 'on' filter length must be equal");
 		}
 		if (queryProvider == null) {
-			throw new HandleException("error: queryProvider can't null");
+			throw new HandleException("error: queryProvider is null");
 		}
 
 		if (this.leftJoinParams == null) {
@@ -855,7 +855,7 @@ public class QueryProvider {
 	 */
 	public void addOrder(String orderName, OrderEnum orderType) {
 		if (ValidateTool.isEmpty(orderName)) {
-			throw new HandleException("error: order field can't null");
+			throw new HandleException("error: order field is null");
 		}
 
 		if (this.orders == null) {
@@ -871,7 +871,7 @@ public class QueryProvider {
 	 */
 	public void addGroup(String groupName) {
 		if (ValidateTool.isEmpty(groupName)) {
-			throw new HandleException("error: group field can't null");
+			throw new HandleException("error: group field is null");
 		}
 		if (this.groups == null) {
 			this.groups = new ArrayList<>();

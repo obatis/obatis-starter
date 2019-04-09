@@ -50,13 +50,13 @@ public class HandleInsertBatchMethod extends AbstractInsertMethod {
 			if (!(obj instanceof CommonEntity)) {
 				throw new HandleException("error: the entity is not instanceof CommonEntity");
 			}
-			List<String> colValueArr = new ArrayList<String>();
+			List<String> colValueArr = new ArrayList<>();
 			getInsertBatchValueColumnFields(obj, cls, columnMap, i, fieldArr, colValueArr);
 			valueArr.add("(" + String.join(",", colValueArr) + ")");
 		}
 
 		if (fieldArr.size() > 0) {
-			Map<String, String> res = new HashMap<String, String>();
+			Map<String, String> res = new HashMap<>();
 			res.put(SqlConstant.BEAN_FIELD, String.join(",", fieldArr));
 			res.put(SqlConstant.BEAN_VALUE, String.join(",", valueArr));
 			return res;
