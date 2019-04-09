@@ -73,7 +73,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 			throw new HandleException("error: resultCls is null");
 		}
 
-		Map<String, BaseResultSessionMapper<M>> resultMapperMap = new HashMap<String, BaseResultSessionMapper<M>>();
+		Map<String, BaseResultSessionMapper<M>> resultMapperMap = new HashMap<>();
 		if (resultMapperMap.containsKey(resultCls.getCanonicalName())) {
 			return resultMapperMap.get(resultCls.getCanonicalName());
 		}
@@ -123,7 +123,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	}
 
 	/**
-	 * 单个添加，传入一个BaseEntity对象，并返回影响行数
+	 * 单个添加，传入一个 CommonEntity对象，并返回影响行数
 	 * @author HuangLongPu
 	 * @param t
 	 * @return
@@ -136,7 +136,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	}
 
 	/**
-	 * 批量添加，传入list BaseEntity对象，返回影响行数
+	 * 批量添加，传入list CommonEntity 对象，返回影响行数
 	 * @author HuangLongPu
 	 * @param list
 	 * @return
@@ -146,7 +146,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	}
 
 	/**
-	 * 传入数据库封装操作对象QueryProvider，进行更新
+	 * 传入数据库封装操作对象 QueryProvider，进行更新
 	 * @author HuangLongPu
 	 * @param queryProvider
 	 * @return
@@ -191,7 +191,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	}
 
 	/**
-	 * 根据传入的QueryParam对象，进行删除操作
+	 * 根据传入的 QueryProvider 对象，进行删除操作
 	 * @author HuangLongPu
 	 * @param queryProvider
 	 * @return
@@ -297,7 +297,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	}
 
 	/**
-	 * 根据传入的 QueryProvider对象，返回一条Map格式记录。 如果根据条件有多条数据符合，则抛出异常。
+	 * 根据传入的 QueryProvider 对象，返回一条Map格式记录。 如果根据条件有多条数据符合，则抛出异常。
 	 * @author HuangLongPu
 	 * @param queryProvider
 	 * @return
