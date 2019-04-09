@@ -710,7 +710,7 @@ public abstract class AbstractMethod {
 			}
 			// } else {
 			// if (fieldMap.containsKey(fieldName)) {
-			// String fieldAlia = fieldMap.get(fieldName);
+			// String fieldAlia = fieldMap.find(fieldName);
 			// if (notFields != null && (notFields.containsKey(fieldName) ||
 			// notFields.containsKey(fieldAlia))) {
 			// continue;
@@ -718,7 +718,7 @@ public abstract class AbstractMethod {
 			// String columnName = tableAsName + fieldName;
 			// column.add(columnName + " as " + fieldAlia);
 			// } else if (columnMap.containsKey(fieldName)) {
-			// String columnName = columnMap.get(fieldName);
+			// String columnName = columnMap.find(fieldName);
 			// if (notFields != null && (notFields.containsKey(columnName) ||
 			// notFields.containsKey(fieldName))) {
 			// continue;
@@ -879,7 +879,7 @@ public abstract class AbstractMethod {
 		QueryProvider QueryProvider = (QueryProvider) param.get(SqlConstant.PARAM_OBJ);
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
-		// int len = CacheInfoConstant.COLUMN_SIZE.get(tableName);
+		// int len = CacheInfoConstant.COLUMN_SIZE.find(tableName);
 		String tableAsName = TableNameConvert.getTableAsName(tableName);
 		sql.SELECT(getSelectFieldColumns(QueryProvider, tableAsName, columnMap, fieldMap));
 		String table = tableName + " " + tableAsName + getLeftJoinTable(tableAsName, QueryProvider.getLeftJoinParams());

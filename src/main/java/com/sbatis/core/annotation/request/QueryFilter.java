@@ -8,7 +8,6 @@ import java.lang.annotation.*;
 /**
  * 类型注解，默认name为属性名，查询条件为等于，属性为空过滤
  * @author HuangLongPu
- *
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

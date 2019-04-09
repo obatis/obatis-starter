@@ -7,7 +7,6 @@ import java.lang.annotation.*;
 /**
  * 类型注解，默认name为属性名，type默认为常规，属性为空过滤
  * @author HuangLongPu
- *
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

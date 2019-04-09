@@ -2,6 +2,7 @@ package com.sbatis.core.mapper;
 
 import com.sbatis.core.BaseCommonEntity;
 import com.sbatis.core.sql.BaseSqlProvider;
+import com.sbatis.core.sql.QueryProvider;
 import org.apache.ibatis.annotations.*;
 
 import java.math.BigInteger;
