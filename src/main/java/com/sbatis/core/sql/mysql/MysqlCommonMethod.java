@@ -1,10 +1,10 @@
-package com.sbatis.core.sql.mysql.method;
+package com.sbatis.core.sql.mysql;
 
 
 import com.sbatis.core.sql.AbstractMethod;
 
 /**
- * @author admin
+ * @author HuangLongPu
  */
 public class MysqlCommonMethod extends AbstractMethod {
 

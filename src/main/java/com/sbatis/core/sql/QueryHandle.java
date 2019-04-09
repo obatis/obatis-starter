@@ -1,29 +1,28 @@
-package com.sbatis.core.util;
+package com.sbatis.core.sql;
+
+import com.sbatis.convert.date.DateCommonConvert;
+import com.sbatis.core.annotation.request.QueryFilter;
+import com.sbatis.core.annotation.request.UpdateField;
+import com.sbatis.core.constant.type.DateFilterEnum;
+import com.sbatis.core.constant.type.FilterEnum;
+import com.sbatis.core.constant.type.SqlHandleEnum;
+import com.sbatis.core.exception.HandleException;
+import com.sbatis.validate.ValidateTool;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Date;
 
-import com.sbatis.convert.date.DateCommonConvert;
-import com.sbatis.core.annotation.param.QueryFilter;
-import com.sbatis.core.annotation.param.UpdateField;
-import com.sbatis.core.constant.type.DateFilterEnum;
-import com.sbatis.core.constant.type.FilterEnum;
-import com.sbatis.core.constant.type.SqlHandleEnum;
-import com.sbatis.core.exception.HandleException;
-import com.sbatis.core.sql.QueryProvider;
-import com.sbatis.validate.ValidateTool;
+public class QueryHandle {
 
-public class QueryConvert {
-
-	private QueryConvert() {
+	private QueryHandle() {
 	}
 
-	public static final void getFilters(Object obj, QueryProvider param) {
-		getFilters(obj, obj.getClass(), param);
+	public static final void getFilters(Object object, QueryProvider queryProvider) {
+		getFilters(object, object.getClass(), queryProvider);
 	}
 	
-	private static final void getFilters(Object obj, Class<?> cls, QueryProvider param) {
+	private static final void getFilters(Object object, Class<?> cls, QueryProvider queryProvider) {
 		Field[] fields = cls.getDeclaredFields();
 		
 		for (Field field : fields) {
@@ -41,7 +40,7 @@ public class QueryConvert {
 			field.setAccessible(true);
 			Object value = null;
 			try {
-				value = field.get(obj);
+				value = field.get(object);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -63,67 +62,67 @@ public class QueryConvert {
 			FilterEnum type = filter.type();
 			switch (type) {
 			case FILTER_EQUAL:
-				param.addFilterEquals(fieldName, value);
+				queryProvider.addFilterEquals(fieldName, value);
 				break;
 			case FILTER_GREATETHAN:
-				param.addFilterGreateThan(fieldName, value);
+				queryProvider.addFilterGreateThan(fieldName, value);
 				break;
 			case FILTER_GREATEEQUAL:
-				param.addFilterGreateEqual(fieldName, value);
+				queryProvider.addFilterGreateEqual(fieldName, value);
 				break;
 			case FILTER_LESSTHAN:
-				param.addFilterLeftLike(fieldName, value);
+				queryProvider.addFilterLeftLike(fieldName, value);
 				break;
 			case FILTER_LESSEQUAL:
-				param.addFilterLessEqual(fieldName, value);
+				queryProvider.addFilterLessEqual(fieldName, value);
 				break;
 			case FILTER_NOTEQUAL:
-				param.addFilterNotEqual(fieldName, value);
+				queryProvider.addFilterNotEqual(fieldName, value);
 				break;
 			case FILTER_IN:
-				param.addFilterIn(fieldName, value);
+				queryProvider.addFilterIn(fieldName, value);
 				break;
 			case FILTER_NOTIN:
-				param.addFilterNotIn(fieldName, value);
+				queryProvider.addFilterNotIn(fieldName, value);
 				break;
 			case FILTER_ISNULL:
-				param.addFilterIsNull(fieldName);
+				queryProvider.addFilterIsNull(fieldName);
 				break;
 			case FILTER_ISNOTNULL:
-				param.addFilterIsNotNull(fieldName);
+				queryProvider.addFilterIsNotNull(fieldName);
 				break;
 			case FILTER_UPGREATETHAN:
-				param.addFilterUpGreateThanZero(fieldName, value);
+				queryProvider.addFilterUpGreateThanZero(fieldName, value);
 				break;
 			case FILTER_REDUCEGREATETHAN:
-				param.addFilterReduceGreateThanZero(fieldName, value);
+				queryProvider.addFilterReduceGreateThanZero(fieldName, value);
 				break;
 			case FILTER_REDUCEGREATEEQUAL:
-				param.addFilterReduceGreateEqualZero(fieldName, value);
+				queryProvider.addFilterReduceGreateEqualZero(fieldName, value);
 				break;
 			case FILTER_LEFT_LIKE:
-				param.addFilterLeftLike(fieldName, value);
+				queryProvider.addFilterLeftLike(fieldName, value);
 				break;
 			case FILTER_RIGHT_LIKE:
-				param.addFilterRightLike(fieldName, value);
+				queryProvider.addFilterRightLike(fieldName, value);
 				break;
 			default:
-				throw new HandleException("Error: filter field annotation is error !!!");
+				throw new HandleException("error: filter annotation invalid");
 			}
 			
 		}
 		
 		Class<?> supCls = cls.getSuperclass();
 		if(supCls != null) {
-			getFilters(obj, supCls, param);
+			getFilters(object, supCls, queryProvider);
 		}
 	}
 	
-	public static final void getUpdateField(Object obj, QueryProvider param) {
-		getUpdateField(obj, obj.getClass(), param);
+	public static final void getUpdateField(Object object, QueryProvider queryProvider) {
+		getUpdateField(object, object.getClass(), queryProvider);
 	}
 	
-	private static void getUpdateField(Object obj, Class<?> cls, QueryProvider param) {
+	private static void getUpdateField(Object object, Class<?> cls, QueryProvider queryProvider) {
 		Field[] fields = cls.getDeclaredFields();
 		
 		for (Field field : fields) {
@@ -141,7 +140,7 @@ public class QueryConvert {
 			field.setAccessible(true);
 			Object value = null;
 			try {
-				value = field.get(obj);
+				value = field.get(object);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -153,25 +152,25 @@ public class QueryConvert {
 			SqlHandleEnum type = uField.type();
 			switch (type) {
 			case HANDLE_DEFAULT:
-				// 表示常规类型
-				param.addField(fieldName, value);
+				// 常规类型操作
+				queryProvider.addField(fieldName, value);
 				break;
 			case HANDLE_UP:
-				// 表示累加
-				param.addFieldUp(fieldName, value);
+				// 累加
+				queryProvider.addFieldUp(fieldName, value);
 				break;
 			case HANDLE_REDUCE:
-				// 表示累加
-				param.addFieldReduce(fieldName, value);
+				// 累加
+				queryProvider.addFieldReduce(fieldName, value);
 				break;
 			default:
-				throw new HandleException("Error: update field annotation is error !!!");
+				throw new HandleException("Error: update annotation invalid");
 			}
 		}
 		
 		Class<?> supClas = cls.getSuperclass();
 		if(supClas != null) {
-			getUpdateField(obj, supClas, param);
+			getUpdateField(object, supClas, queryProvider);
 		}
 	}
 	

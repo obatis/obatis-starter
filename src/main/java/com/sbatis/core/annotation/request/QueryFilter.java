@@ -1,4 +1,4 @@
-package com.sbatis.core.annotation.param;
+package com.sbatis.core.annotation.request;
 
 import com.sbatis.core.constant.type.DateFilterEnum;
 import com.sbatis.core.constant.type.FilterEnum;

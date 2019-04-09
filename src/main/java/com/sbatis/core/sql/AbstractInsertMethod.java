@@ -3,10 +3,10 @@ package com.sbatis.core.sql;
 import com.sbatis.convert.date.DateCommonConvert;
 import com.sbatis.core.BaseCommonField;
 import com.sbatis.core.annotation.NotColumn;
-import com.sbatis.core.constant.CoreCommonStants;
+import com.sbatis.core.constant.SqlConstant;
 import com.sbatis.core.exception.HandleException;
 import com.sbatis.core.generator.NumberGenerator;
-import com.sbatis.core.util.CacheInfoConstant;
+import com.sbatis.core.constant.CacheInfoConstant;
 import com.sbatis.validate.ValidateTool;
 import org.apache.ibatis.jdbc.SQL;
 
@@ -19,42 +19,42 @@ import java.util.Map;
 
 public abstract class AbstractInsertMethod {
 
-	protected String getInsertSql(Object obj, Class<?> cls, String tableName) throws HandleException {
+	protected String getInsertSql(Object object, Class<?> clsName, String tableName) throws HandleException {
 
         SQL sql = new SQL();
         sql.INSERT_INTO(tableName);
-        Map<String, String> res = this.getInsertFields(obj, cls, tableName);
+        Map<String, String> res = this.getInsertFields(object, clsName, tableName);
         if (res == null) {
-            throw new HandleException("insert error：object is empty！！！");
+            throw new HandleException("error：object is null");
         }
 
-        sql.INTO_COLUMNS(res.get(CoreCommonStants.BEAN_FIELD));
-        sql.INTO_VALUES(res.get(CoreCommonStants.BEAN_VALUE));
+        sql.INTO_COLUMNS(res.get(SqlConstant.BEAN_FIELD));
+        sql.INTO_VALUES(res.get(SqlConstant.BEAN_VALUE));
         return sql.toString();
     }
 	
-	private Map<String, String> getInsertFields(Object obj, Class<?> cls, String tableName) throws HandleException {
-		List<String> fieldArr = new ArrayList<>();
-		List<String> valueArr = new ArrayList<>();
+	private Map<String, String> getInsertFields(Object object, Class<?> clsName, String tableName) throws HandleException {
+		List<String> fields = new ArrayList<>();
+		List<String> values = new ArrayList<>();
 
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
-		getInsertFieldVaule(cls, columnMap, obj, fieldArr, valueArr);
+		getInsertFieldVaule(clsName, columnMap, object, fields, values);
 
-		if (fieldArr.size() > 0) {
-			Map<String, String> res = new HashMap<String, String>();
-			res.put(CoreCommonStants.BEAN_FIELD, String.join(",", fieldArr));
-			res.put(CoreCommonStants.BEAN_VALUE, String.join(",", valueArr));
+		if (fields.size() > 0) {
+			Map<String, String> res = new HashMap<>();
+			res.put(SqlConstant.BEAN_FIELD, String.join(",", fields));
+			res.put(SqlConstant.BEAN_VALUE, String.join(",", values));
 			return res;
 		} else {
 			return null;
 		}
 	}
 	
-	private void getInsertFieldVaule(Class<?> cls, Map<String, String> columnMap, Object obj, List<String> fieldArr, List<String> valueArr)
+	private void getInsertFieldVaule(Class<?> clsName, Map<String, String> columnMap, Object obj, List<String> fields, List<String> values)
 			throws HandleException {
 
-		Field[] fields = cls.getDeclaredFields();
-		for (Field field : fields) {
+		Field[] fieldArr = clsName.getDeclaredFields();
+		for (Field field : fieldArr) {
 
 			boolean isStatic = Modifier.isStatic(field.getModifiers());
 			if (isStatic) {
@@ -89,20 +89,20 @@ public abstract class AbstractInsertMethod {
 				}
 
 				if (addFlag) {
-					fieldArr.add(columnName);
-					valueArr.add("#{param." + fieldName + "}");
+					fields.add(columnName);
+					values.add("#{request." + fieldName + "}");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				throw new HandleException("Error: get fields fail!!!");
+				throw new HandleException("error: load class fields fail");
 			}
 		}
 
-		Class<?> supCls = cls.getSuperclass();
+		Class<?> supCls = clsName.getSuperclass();
 		if (supCls != null) {
-			getInsertFieldVaule(supCls, columnMap, obj, fieldArr, valueArr);
+			getInsertFieldVaule(supCls, columnMap, obj, fields, values);
 		}
 	}
 	
-	protected abstract String getInsertBatchSql(List<?> list, Class<?> cls, String tableName);
+	protected abstract String handleInsertBatchSql(List<?> list, Class<?> cls, String tableName);
 }

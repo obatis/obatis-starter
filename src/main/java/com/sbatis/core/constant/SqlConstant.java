@@ -1,11 +1,8 @@
 package com.sbatis.core.constant;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class CoreCommonStants {
+public class SqlConstant {
 	
-	private CoreCommonStants(){};
+	private SqlConstant(){};
 
 	/**
 	 * 字段属性
@@ -29,8 +26,8 @@ public class CoreCommonStants {
 	 * 查询 sql
 	 */
 	public static final String QUERY_SQL = "query_sql";
-	
-	// 存放class
-	public static Map<String, Class<?>> clsCacheMap = new HashMap<>();
+	/**
+	 * 默认起始值
+	 */
 	public static final int DEFAULT_INIT = 0;
 }

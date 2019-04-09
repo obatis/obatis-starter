@@ -1,14 +1,15 @@
-package com.sbatis.core.sql.mysql.insert;
+package com.sbatis.core.sql.mysql;
 
 import com.sbatis.convert.date.DateCommonConvert;
 import com.sbatis.core.BaseCommonEntity;
 import com.sbatis.core.BaseCommonField;
 import com.sbatis.core.annotation.NotColumn;
-import com.sbatis.core.constant.CoreCommonStants;
+import com.sbatis.core.constant.SqlConstant;
 import com.sbatis.core.exception.HandleException;
 import com.sbatis.core.generator.NumberGenerator;
 import com.sbatis.core.sql.AbstractInsertMethod;
-import com.sbatis.core.util.CacheInfoConstant;
+import com.sbatis.core.constant.CacheInfoConstant;
+import com.sbatis.validate.ValidateTool;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -17,27 +18,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MysqlInsertBatch extends AbstractInsertMethod {
+/**
+ * MySQL 添加方法实现
+ * @author HuangLongPu
+ */
+public class HandleInsertBatchMethod extends AbstractInsertMethod {
 
-	@Override
-	protected String getInsertBatchSql(List<?> list, Class<?> cls, String tableName) {
+	protected String handleInsertBatchSql(List<?> list, Class<?> cls, String tableName) {
 		StringBuffer sql = new StringBuffer("insert into " + tableName + "(");
         Map<String, String> res = this.getInsertBatchFields(list, cls, tableName);
         if (res == null) {
-            throw new HandleException("insert error：object is empty！！！");
+            throw new HandleException("error：object is empty");
         }
 
-        sql.append(res.get(CoreCommonStants.BEAN_FIELD) + ")");
-        return sql.toString() + " values " + res.get(CoreCommonStants.BEAN_VALUE);
+        sql.append(res.get(SqlConstant.BEAN_FIELD) + ")");
+        return sql.toString() + " values " + res.get(SqlConstant.BEAN_VALUE);
 	}
 
 	protected Map<String, String> getInsertBatchFields(List<?> list, Class<?> cls, String tableName) {
 
-		List<String> fieldArr = new ArrayList<String>();
-		List<String> valueArr = new ArrayList<String>();
+		List<String> fieldArr = new ArrayList<>();
+		List<String> valueArr = new ArrayList<>();
 
 		if (list.isEmpty() || list.size() == 0) {
-			throw new HandleException("Error: list is empty!!!");
+			throw new HandleException("error: list is empty!!!");
 		}
 
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
@@ -53,8 +57,8 @@ public class MysqlInsertBatch extends AbstractInsertMethod {
 
 		if (fieldArr.size() > 0) {
 			Map<String, String> res = new HashMap<String, String>();
-			res.put(CoreCommonStants.BEAN_FIELD, String.join(",", fieldArr));
-			res.put(CoreCommonStants.BEAN_VALUE, String.join(",", valueArr));
+			res.put(SqlConstant.BEAN_FIELD, String.join(",", fieldArr));
+			res.put(SqlConstant.BEAN_VALUE, String.join(",", valueArr));
 			return res;
 		} else {
 			return null;
@@ -85,7 +89,7 @@ public class MysqlInsertBatch extends AbstractInsertMethod {
 			try {
 				field.setAccessible(true);
 				Object value = field.get(obj);
-				if (value == null || ("").equals(value.toString())) {
+				if (ValidateTool.isEmpty(value)) {
 					if (BaseCommonField.FIELD_ID.equals(columnName)) {
 						field.set(obj, NumberGenerator.getNumber());
 					} else if (BaseCommonField.FIELD_CREATE_TIME.equals(columnName)) {
@@ -96,10 +100,10 @@ public class MysqlInsertBatch extends AbstractInsertMethod {
 				if (index == 0) {
 					fieldArr.add(columnName);
 				}
-				colValueArr.add("#{param[" + index + "]." + fieldName + "}");
+				colValueArr.add("#{request[" + index + "]." + fieldName + "}");
 			} catch (Exception e) {
 				e.printStackTrace();
-				throw new HandleException("Error: get fields fail!!!");
+				throw new HandleException("error: load class fields fail");
 			}
 		}
 

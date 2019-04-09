@@ -1,11 +1,11 @@
-package com.sbatis.core.sql.mysql.method;
+package com.sbatis.core.sql.mysql;
 
 import com.sbatis.core.constant.type.OrderEnum;
 import com.sbatis.core.sql.AbstractOrder;
 
 import java.util.List;
 
-public class MysqlOrder extends AbstractOrder {
+public class HandleOrderMethod extends AbstractOrder {
 
 	@Override
 	protected void addOrder(List<String[]> orders, String orderName, OrderEnum orderType) {

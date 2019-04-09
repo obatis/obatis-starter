@@ -1,18 +1,21 @@
 package com.sbatis.core;
 
 import com.sbatis.config.response.result.PageResultInfo;
-import com.sbatis.core.constant.CoreCommonStants;
+import com.sbatis.core.constant.SqlConstant;
 import com.sbatis.core.constant.type.PageEnum;
 import com.sbatis.core.exception.HandleException;
-import com.sbatis.core.mapper.BaseBeanMapper;
-import com.sbatis.core.mapper.BaseResultMapper;
-import com.sbatis.core.mapper.factory.BeanMapperFactory;
-import com.sbatis.core.mapper.factory.ResultMapperFactory;
+import com.sbatis.core.mapper.BaseBeanSessionMapper;
+import com.sbatis.core.mapper.BaseResultSessionMapper;
+import com.sbatis.core.mapper.factory.BeanSessionMapperFactory;
+import com.sbatis.core.mapper.factory.ResultSessionMapperFactory;
+import com.sbatis.core.result.ResultInfoOutput;
 import com.sbatis.core.sql.QueryProvider;
 import com.sbatis.core.sql.SqlProvider;
-import com.sbatis.core.util.CacheInfoConstant;
+import com.sbatis.core.constant.CacheInfoConstant;
 import com.sbatis.validate.ValidateTool;
 import org.apache.ibatis.session.SqlSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 import java.lang.reflect.ParameterizedType;
@@ -23,62 +26,70 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 基础BaseDAO
+ * DBHandleFactory 数据库操作类，提供对数据库操作的入口，并进行简要封装
  * @author HuangLongPu
  * @param <T>
  */
-@SuppressWarnings("deprecation")
-public abstract class BaseDAO<T extends BaseCommonEntity> {
+public abstract class DBHandleFactory<T extends BaseCommonEntity> {
 
-	private Class<T> cls;
+	private Logger log = LoggerFactory.getLogger(DBHandleFactory.class);
+
+	private Class<T> entityCls;
 	private String tableName;
 	private String canonicalName;
-	private BaseBeanMapper<T> mapper;
+	private BaseBeanSessionMapper<T> baseBeanSessionMapper;
 	@Resource
 	private SqlSession sqlSession;
 
-	@SuppressWarnings("unchecked")
-	private BaseBeanMapper<T> getMapper() {
+	private BaseBeanSessionMapper<T> getBaseBeanSessionMapper() {
 
-		if (cls == null) {
-			getCls();
+		if (entityCls == null) {
+			getEntityCls();
 		}
-		if (mapper != null) {
-			return mapper;
+		if (baseBeanSessionMapper != null) {
+			return baseBeanSessionMapper;
 		}
-		mapper = (BaseBeanMapper<T>) BeanMapperFactory.getMapper(sqlSession, canonicalName);
-		return mapper;
+		baseBeanSessionMapper = (BaseBeanSessionMapper<T>) BeanSessionMapperFactory.getSessionMapper(sqlSession, canonicalName);
+		return baseBeanSessionMapper;
 	}
 
-	@SuppressWarnings("unchecked")
-	private <M> BaseResultMapper<M> getResultMapper(Class<M> resultCls) {
+	private <M> BaseResultSessionMapper<M> getResultMapper(Class<M> resultCls) throws HandleException {
 		if (resultCls == null) {
-			throw new HandleException("error: Class<M> resultCls is null !!!");
+			throw new HandleException("error: resultCls is null");
 		}
 
-		Map<String, BaseResultMapper<M>> resultMapperMap = new HashMap<String, BaseResultMapper<M>>();
+		Map<String, BaseResultSessionMapper<M>> resultMapperMap = new HashMap<String, BaseResultSessionMapper<M>>();
 		if (resultMapperMap.containsKey(resultCls.getCanonicalName())) {
 			return resultMapperMap.get(resultCls.getCanonicalName());
 		}
 
-		BaseResultMapper<M> resultMapper = (BaseResultMapper<M>) ResultMapperFactory.getMapper(sqlSession, resultCls);
+		try {
+			if(!(resultCls.newInstance() instanceof ResultInfoOutput)) {
+				throw new HandleException("error: resultCls is not instanceof ResultInfoOutput");
+			}
+		} catch (Exception e) {
+			log.warn(" >>>>> error: resultCls newInstance() fail");
+			throw new HandleException("error: resultCls newInstance() fail");
+		}
+
+
+		BaseResultSessionMapper<M> resultMapper = (BaseResultSessionMapper<M>) ResultSessionMapperFactory.getSessionMapper(sqlSession, resultCls.getCanonicalName());
 		resultMapperMap.put(resultCls.getCanonicalName(), resultMapper);
 		return resultMapper;
 	}
 
-	@SuppressWarnings("unchecked")
-	private void getCls() {
-		cls = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-		canonicalName = cls.getCanonicalName();
+	private void getEntityCls() {
+		entityCls = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		canonicalName = entityCls.getCanonicalName();
 	}
 
 	public String getTableName() throws HandleException {
 
-		if (cls == null) {
-			getCls();
+		if (entityCls == null) {
+			getEntityCls();
 		}
 		if (ValidateTool.isEmpty(tableName)) {
-			String clsName = cls.getCanonicalName();
+			String clsName = entityCls.getCanonicalName();
 			if (CacheInfoConstant.TABLE_CACHE.containsKey(clsName)) {
 				tableName = CacheInfoConstant.TABLE_CACHE.get(clsName);
 			}
@@ -96,34 +107,40 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 		if (!(t instanceof BaseCommonEntity)) {
 			throw new HandleException("error: the entity is not instanceof BaseCommonEntity!!!");
 		}
-		return this.getMapper().insert(t, getTableName(), cls);
+		return this.getBaseBeanSessionMapper().insert(t, getTableName(), entityCls);
 	}
 
 	/**
-	 * 批量添加，传入一个list集合的BaseEntity对象，并返回影响行数
+	 * 批量添加，传入list BaseEntity对象，返回影响行数。
 	 * @param list
 	 * @return
 	 */
 	public int insertBatch(List<T> list) throws HandleException {
-		return this.getMapper().insertBatch(list, getTableName(), cls);
+		return this.getBaseBeanSessionMapper().insertBatch(list, getTableName(), entityCls);
 	}
 
 	/**
-	 * 根据传入的QueryParam对象，进行更新操作
-	 * @param param
+	 * 传入数据库封装操作对象QueryProvider，进行更新
+	 * @param queryProvider
 	 * @return
 	 */
-	public int update(QueryProvider param) throws HandleException {
+	public int update(QueryProvider queryProvider) throws HandleException {
 		
-		if(param == null) {
-			throw new HandleException("error: update QueryProvider is null !!!");
+		if(queryProvider == null) {
+			throw new HandleException("error: update QueryProvider is null");
 		}
 		
-		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put(CoreCommonStants.PARAM_OBJ, param);
-		return this.getMapper().update(paramMap, this.getTableName());
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put(SqlConstant.PARAM_OBJ, queryProvider);
+		return this.getBaseBeanSessionMapper().update(paramMap, this.getTableName());
 	}
-	
+
+	/**
+	 * 批量更新，传入list 操作对象，返回影响行数
+	 * @param list
+	 * @return
+	 * @throws HandleException
+	 */
 	public int updateBatch(List<QueryProvider> list) throws HandleException {
 		
 		if(list == null || list.isEmpty()) {
@@ -131,8 +148,8 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 		}
 		
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put(CoreCommonStants.PARAM_OBJ, list);
-		return this.getMapper().updateBatch(paramMap, this.getTableName());
+		paramMap.put(SqlConstant.PARAM_OBJ, list);
+		return this.getBaseBeanSessionMapper().updateBatch(paramMap, this.getTableName());
 	}
 	
 	/**
@@ -141,7 +158,7 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 	 * @return
 	 */
 	public int deleteById(BigInteger id) throws HandleException {
-		return this.getMapper().deleteById(id, this.getTableName());
+		return this.getBaseBeanSessionMapper().deleteById(id, this.getTableName());
 	}
 
 	/**
@@ -152,8 +169,8 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 	 */
 	public int delete(QueryProvider param) throws HandleException {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put(CoreCommonStants.PARAM_OBJ, param);
-		return this.getMapper().delete(paramMap, this.getTableName());
+		paramMap.put(SqlConstant.PARAM_OBJ, param);
+		return this.getBaseBeanSessionMapper().delete(paramMap, this.getTableName());
 	}
 
 	/**
@@ -214,8 +231,8 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 	 */
 	public T get(QueryProvider param) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put(CoreCommonStants.PARAM_OBJ, param);
-		return this.getMapper().find(paramMap, this.getTableName());
+		paramMap.put(SqlConstant.PARAM_OBJ, param);
+		return this.getBaseBeanSessionMapper().find(paramMap, this.getTableName());
 	}
 
 	/**
@@ -227,7 +244,7 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 	 */
 	public <M> M get(QueryProvider param, Class<M> resultCls) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put(CoreCommonStants.PARAM_OBJ, param);
+		paramMap.put(SqlConstant.PARAM_OBJ, param);
 		return this.getResultMapper(resultCls).findR(paramMap, this.getTableName());
 	}
 	
@@ -238,8 +255,8 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 	 */
 	public boolean validate(QueryProvider param) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put(CoreCommonStants.PARAM_OBJ, param);
-		return this.getMapper().validate(paramMap, this.getTableName()) > 0;
+		paramMap.put(SqlConstant.PARAM_OBJ, param);
+		return this.getBaseBeanSessionMapper().validate(paramMap, this.getTableName()) > 0;
 	}
 
 	/**
@@ -250,8 +267,8 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 	 */
 	public Map<String, Object> getToMap(QueryProvider param) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put(CoreCommonStants.PARAM_OBJ, param);
-		return this.getMapper().findToMap(paramMap, this.getTableName());
+		paramMap.put(SqlConstant.PARAM_OBJ, param);
+		return this.getBaseBeanSessionMapper().findToMap(paramMap, this.getTableName());
 	}
 
 	/**
@@ -263,8 +280,8 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 	 */
 	public List<T> list(QueryProvider param) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put(CoreCommonStants.PARAM_OBJ, param);
-		return this.getMapper().list(paramMap, this.getTableName());
+		paramMap.put(SqlConstant.PARAM_OBJ, param);
+		return this.getBaseBeanSessionMapper().list(paramMap, this.getTableName());
 	}
 
 	/**
@@ -276,7 +293,7 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 	 */
 	public <M> List<M> list(QueryProvider param, Class<M> resultCls) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put(CoreCommonStants.PARAM_OBJ, param);
+		paramMap.put(SqlConstant.PARAM_OBJ, param);
 		return this.getResultMapper(resultCls).listR(paramMap, this.getTableName());
 	}
 
@@ -289,8 +306,8 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 	 */
 	public List<Map<String, Object>> listToMap(QueryProvider param) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put(CoreCommonStants.PARAM_OBJ, param);
-		return this.getMapper().query(paramMap, this.getTableName());
+		paramMap.put(SqlConstant.PARAM_OBJ, param);
+		return this.getBaseBeanSessionMapper().query(paramMap, this.getTableName());
 	}
 
 	/**
@@ -343,8 +360,8 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 	 */
 	private Object getObject(QueryProvider param) {
 		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(CoreCommonStants.PARAM_OBJ, param);
-		return this.getMapper().getObject(paramMap, this.getTableName());
+		paramMap.put(SqlConstant.PARAM_OBJ, param);
+		return this.getBaseBeanSessionMapper().getObject(paramMap, this.getTableName());
 	}
 
 	/**
@@ -357,7 +374,7 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 	 * @return
 	 */
 	public T getBySql(String sql, List<Object> param) {
-		return this.getMapper().getBySql(sql, param);
+		return this.getBaseBeanSessionMapper().getBySql(sql, param);
 	}
 
 	/**
@@ -368,7 +385,7 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 	 * @return
 	 */
 	public Object getObjectBySql(String sql, List<Object> param) {
-		return this.getMapper().getObjectBySql(sql, param);
+		return this.getBaseBeanSessionMapper().getObjectBySql(sql, param);
 	}
 
 	/**
@@ -379,7 +396,7 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 	 * @return
 	 */
 	public int getTotal(String sql, List<Object> param) {
-		return this.getMapper().getTotalByParam(sql, param);
+		return this.getBaseBeanSessionMapper().getTotalByParam(sql, param);
 	}
 
 	/**
@@ -407,7 +424,7 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 	 * @return
 	 */
 	public Map<String, Object> getMapBySql(String sql, List<Object> param) {
-		return this.getMapper().getMapBySql(sql, param);
+		return this.getBaseBeanSessionMapper().getMapBySql(sql, param);
 	}
 
 	/**
@@ -420,7 +437,7 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 	 * @return
 	 */
 	public List<T> listBySql(String sql, List<Object> param) {
-		return this.getMapper().listBySql(sql, param);
+		return this.getBaseBeanSessionMapper().listBySql(sql, param);
 	}
 
 	/**
@@ -448,7 +465,7 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 	 * @return
 	 */
 	public List<Map<String, Object>> listMapBySql(String sql, List<Object> param) {
-		return this.getMapper().listMapBySql(sql, param);
+		return this.getBaseBeanSessionMapper().listMapBySql(sql, param);
 	}
 
 
@@ -473,7 +490,7 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 		}
 		boolean reset = this.getPageInfo(total, indexPage, pageSize);
 		sql = SqlProvider.appendPageSql(sql, indexPage, pageSize, reset);
-		page.setList(this.getMapper().listBySql(sql, param));
+		page.setList(this.getBaseBeanSessionMapper().listBySql(sql, param));
 		return page;
 	}
 
@@ -522,7 +539,7 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 		}
 		boolean reset = this.getPageInfo(total, indexPage, pageSize);
 		sql = SqlProvider.appendPageSql(sql, indexPage, pageSize, reset);
-		page.setList(this.getMapper().listMapBySql(sql, param));
+		page.setList(this.getBaseBeanSessionMapper().listMapBySql(sql, param));
 		return page;
 	}
 
@@ -536,11 +553,11 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 	public PageResultInfo<T> page(QueryProvider param) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		param.setIsPage(PageEnum.IS_PAGE_TRUE);
-		paramMap.put(CoreCommonStants.PARAM_OBJ, param);
+		paramMap.put(SqlConstant.PARAM_OBJ, param);
 		// 拼装SQL语句
 		SqlProvider.getQueryPageSql(paramMap, this.getTableName());
 
-		int total = this.getMapper().getTotal((String) paramMap.get(CoreCommonStants.COUNT_SQL), paramMap);
+		int total = this.getBaseBeanSessionMapper().getTotal((String) paramMap.get(SqlConstant.COUNT_SQL), paramMap);
 		PageResultInfo<T> page = new PageResultInfo<T>();
 		this.setPageInfo(page, total);
 		if (total == 0) {
@@ -548,15 +565,15 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 			return page;
 		}
 
-		String querySql = (String) paramMap.get(CoreCommonStants.QUERY_SQL);
+		String querySql = (String) paramMap.get(SqlConstant.QUERY_SQL);
 		// 说明页面超出真实数据，为了保证前端的兼容效果，重置到第一页
 		boolean resetIndexPage = getPageInfo(total, param.getIndexPage(), param.getPageSize());
 		if (resetIndexPage) {
 			param.setResetIndexPage(true);
 		}
 
-		paramMap.put(CoreCommonStants.PARAM_OBJ, param);
-		page.setList(this.getMapper().page(querySql, paramMap));
+		paramMap.put(SqlConstant.PARAM_OBJ, param);
+		page.setList(this.getBaseBeanSessionMapper().page(querySql, paramMap));
 		return page;
 	}
 	
@@ -570,11 +587,11 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 	public <M> PageResultInfo<M> PageResultInfo(QueryProvider param, Class<M> resultCls) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		param.setIsPage(PageEnum.IS_PAGE_TRUE);
-		paramMap.put(CoreCommonStants.PARAM_OBJ, param);
+		paramMap.put(SqlConstant.PARAM_OBJ, param);
 		// 拼装SQL语句
 		SqlProvider.getQueryPageSql(paramMap, this.getTableName());
 
-		int total = this.getMapper().getTotal((String) paramMap.get(CoreCommonStants.COUNT_SQL), paramMap);
+		int total = this.getBaseBeanSessionMapper().getTotal((String) paramMap.get(SqlConstant.COUNT_SQL), paramMap);
 		PageResultInfo<M> page = new PageResultInfo<M>();
 		this.setPageInfo(page, total);
 		
@@ -583,7 +600,7 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 			return page;
 		}
 
-		String querySql = (String) paramMap.get(CoreCommonStants.QUERY_SQL);
+		String querySql = (String) paramMap.get(SqlConstant.QUERY_SQL);
 
 		// 说明页面超出真实数据，为了保证前端的兼容效果，重置到第一页
 		boolean resetIndexPage = getPageInfo(total, param.getIndexPage(), param.getPageSize());
@@ -591,7 +608,7 @@ public abstract class BaseDAO<T extends BaseCommonEntity> {
 			param.setResetIndexPage(true);
 		}
 
-		paramMap.put(CoreCommonStants.PARAM_OBJ, param);
+		paramMap.put(SqlConstant.PARAM_OBJ, param);
 		page.setList(this.getResultMapper(resultCls).pageR(querySql, paramMap));
 		return page;
 	}

@@ -1,4 +1,4 @@
-package com.sbatis.core.util;
+package com.sbatis.core.convert;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -10,7 +10,8 @@ import java.util.Map;
 import com.pudahui.core.annotation.Table;
 import com.sbatis.core.annotation.Column;
 import com.sbatis.core.annotation.NotColumn;
-import com.sbatis.core.constant.CoreCommonStants;
+import com.sbatis.core.constant.CacheInfoConstant;
+import com.sbatis.core.constant.SqlConstant;
 import com.sbatis.core.exception.HandleException;
 import com.sbatis.validate.ValidateTool;
 
@@ -24,19 +25,19 @@ public class BeanConvert {
 		Map<String, String> fieldMap = new HashMap<String, String>();
 		
 		Table table = cls.getAnnotation(Table.class);
-		String clsName = cls.getCanonicalName();
+		String canonicalName = cls.getCanonicalName();
 		if(ValidateTool.isEmpty(table)) {
-			throw new HandleException("error: " + clsName + " tableName must be anotation!!!");
+			throw new HandleException("error: " + canonicalName + " tableName must be anotation!!!");
 		}
 		String name = table.name();
 		if(ValidateTool.isEmpty(name)) {
-			throw new HandleException("error: " + clsName + " tableName is empty!!!");
+			throw new HandleException("error: " + canonicalName + " tableName is empty!!!");
 		}
 		
 		if(CacheInfoConstant.FIELD_CACHE.containsKey(name)) {
-			throw new HandleException("error: " + clsName + " tableName(" + name + ") is exist!!!");
+			throw new HandleException("error: " + canonicalName + " tableName(" + name + ") is exist!!!");
 		}
-		CacheInfoConstant.TABLE_CACHE.put(clsName, name);
+		CacheInfoConstant.TABLE_CACHE.put(canonicalName, name);
 		addColumnCache(cls, name, columnMap, fieldMap, 0);
 	}
 
@@ -74,12 +75,11 @@ public class BeanConvert {
 			addColumnCache(supCls, tableName, columnMap, fieldMap, index + 1);
 		}
 
-		if (index == CoreCommonStants.DEFAULT_INIT) {
+		if (index == SqlConstant.DEFAULT_INIT) {
 			int len = columnMap.size();
 			if (len > 0) {
 				CacheInfoConstant.FIELD_CACHE.put(tableName, fieldMap);
 				CacheInfoConstant.COLUMN_CACHE.put(tableName, columnMap);
-//				CacheInfoConstant.COLUMN_SIZE.put(tableName, len);
 			}
 		}
 	}

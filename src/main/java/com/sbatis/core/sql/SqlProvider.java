@@ -23,7 +23,7 @@ public class SqlProvider<T> {
 	}
 
 	public static String getInsertBatchSql(List<?> obj, Class<?> cls, String tableName) throws HandleException {
-		return insertMethod.getInsertBatchSql(obj, cls, tableName);
+		return insertMethod.handleInsertBatchSql(obj, cls, tableName);
 	}
 
 	public static String getUpdateSql(Map<String, Object> param, String tableName) throws HandleException {

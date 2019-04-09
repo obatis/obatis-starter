@@ -1,12 +1,12 @@
 package com.sbatis.core.sql;
 
 import com.sbatis.core.BaseCommonField;
-import com.sbatis.core.constant.CoreCommonStants;
+import com.sbatis.core.constant.SqlConstant;
 import com.sbatis.core.constant.type.FilterEnum;
 import com.sbatis.core.constant.type.PageEnum;
 import com.sbatis.core.constant.type.SqlHandleEnum;
 import com.sbatis.core.exception.HandleException;
-import com.sbatis.core.util.CacheInfoConstant;
+import com.sbatis.core.constant.CacheInfoConstant;
 import com.sbatis.validate.ValidateTool;
 import org.apache.ibatis.jdbc.SQL;
 
@@ -31,21 +31,21 @@ public abstract class AbstractMethod {
 	}
 
 	public String getUpdateSql(Map<String, Object> param, String tableName) throws HandleException {
-		QueryProvider QueryProvider = (QueryProvider) param.get(CoreCommonStants.PARAM_OBJ);
+		QueryProvider QueryProvider = (QueryProvider) param.get(SqlConstant.PARAM_OBJ);
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 
 		Map<String, Object> fieldValue = new HashMap<String, Object>();
 		Map<String, Object> filterValue = new HashMap<String, Object>();
 
-		param.put(CoreCommonStants.PARAM_FIELD, fieldValue);
-		param.put(CoreCommonStants.PARAM_FILTER, filterValue);
+		param.put(SqlConstant.PARAM_FIELD, fieldValue);
+		param.put(SqlConstant.PARAM_FILTER, filterValue);
 
 		return this.getUpdateSql(param, QueryProvider, tableName, INDEX_DEFAULT, columnMap, fieldMap, fieldValue, filterValue);
 	}
 
 	public String getUpdateBatchSql(Map<String, Object> param, String tableName) throws HandleException {
-		List<QueryProvider> list = (List<QueryProvider>) param.get(CoreCommonStants.PARAM_OBJ);
+		List<QueryProvider> list = (List<QueryProvider>) param.get(SqlConstant.PARAM_OBJ);
 		StringBuffer s = new StringBuffer();
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
@@ -58,8 +58,8 @@ public abstract class AbstractMethod {
 			s.append(this.getUpdateSql(param, QueryProvider, tableName, i + "", columnMap, fieldMap, fieldValue, filterValue) + ";");
 		}
 
-		param.put(CoreCommonStants.PARAM_FIELD, fieldValue);
-		param.put(CoreCommonStants.PARAM_FILTER, filterValue);
+		param.put(SqlConstant.PARAM_FIELD, fieldValue);
+		param.put(SqlConstant.PARAM_FILTER, filterValue);
 		return getUpdateBatchDbSql(s.toString());
 	}
 
@@ -75,7 +75,7 @@ public abstract class AbstractMethod {
 			sql.WHERE(getFilterSql(QueryProvider.getLeftJoinParams(), null, null, "", filters, QueryProvider.getOrParams(), filterValue, index, columnMap,
 					fieldMap, NOT_FIND));
 			// // 放入值到map
-			// param.put(CoreCommonStants.PARAM_FILTER, value);
+			// request.put(SqlConstant.PARAM_FILTER, value);
 		} else {
 			throw new HandleException("update error：filters is empty！！！");
 		}
@@ -98,7 +98,7 @@ public abstract class AbstractMethod {
 
 		for (int i = 0; i < fieldsLen; i++) {
 			Object[] obj = fields.get(i);
-			String key = CoreCommonStants.PARAM_FIELD + "_v" + index + "_" + i;
+			String key = SqlConstant.PARAM_FIELD + "_v" + index + "_" + i;
 			SqlHandleEnum fieldType = (SqlHandleEnum) obj[1];
 			String fieldTypeValue = "";
 			String fieldName = obj[0].toString();
@@ -115,11 +115,11 @@ public abstract class AbstractMethod {
 			} else if (SqlHandleEnum.HANDLE_REDUCE.equals(fieldType)) {
 				fieldTypeValue = name + " - ";
 			}
-			setColumn[i] = name + "= " + fieldTypeValue + "#{param." + CoreCommonStants.PARAM_FIELD + "." + key + "}";
+			setColumn[i] = name + "= " + fieldTypeValue + "#{request." + SqlConstant.PARAM_FIELD + "." + key + "}";
 			fieldValue.put(key, obj[2]);
 		}
 
-		// param.put(CoreCommonStants.PARAM_FIELD, value);
+		// request.put(SqlConstant.PARAM_FIELD, value);
 		return setColumn;
 	}
 
@@ -135,7 +135,7 @@ public abstract class AbstractMethod {
 
 		SQL sql = new SQL();
 		sql.DELETE_FROM(tableName);
-		QueryProvider QueryProvider = (QueryProvider) param.get(CoreCommonStants.PARAM_OBJ);
+		QueryProvider QueryProvider = (QueryProvider) param.get(SqlConstant.PARAM_OBJ);
 		List<Object[]> filters = QueryProvider.getFilters();
 		if (filters != null && !filters.isEmpty()) {
 			Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
@@ -144,7 +144,7 @@ public abstract class AbstractMethod {
 			sql.WHERE(getFilterSql(QueryProvider.getLeftJoinParams(), null, null, "", filters, QueryProvider.getOrParams(), value, INDEX_DEFAULT, columnMap,
 					fieldMap, NOT_FIND));
 			// 放入值到map
-			param.put(CoreCommonStants.PARAM_FILTER, value);
+			param.put(SqlConstant.PARAM_FILTER, value);
 		} else {
 			throw new HandleException("delete error：filters is empty！！！");
 		}
@@ -175,7 +175,7 @@ public abstract class AbstractMethod {
 
 		for (int i = 0; i < filtersLen; i++) {
 			Object[] obj = filters.get(i);
-			String key = CoreCommonStants.PARAM_FILTER + "_v" + index + "_" + i;
+			String key = SqlConstant.PARAM_FILTER + "_v" + index + "_" + i;
 			FilterEnum filterType = (FilterEnum) obj[1];
 			String filterName = obj[0].toString();
 			String column = columnMap.get(filterName);
@@ -188,7 +188,7 @@ public abstract class AbstractMethod {
 			}
 
 			String sql;
-			String expression = "#{param." + CoreCommonStants.PARAM_FILTER + "." + key + "}";
+			String expression = "#{request." + SqlConstant.PARAM_FILTER + "." + key + "}";
 			Object vue = obj[2];
 			switch (filterType) {
 			case FILTER_LIKE:
@@ -273,9 +273,9 @@ public abstract class AbstractMethod {
 			for (int j = 0, k = leftJoinParams.size(); j < k; j++) {
 				Object[] obj = leftJoinParams.get(j);
 				QueryProvider leftJoinParam = (QueryProvider) obj[2];
-				String childTableAsName = TableNameConvert.getTableAsName(leftJoinParam.getConnectTableName());
-				Map<String, String> childFieldMap = CacheInfoConstant.FIELD_CACHE.get(leftJoinParam.getConnectTableName());
-				Map<String, String> childColumnMap = CacheInfoConstant.COLUMN_CACHE.get(leftJoinParam.getConnectTableName());
+				String childTableAsName = TableNameConvert.getTableAsName(leftJoinParam.getJoinTableName());
+				Map<String, String> childFieldMap = CacheInfoConstant.FIELD_CACHE.get(leftJoinParam.getJoinTableName());
+				Map<String, String> childColumnMap = CacheInfoConstant.COLUMN_CACHE.get(leftJoinParam.getJoinTableName());
 				this.getGroupBy(groups, childTableAsName, childColumnMap, leftJoinParam);
 				this.getOrder(orders, childTableAsName, childColumnMap, leftJoinParam);
 				String leftJoinFilterSql = getFilterSql(leftJoinParam.getLeftJoinParams(), groups, orders, childTableAsName, leftJoinParam.getFilters(),
@@ -298,7 +298,7 @@ public abstract class AbstractMethod {
 		if (!sql.contains("?")) {
 			return sql;
 		}
-		String expression = "#{param[" + index + "]}";
+		String expression = "#{request[" + index + "]}";
 		sql = sql.replaceFirst("[?]", expression);
 		index++;
 		return getReplaceSql(sql, index);
@@ -347,7 +347,7 @@ public abstract class AbstractMethod {
 		for (int i = 0; i < length; i++) {
 			String itemKey = key + "_" + i;
 			param.put(itemKey, Array.get(obj, i));
-			itemSql.append("#{param." + CoreCommonStants.PARAM_FILTER + ".").append(itemKey).append("}");
+			itemSql.append("#{request." + SqlConstant.PARAM_FILTER + ".").append(itemKey).append("}");
 			if (i != length - 1) {
 				itemSql.append(",");
 			}
@@ -360,7 +360,7 @@ public abstract class AbstractMethod {
 		StringBuilder itemSql = new StringBuilder();
 		String itemKey = key + "_" + 0;
 		param.put(itemKey, obj);
-		itemSql.append("#{param." + CoreCommonStants.PARAM_FILTER + ".").append(itemKey).append("}");
+		itemSql.append("#{request." + SqlConstant.PARAM_FILTER + ".").append(itemKey).append("}");
 		return itemSql.toString();
 	}
 
@@ -383,7 +383,7 @@ public abstract class AbstractMethod {
 	 */
 	public String getSelectSql(Map<String, Object> param, String tableName) throws HandleException {
 
-		QueryProvider QueryProvider = (QueryProvider) param.get(CoreCommonStants.PARAM_OBJ);
+		QueryProvider QueryProvider = (QueryProvider) param.get(SqlConstant.PARAM_OBJ);
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 
@@ -411,7 +411,7 @@ public abstract class AbstractMethod {
 					INDEX_DEFAULT, columnMap, fieldMap, DEFAULT_FIND);
 			if (!ValidateTool.isEmpty(filterSql)) {
 				// 放入值到map
-				param.put(CoreCommonStants.PARAM_FILTER, value);
+				param.put(SqlConstant.PARAM_FILTER, value);
 				sql.WHERE(filterSql);
 				// countSql.WHERE(filterSql);
 			}
@@ -435,7 +435,7 @@ public abstract class AbstractMethod {
 
 	public String getValidateSql(Map<String, Object> param, String tableName) throws HandleException {
 
-		QueryProvider QueryProvider = (QueryProvider) param.get(CoreCommonStants.PARAM_OBJ);
+		QueryProvider QueryProvider = (QueryProvider) param.get(SqlConstant.PARAM_OBJ);
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 
@@ -455,7 +455,7 @@ public abstract class AbstractMethod {
 					INDEX_DEFAULT, columnMap, fieldMap, DEFAULT_FIND);
 			if (!ValidateTool.isEmpty(filterSql)) {
 				// 放入值到map
-				param.put(CoreCommonStants.PARAM_FILTER, value);
+				param.put(SqlConstant.PARAM_FILTER, value);
 				sql.WHERE(filterSql);
 			}
 		}
@@ -507,7 +507,7 @@ public abstract class AbstractMethod {
 		for (Object[] leftJoinArray : leftJoinParams) {
 
 			QueryProvider childParam = (QueryProvider) leftJoinArray[2];
-			String connectTableName = childParam.getConnectTableName();
+			String connectTableName = childParam.getJoinTableName();
 			if (ValidateTool.isEmpty(connectTableName)) {
 				throw new HandleException("set connectTableName Error:connectTableName can't null(empty)!!!");
 			}
@@ -606,9 +606,9 @@ public abstract class AbstractMethod {
 
 		for (Object[] obj : leftJoinParams) {
 			QueryProvider leftJoinParam = (QueryProvider) obj[2];
-			String tableAsName = TableNameConvert.getTableAsName(leftJoinParam.getConnectTableName());
-			Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(leftJoinParam.getConnectTableName());
-			Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(leftJoinParam.getConnectTableName());
+			String tableAsName = TableNameConvert.getTableAsName(leftJoinParam.getJoinTableName());
+			Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(leftJoinParam.getJoinTableName());
+			Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(leftJoinParam.getJoinTableName());
 			
 			List<Object[]> fields = null;
 			if ((fields = leftJoinParam.getFields()) != null && fields.size() > 0) {
@@ -876,7 +876,7 @@ public abstract class AbstractMethod {
 	public void getQueryPageSql(Map<String, Object> param, String tableName) {
 
 		SQL sql = new SQL();
-		QueryProvider QueryProvider = (QueryProvider) param.get(CoreCommonStants.PARAM_OBJ);
+		QueryProvider QueryProvider = (QueryProvider) param.get(SqlConstant.PARAM_OBJ);
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 		// int len = CacheInfoConstant.COLUMN_SIZE.get(tableName);
@@ -903,7 +903,7 @@ public abstract class AbstractMethod {
 					INDEX_DEFAULT, columnMap, fieldMap, DEFAULT_FIND);
 			if (!ValidateTool.isEmpty(filterSql)) {
 				// 放入值到map
-				param.put(CoreCommonStants.PARAM_FILTER, value);
+				param.put(SqlConstant.PARAM_FILTER, value);
 				sql.WHERE(filterSql);
 				countSql.WHERE(filterSql);
 			}
@@ -920,13 +920,13 @@ public abstract class AbstractMethod {
 
 		if (PageEnum.IS_PAGE_TRUE.equals(QueryProvider.getIsPage())) {
 			if (groups != null && !groups.isEmpty()) {
-				param.put(CoreCommonStants.COUNT_SQL, "select count(1) from (" + countSql.toString() + ") s");
+				param.put(SqlConstant.COUNT_SQL, "select count(1) from (" + countSql.toString() + ") s");
 			} else {
-				param.put(CoreCommonStants.COUNT_SQL, countSql.toString());
+				param.put(SqlConstant.COUNT_SQL, countSql.toString());
 			}
 		}
 
-		param.put(CoreCommonStants.QUERY_SQL, sql.toString());
+		param.put(SqlConstant.QUERY_SQL, sql.toString());
 	}
 
 	/**
