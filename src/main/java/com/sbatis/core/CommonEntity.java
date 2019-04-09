@@ -9,10 +9,10 @@ import java.util.Date;
  * 公共基础实体，所有定义的实体都需要继承此类
  * @author HuangLongPu
  */
-public class BaseCommonEntity {
+public class CommonEntity {
 	
 	private BigInteger id;
-	@Column(name = BaseCommonField.FIELD_CREATE_TIME)
+	@Column(name = CommonField.FIELD_CREATE_TIME)
 	private Date createTime;
 
 	public BigInteger getId() {

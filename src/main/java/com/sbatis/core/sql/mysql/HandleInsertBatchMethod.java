@@ -1,8 +1,8 @@
 package com.sbatis.core.sql.mysql;
 
 import com.sbatis.convert.date.DateCommonConvert;
-import com.sbatis.core.BaseCommonEntity;
-import com.sbatis.core.BaseCommonField;
+import com.sbatis.core.CommonEntity;
+import com.sbatis.core.CommonField;
 import com.sbatis.core.annotation.NotColumn;
 import com.sbatis.core.constant.SqlConstant;
 import com.sbatis.core.exception.HandleException;
@@ -41,14 +41,14 @@ public class HandleInsertBatchMethod extends AbstractInsertMethod {
 		List<String> valueArr = new ArrayList<>();
 
 		if (list.isEmpty() || list.size() == 0) {
-			throw new HandleException("error: list is empty!!!");
+			throw new HandleException("error: insert batch list is empty");
 		}
 
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		for (int i = 0, j = list.size(); i < j; i++) {
 			Object obj = list.get(i);
-			if (!(obj instanceof BaseCommonEntity)) {
-				throw new HandleException("error: the entity is not instanceof BaseCommonEntity!!!");
+			if (!(obj instanceof CommonEntity)) {
+				throw new HandleException("error: the entity is not instanceof CommonEntity");
 			}
 			List<String> colValueArr = new ArrayList<String>();
 			getInsertBatchValueColumnFields(obj, cls, columnMap, i, fieldArr, colValueArr);
@@ -90,9 +90,9 @@ public class HandleInsertBatchMethod extends AbstractInsertMethod {
 				field.setAccessible(true);
 				Object value = field.get(obj);
 				if (ValidateTool.isEmpty(value)) {
-					if (BaseCommonField.FIELD_ID.equals(columnName)) {
+					if (CommonField.FIELD_ID.equals(columnName)) {
 						field.set(obj, NumberGenerator.getNumber());
-					} else if (BaseCommonField.FIELD_CREATE_TIME.equals(columnName)) {
+					} else if (CommonField.FIELD_CREATE_TIME.equals(columnName)) {
 						field.set(obj, DateCommonConvert.getCurDate());
 					}
 				}

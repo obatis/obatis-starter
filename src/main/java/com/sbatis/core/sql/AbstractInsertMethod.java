@@ -1,7 +1,7 @@
 package com.sbatis.core.sql;
 
 import com.sbatis.convert.date.DateCommonConvert;
-import com.sbatis.core.BaseCommonField;
+import com.sbatis.core.CommonField;
 import com.sbatis.core.annotation.NotColumn;
 import com.sbatis.core.constant.SqlConstant;
 import com.sbatis.core.exception.HandleException;
@@ -76,10 +76,10 @@ public abstract class AbstractInsertMethod {
 				Object value = field.get(obj);
 				boolean addFlag = false;
 				if (ValidateTool.isEmpty(value)) {
-					if (BaseCommonField.FIELD_ID.equals(columnName)) {
+					if (CommonField.FIELD_ID.equals(columnName)) {
 						field.set(obj, NumberGenerator.getNumber());
 						addFlag = true;
-					} else if (BaseCommonField.FIELD_CREATE_TIME.equals(columnName)) {
+					} else if (CommonField.FIELD_CREATE_TIME.equals(columnName)) {
 						field.set(obj, DateCommonConvert.getCurDate());
 						addFlag = true;
 					}

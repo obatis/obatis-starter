@@ -1,6 +1,6 @@
 package com.sbatis.core.sql;
 
-import com.sbatis.core.BaseCommonField;
+import com.sbatis.core.CommonField;
 import com.sbatis.core.constant.SqlConstant;
 import com.sbatis.core.constant.type.FilterEnum;
 import com.sbatis.core.constant.type.PageEnum;
@@ -9,6 +9,8 @@ import com.sbatis.core.exception.HandleException;
 import com.sbatis.core.constant.CacheInfoConstant;
 import com.sbatis.validate.ValidateTool;
 import org.apache.ibatis.jdbc.SQL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Array;
 import java.math.BigInteger;
@@ -16,17 +18,18 @@ import java.util.*;
 
 /**
  * sql方法抽象类
- * 
  * @author HuangLongPu
  *
  */
-public abstract class AbstractMethod {
+public abstract class AbstractSqlHandleMethod {
+
+	private static final Logger log = LoggerFactory.getLogger(AbstractSqlHandleMethod.class);
 
 	private final static String INDEX_DEFAULT = "0";
 	private final static int DEFAULT_FIND = 0;
 	private final static int NOT_FIND = 1;
 
-	protected AbstractMethod() {
+	protected AbstractSqlHandleMethod() {
 
 	}
 
@@ -35,8 +38,8 @@ public abstract class AbstractMethod {
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 
-		Map<String, Object> fieldValue = new HashMap<String, Object>();
-		Map<String, Object> filterValue = new HashMap<String, Object>();
+		Map<String, Object> fieldValue = new HashMap<>();
+		Map<String, Object> filterValue = new HashMap<>();
 
 		param.put(SqlConstant.PARAM_FIELD, fieldValue);
 		param.put(SqlConstant.PARAM_FILTER, filterValue);
@@ -50,8 +53,8 @@ public abstract class AbstractMethod {
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 
-		Map<String, Object> fieldValue = new HashMap<String, Object>();
-		Map<String, Object> filterValue = new HashMap<String, Object>();
+		Map<String, Object> fieldValue = new HashMap<>();
+		Map<String, Object> filterValue = new HashMap<>();
 
 		for (int i = 0, j = list.size(); i < j; i++) {
 			QueryProvider QueryProvider = list.get(i);
@@ -74,10 +77,8 @@ public abstract class AbstractMethod {
 		if (filters != null && !filters.isEmpty()) {
 			sql.WHERE(getFilterSql(QueryProvider.getLeftJoinParams(), null, null, "", filters, QueryProvider.getOrParams(), filterValue, index, columnMap,
 					fieldMap, NOT_FIND));
-			// // 放入值到map
-			// request.put(SqlConstant.PARAM_FILTER, value);
 		} else {
-			throw new HandleException("update error：filters is empty！！！");
+			throw new HandleException("error：filters is empty");
 		}
 		return sql.toString();
 	}
@@ -86,15 +87,14 @@ public abstract class AbstractMethod {
 			String index, Map<String, Object> fieldValue) throws HandleException {
 
 		if (fields == null) {
-			throw new HandleException("column error：fields is null！！！");
+			throw new HandleException("error：fields is null");
 		}
 		int fieldsLen = fields.size();
 		if (fieldsLen == 0) {
-			throw new HandleException("column error：fields is null！！！");
+			throw new HandleException("error：fields is null");
 		}
 
 		String[] setColumn = new String[fieldsLen];
-		// Map<String, Object> value = new HashMap<String, Object>();
 
 		for (int i = 0; i < fieldsLen; i++) {
 			Object[] obj = fields.get(i);
@@ -107,7 +107,7 @@ public abstract class AbstractMethod {
 				columnName = fieldName;
 			}
 			if (ValidateTool.isEmpty(columnName)) {
-				throw new HandleException("column error：fieldName is invalid！！！");
+				throw new HandleException("error：fieldName is invalid");
 			}
 			String name = columnName;
 			if (SqlHandleEnum.HANDLE_UP.equals(fieldType)) {
@@ -119,7 +119,6 @@ public abstract class AbstractMethod {
 			fieldValue.put(key, obj[2]);
 		}
 
-		// request.put(SqlConstant.PARAM_FIELD, value);
 		return setColumn;
 	}
 
@@ -127,7 +126,7 @@ public abstract class AbstractMethod {
 
 		SQL sql = new SQL();
 		sql.DELETE_FROM(tableName);
-		sql.WHERE(BaseCommonField.FIELD_ID + "=#{" + BaseCommonField.FIELD_ID + "}");
+		sql.WHERE(CommonField.FIELD_ID + "=#{" + CommonField.FIELD_ID + "}");
 		return sql.toString();
 	}
 
@@ -146,14 +145,14 @@ public abstract class AbstractMethod {
 			// 放入值到map
 			param.put(SqlConstant.PARAM_FILTER, value);
 		} else {
-			throw new HandleException("delete error：filters is empty！！！");
+			throw new HandleException("error：filters is empty");
 		}
 		return sql.toString();
 	}
 
 	/**
 	 * 根据传入的filter，获取条件filter的数组
-	 *
+	 * @author HuangLongPu
 	 * @param leftJoinParams
 	 * @param filters
 	 * @return
@@ -315,7 +314,7 @@ public abstract class AbstractMethod {
 	protected String modifyInFilter(Object obj, String key, Map<String, Object> param) throws HandleException {
 
 		if (obj == null) {
-			throw new HandleException("modify sql error: type in select filter is empty!");
+			throw new HandleException("error: select filter is empty");
 		}
 
 		// 由于in查询能够接收多种类型的数据，需要做处理
@@ -392,15 +391,9 @@ public abstract class AbstractMethod {
 		sql.SELECT(getSelectFieldColumns(QueryProvider, tableAsName, columnMap, fieldMap));
 		sql.FROM(tableName + " " + tableAsName + getLeftJoinTable(tableAsName, QueryProvider.getLeftJoinParams()));
 
-		// 分页的语句
-		// SQL countSql = new SQL();
-		// countSql.SELECT("count(1)");
-		// countSql.FROM(tableName + " " + tableAsName +
-		// getLeftJoinTable(tableAsName, QueryProvider.getLeftJoinParams()));
-
 		// 构建 group by 语句
-		List<String> groups = new ArrayList<String>();
-		List<String> orders = new ArrayList<String>();
+		List<String> groups = new ArrayList<>();
+		List<String> orders = new ArrayList<>();
 		this.getGroupBy(groups, tableAsName, columnMap, QueryProvider);
 		this.getOrder(orders, tableAsName, columnMap, QueryProvider);
 
@@ -413,13 +406,11 @@ public abstract class AbstractMethod {
 				// 放入值到map
 				param.put(SqlConstant.PARAM_FILTER, value);
 				sql.WHERE(filterSql);
-				// countSql.WHERE(filterSql);
 			}
 		}
 
 		if (!groups.isEmpty()) {
 			sql.GROUP_BY(groups.toArray(new String[groups.size()]));
-			// countSql.GROUP_BY(groups.toArray(new String[groups.size()]));
 		}
 
 		if (!orders.isEmpty()) {
@@ -445,12 +436,12 @@ public abstract class AbstractMethod {
 		sql.FROM(tableName + " " + tableAsName + getLeftJoinTable(tableAsName, QueryProvider.getLeftJoinParams()));
 
 		// 处理 group by 语句
-		List<String> groups = new ArrayList<String>();
+		List<String> groups = new ArrayList<>();
 		this.getGroupBy(groups, tableAsName, columnMap, QueryProvider);
 
 		List<Object[]> filters = QueryProvider.getFilters();
 		if ((filters != null && !filters.isEmpty()) || (QueryProvider.getLeftJoinParams() != null && !QueryProvider.getLeftJoinParams().isEmpty())) {
-			Map<String, Object> value = new HashMap<String, Object>();
+			Map<String, Object> value = new HashMap<>();
 			String filterSql = getFilterSql(QueryProvider.getLeftJoinParams(), groups, null, tableAsName, filters, QueryProvider.getOrParams(), value,
 					INDEX_DEFAULT, columnMap, fieldMap, DEFAULT_FIND);
 			if (!ValidateTool.isEmpty(filterSql)) {
@@ -509,7 +500,7 @@ public abstract class AbstractMethod {
 			QueryProvider childParam = (QueryProvider) leftJoinArray[2];
 			String connectTableName = childParam.getJoinTableName();
 			if (ValidateTool.isEmpty(connectTableName)) {
-				throw new HandleException("set connectTableName Error:connectTableName can't null(empty)!!!");
+				throw new HandleException("error:connectTableName is null");
 			}
 			String connectTableAsName = TableNameConvert.getTableAsName(connectTableName);
 			Object fieldName = leftJoinArray[0];
@@ -542,7 +533,7 @@ public abstract class AbstractMethod {
 
 	/**
 	 * 获取要查询的字段列数组
-	 * 
+	 * @author HuangLongPu
 	 * @param QueryProvider
 	 * @return
 	 * @throws HandleException
@@ -580,8 +571,8 @@ public abstract class AbstractMethod {
 				getLeftJoinSelectColumn(leftJoinParams, column);
 			}
 
-			if (column.size() == 0) {
-				throw new HandleException("select field Error：field can't null ！！！");
+			if (column.isEmpty()) {
+				throw new HandleException("error：field is null");
 			}
 			return String.join(",", column);
 		}
@@ -596,12 +587,18 @@ public abstract class AbstractMethod {
 		}
 
 		if (column.size() == 0) {
-			throw new HandleException("select field Error：field can't null ！！！");
+			throw new HandleException("error：field is null");
 		}
 
 		return String.join(",", column);
 	}
 
+	/**
+	 * 获取连接查询的字段
+	 * @author HuangLongPu
+	 * @param leftJoinParams
+	 * @param column
+	 */
 	private void getLeftJoinSelectColumn(List<Object[]> leftJoinParams, List<String> column) {
 
 		for (Object[] obj : leftJoinParams) {
@@ -615,7 +612,11 @@ public abstract class AbstractMethod {
 				getSelectColumn(tableAsName, column, leftJoinParam.getFields(), fieldMap, columnMap, leftJoinParam.getNotFields());
 			} else {
 				Map<String, String> notFields = leftJoinParam.getNotFields();
-				// 说明是 select * from SQL结构
+				/**
+				 * 表示未查询全部字段，sql 语句例如：select * from demo ************
+				 * 为提升查询效率，不建议 sql 查询所有字段，打印一条日志进行提醒开发人员
+				 */
+				log.warn("*********** WARN : no suggest use sql >>>>>>>>>  select * from XXXXXX ********");
 				for (Map.Entry<String, String> entry : columnMap.entrySet()) {
 					String name = entry.getValue();
 					String key = entry.getKey();
@@ -639,6 +640,16 @@ public abstract class AbstractMethod {
 		}
 	}
 
+	/**
+	 * 获取需要查询的字段
+	 * @author HuangLongPu
+	 * @param tableAsName
+	 * @param column
+	 * @param fields
+	 * @param fieldMap
+	 * @param columnMap
+	 * @param notFields
+	 */
 	private void getSelectColumn(String tableAsName, List<String> column, List<Object[]> fields, Map<String, String> fieldMap,
 			Map<String, String> columnMap, Map<String, String> notFields) {
 		// 别名加点
@@ -649,9 +660,6 @@ public abstract class AbstractMethod {
 			String fieldName = obj[0].toString();
 			Object alia = obj[2];
 
-			/**
-			 * HuangLongPu 于2019-01-31进行修复，此前当聚合函数的字段于别名相同时会存在bug
-			 */
 			String fieldTemp = null;
 			if (columnMap.containsKey(fieldName)) {
 				fieldTemp = columnMap.get(fieldName);
@@ -660,7 +668,6 @@ public abstract class AbstractMethod {
 			}
 			String fieldAlia = ValidateTool.isEmpty(alia) ? "" : alia.toString();
 			if (ValidateTool.isEmpty(fieldAlia) || (fieldMap.containsKey(fieldTemp) && !columnMap.containsKey(fieldAlia))) {
-				// 说明是注解类型的字段
 				fieldAlia = fieldMap.get(fieldTemp);
 			}
 
@@ -701,44 +708,19 @@ public abstract class AbstractMethod {
 				break;
 			default:
 				if (!fieldMap.containsKey(fieldTemp) && !columnMap.containsKey(fieldTemp)) {
-					throw new HandleException("error: fieldName('" + fieldName + "')  is invalid！！！");
+					throw new HandleException("error: fieldName('" + fieldName + "')  is invalid");
 				} else {
 					columnName = tableAsName + fieldTemp;
 					column.add(columnName + fieldAsTemp);
 				}
 				break;
 			}
-			// } else {
-			// if (fieldMap.containsKey(fieldName)) {
-			// String fieldAlia = fieldMap.find(fieldName);
-			// if (notFields != null && (notFields.containsKey(fieldName) ||
-			// notFields.containsKey(fieldAlia))) {
-			// continue;
-			// }
-			// String columnName = tableAsName + fieldName;
-			// column.add(columnName + " as " + fieldAlia);
-			// } else if (columnMap.containsKey(fieldName)) {
-			// String columnName = columnMap.find(fieldName);
-			// if (notFields != null && (notFields.containsKey(columnName) ||
-			// notFields.containsKey(fieldName))) {
-			// continue;
-			// }
-			// if (columnName.equals(fieldName)) {
-			// column.add(tableAsName + fieldName + " as " + fieldName);
-			// } else {
-			// column.add(tableAsName + fieldName);
-			// }
-			// } else {
-			// throw new HandleException("error: fieldName('" + fieldName +
-			// "')  is invalid！！！");
-			// }
-			// }
 		}
 	}
 
 	/**
 	 * 解析聚合函数，拼装SQL
-	 * 
+	 * @author HuangLongPu
 	 * @param tableAsName
 	 * @param fieldName
 	 * @return
@@ -818,8 +800,8 @@ public abstract class AbstractMethod {
 	}
 
 	/**
-	 * 根据业务传入的type值，判断条件类型
-	 *
+	 * 传入查询的枚举类型值，判断条件类型
+	 * @author HuangLongPu
 	 * @param type
 	 * @return
 	 */
@@ -873,6 +855,12 @@ public abstract class AbstractMethod {
 		return filterType;
 	}
 
+	/**
+	 * 获取分页查询 sql 语句
+	 * @author HuangLongPu
+	 * @param param
+	 * @param tableName
+	 */
 	public void getQueryPageSql(Map<String, Object> param, String tableName) {
 
 		SQL sql = new SQL();
@@ -931,42 +919,35 @@ public abstract class AbstractMethod {
 
 	/**
 	 * 获取like sql
-	 * 
-	 * @param expression
-	 *            表达式
+	 * @author HuangLongPu
+	 * @param expression  表达式
 	 * @return String
 	 */
 	abstract protected String getLikeSql(String expression);
 
 	/**
 	 * 获取左like sql
-	 * 
-	 * @param expression
-	 *            表达式
+	 * @author HuangLongPu
+	 * @param expression 表达式
 	 * @return String
 	 */
 	abstract protected String getLeftLikeSql(String expression);
 
 	/**
 	 * 获取右like sql
-	 * 
-	 * @param expression
-	 *            表达式
+	 * @author HuangLongPu
+	 * @param expression 表达式
 	 * @return String
 	 */
 	abstract protected String getRightLikeSql(String expression);
 
 	/**
 	 * 增加分页
-	 * 
-	 * @param sql
-	 *            原sql
-	 * @param pageNo
-	 *            页码
-	 * @param pageSize
-	 *            当前页数量
-	 * @param reset
-	 *            是否重置页码
+	 * @author HuangLongPu
+	 * @param sql        原sql
+	 * @param pageNo     页码
+	 * @param pageSize   当前页数量
+	 * @param reset      是否重置页码
 	 * @return String
 	 */
 	abstract protected String appendPageSql(String sql, int pageNo, int pageSize, boolean reset);

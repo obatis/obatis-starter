@@ -21,8 +21,8 @@ public class BeanConvert {
 	}
 	
 	public static final void initEntityCache(Class<?> cls) {
-		Map<String, String> columnMap = new HashMap<String, String>();
-		Map<String, String> fieldMap = new HashMap<String, String>();
+		Map<String, String> columnMap = new HashMap<>();
+		Map<String, String> fieldMap = new HashMap<>();
 		
 		Table table = cls.getAnnotation(Table.class);
 		String canonicalName = cls.getCanonicalName();
@@ -58,10 +58,12 @@ public class BeanConvert {
 			if (column != null) {
 				String name = column.name();
 				if (ValidateTool.isEmpty(name)) {
-					throw new HandleException("Error: column annotaton name is not null !!!");
+					throw new HandleException("error: column annotaton name is not null");
 				}
 				columnMap.put(fieldName, name);
-				// 有注解的字段，都统一放进缓存
+				/**
+				 * 将有注解的属性，统一放进缓存方便取值
+				 */
 				if (!name.equals(fieldName)) {
 					fieldMap.put(name, fieldName);
 				}
@@ -89,7 +91,6 @@ public class BeanConvert {
 		if(CacheInfoConstant.RESULT_CACHE.containsKey(clsName)) {
 			return CacheInfoConstant.RESULT_CACHE.get(clsName);
 		} else {
-			
 			return getResultFields(cls, clsName);
 		}
     }
@@ -99,7 +100,7 @@ public class BeanConvert {
 			return CacheInfoConstant.RESULT_CACHE.get(clsName);
 		}
 		
-		List<String[]> resultList = new ArrayList<String[]>();
+		List<String[]> resultList = new ArrayList<>();
 		getResultFields(cls, resultList);
 		CacheInfoConstant.RESULT_CACHE.put(clsName, resultList);
 		return resultList;
@@ -121,7 +122,7 @@ public class BeanConvert {
 			if (column != null) {
 				String name = column.name();
 				if (ValidateTool.isEmpty(name)) {
-					throw new HandleException("Error: column annotaton name is not null !!!");
+					throw new HandleException("error: column annotaton name is not null");
 				}
 				String[] result = {name, fieldName};
 				resultList.add(result);
@@ -130,7 +131,10 @@ public class BeanConvert {
 				resultList.add(result);
 			}
 		}
-		
+
+		/**
+		 * 进行递归循环调用
+		 */
 		Class<?> supCls = cls.getSuperclass();
 		if (supCls != null) {
 			getResultFields(supCls, resultList);

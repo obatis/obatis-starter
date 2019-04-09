@@ -152,19 +152,25 @@ public class QueryHandle {
 			SqlHandleEnum type = uField.type();
 			switch (type) {
 			case HANDLE_DEFAULT:
-				// 常规类型操作
+				/**
+				 * 常规类型操作
+				 */
 				queryProvider.addField(fieldName, value);
 				break;
 			case HANDLE_UP:
-				// 累加
+				/**
+				 * 累加
+				 */
 				queryProvider.addFieldUp(fieldName, value);
 				break;
 			case HANDLE_REDUCE:
-				// 累加
+				/**
+				 * 累加
+				 */
 				queryProvider.addFieldReduce(fieldName, value);
 				break;
 			default:
-				throw new HandleException("Error: update annotation invalid");
+				throw new HandleException("error: update annotation invalid");
 			}
 		}
 		

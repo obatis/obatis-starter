@@ -1,77 +1,68 @@
 package com.sbatis.core.sql;
 
+import com.sbatis.core.constant.SqlConstant;
+import com.sbatis.core.constant.type.PageEnum;
 import com.sbatis.core.exception.HandleException;
+import org.apache.ibatis.annotations.Param;
 
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
 /**
- * @author
+ * 基础sql提供类
+ * @author admin
  */
 public class SqlProvider<T> {
-
-	protected static AbstractMethod method;
-	protected static AbstractInsertMethod insertMethod;
-
-	private SqlProvider() {
-
+	
+	public SqlProvider() {}
+	
+	public String insert(@Param("request") T t, String tableName, Class<T> cls) throws HandleException {
+		return SqlHandleProvider.getInsertSql(t, cls, tableName);
+	}
+	
+	public String insertBatch(@Param("request") List<T> list, String tableName, Class<T> cls) throws HandleException {
+		return SqlHandleProvider.getInsertBatchSql(list, cls, tableName);
+	}
+	
+	public String update(@Param("request") Map<String, Object> param, String tableName) throws HandleException {
+		return SqlHandleProvider.getUpdateSql(param, tableName);
+	}
+	
+	public String updateBatch(@Param("request") Map<String, Object> param, String tableName) throws HandleException {
+		return SqlHandleProvider.getUpdateBatchSql(param, tableName);
+	}
+	
+	public String deleteById(@Param("id") BigInteger id, String tableName) throws HandleException {
+		return SqlHandleProvider.getDeleteByIdSql(tableName);
+	}
+	
+	public String delete(@Param("request") Map<String, Object> param, String tableName) throws HandleException {
+		return SqlHandleProvider.getDeleteSql(param, tableName);
+	}
+	
+	public String find(@Param("request") Map<String, Object> param, String tableName) throws HandleException {
+		return SqlHandleProvider.getSelectSql(param, tableName);
+	}
+	
+	public String validate(@Param("request") Map<String, Object> param, String tableName) throws HandleException {
+		return SqlHandleProvider.getValidateSql(param, tableName);
+	}
+	
+	public String replaceSql(String sql, @Param("request") List<Object> object) {
+		int index = 0;
+		return SqlHandleProvider.getReplaceSql(sql, index);
 	}
 
-	public static String getInsertSql(Object obj, Class<?> cls, String tableName) throws HandleException {
-		return insertMethod.getInsertSql(obj, cls, tableName);
+	public String returnParamSql(String sql, @Param("request") Map<String, Object> param) {
+		return sql;
 	}
-
-	public static String getInsertBatchSql(List<?> obj, Class<?> cls, String tableName) throws HandleException {
-		return insertMethod.handleInsertBatchSql(obj, cls, tableName);
-	}
-
-	public static String getUpdateSql(Map<String, Object> param, String tableName) throws HandleException {
-		return method.getUpdateSql(param, tableName);
-	}
-
-	public static String getUpdateBatchSql(Map<String, Object> param, String tableName) throws HandleException {
-		return method.getUpdateBatchSql(param, tableName);
-	}
-
-	public static String getDeleteByIdSql(String tableName) throws HandleException {
-		return method.getDeleteByIdSql(tableName);
-	}
-
-	public static String getDeleteSql(Map<String, Object> param, String tableName) throws HandleException {
-		return method.getDeleteSql(param, tableName);
-	}
-
-	public static String getSelectByIdSql(String[] columns, BigInteger id, String tableName) {
-		return method.getSelectByIdSql(columns, id, tableName);
-	}
-
-	/**
-	 * 根据map，拼接SQL
-	 * 
-	 * @param param
-	 * @param tableName
-	 * @return
-	 * @throws HandleException
-	 */
-	public static String getSelectSql(Map<String, Object> param, String tableName) throws HandleException {
-		return method.getSelectSql(param, tableName);
-	}
-
-	public static String getValidateSql(Map<String, Object> param, String tableName) throws HandleException {
-		return method.getValidateSql(param, tableName);
-	}
-
-	public static void getQueryPageSql(Map<String, Object> param, String tableName) {
-		method.getQueryPageSql(param, tableName);
-	}
-
-	public static String getReplaceSql(String sql, int index) {
-
-		return method.getReplaceSql(sql, index);
-	}
-
-	public static String appendPageSql(String sql, int indexPage, int pageSize, boolean reset) {
-		return method.appendPageSql(sql, indexPage, pageSize, reset);
+	
+	public String pageSql(String sql, @Param("request") Map<String, Object> param) {
+		QueryProvider QueryProvider = (QueryProvider) param.get(SqlConstant.PARAM_OBJ);
+		if (PageEnum.IS_PAGE_TRUE.equals(QueryProvider.getIsPage())) {
+			return SqlHandleProvider.appendPageSql(sql, QueryProvider.getIndexPage(), QueryProvider.getPageSize(), QueryProvider.isResetIndexPage());
+		}
+		return sql;
 	}
 }

@@ -1,12 +1,12 @@
 package com.sbatis.core.sql.mysql;
 
 
-import com.sbatis.core.sql.AbstractMethod;
+import com.sbatis.core.sql.AbstractSqlHandleMethod;
 
 /**
  * @author HuangLongPu
  */
-public class MysqlCommonMethod extends AbstractMethod {
+public class MysqlCommonMethod extends AbstractSqlHandleMethod {
 
 	public MysqlCommonMethod() {
 		super();
