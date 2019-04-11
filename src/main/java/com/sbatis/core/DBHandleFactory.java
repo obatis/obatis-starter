@@ -535,7 +535,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	 */
 	public <M> PageResultInfo<M> page(String sql, String totalSql, List<Object> list, int pageNumber, int pageSize, Class<M> resultCls) {
 		int total = this.findTotal(totalSql, list);
-		PageResultInfo<M> page = new PageResultInfo<M>();
+		PageResultInfo<M> page = new PageResultInfo<>();
 		page.setTotal(total);
 		if (total == 0) {
 			// 当没有数据的时候，直接不进行数据查询
@@ -560,7 +560,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	 */
 	public PageResultInfo<Map<String, Object>> pageResultMap(String sql, String totalSql, List<Object> list, int pageNumber, int pageSize) {
 		int total = this.findTotal(totalSql, list);
-		PageResultInfo<Map<String, Object>> page = new PageResultInfo<Map<String, Object>>();
+		PageResultInfo<Map<String, Object>> page = new PageResultInfo<>();
 		page.setTotal(total);
 		if (total == 0) {
 			// 当没有数据的时候，直接不进行数据查询
@@ -581,14 +581,14 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	 * @return
 	 */
 	public PageResultInfo<T> page(QueryProvider queryProvider) {
-		Map<String, Object> providerMap = new HashMap<String, Object>();
+		Map<String, Object> providerMap = new HashMap<>();
 		queryProvider.setIsPage(PageEnum.IS_PAGE_TRUE);
 		providerMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		// 拼装SQL语句
 		SqlHandleProvider.getQueryPageSql(providerMap, this.getTableName());
 
 		int total = this.getBaseBeanSessionMapper().findTotal((String) providerMap.get(SqlConstant.PROVIDER_COUNT_SQL), providerMap);
-		PageResultInfo<T> page = new PageResultInfo<T>();
+		PageResultInfo<T> page = new PageResultInfo<>();
 		page.setTotal(total);
 		if (total == 0) {
 			// 当总条数为0时，直接取消数据查询
@@ -616,14 +616,14 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	 * @return 
 	 */
 	public <M> PageResultInfo<M> PageResultInfo(QueryProvider queryProvider, Class<M> resultCls) {
-		Map<String, Object> paramMap = new HashMap<String, Object>();
+		Map<String, Object> paramMap = new HashMap<>();
 		queryProvider.setIsPage(PageEnum.IS_PAGE_TRUE);
 		paramMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		// 拼装SQL语句
 		SqlHandleProvider.getQueryPageSql(paramMap, this.getTableName());
 
 		int total = this.getBaseBeanSessionMapper().findTotal((String) paramMap.get(SqlConstant.PROVIDER_COUNT_SQL), paramMap);
-		PageResultInfo<M> page = new PageResultInfo<M>();
+		PageResultInfo<M> page = new PageResultInfo<>();
 		page.setTotal(total);
 		
 		if (total == 0) {
