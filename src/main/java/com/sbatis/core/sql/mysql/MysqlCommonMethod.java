@@ -28,17 +28,17 @@ public class MysqlCommonMethod extends AbstractSqlHandleMethod {
 	}
 
 	@Override
-	protected String appendPageSql(String sql, int pageNo, int pageSize, boolean reset) {
+	protected String appendPageSql(String sql, int pageNumber, int pageSize, boolean reset) {
 		if (reset) {
 			sql += " limit 0," + pageSize;
 		} else {
-			sql += " limit " + getIndexPage(pageNo, pageSize) + "," + pageSize;
+			sql += " limit " + getPageLimit(pageNumber, pageSize) + "," + pageSize;
 		}
 		return sql;
 	}
 
 	@Override
-	protected String getUpdateBatchDbSql(String sql) {
+	protected String getBatchUpdateDbSql(String sql) {
 		return sql;
 	}
 	

@@ -19,14 +19,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * MySQL 添加方法实现
+ * MySQL 批量添加方法实现
  * @author HuangLongPu
  */
 public class HandleInsertBatchMethod extends AbstractInsertMethod {
 
-	protected String handleInsertBatchSql(List<?> list, Class<?> cls, String tableName) {
+	@Override
+	protected String handleBatchInsertSql(List<?> list, Class<?> cls, String tableName) {
 		StringBuffer sql = new StringBuffer("insert into " + tableName + "(");
-        Map<String, String> res = this.getInsertBatchFields(list, cls, tableName);
+        Map<String, String> res = this.getBatchInsertFields(list, cls, tableName);
         if (res == null) {
             throw new HandleException("error：object is empty");
         }
@@ -35,23 +36,23 @@ public class HandleInsertBatchMethod extends AbstractInsertMethod {
         return sql.toString() + " values " + res.get(SqlConstant.BEAN_VALUE);
 	}
 
-	protected Map<String, String> getInsertBatchFields(List<?> list, Class<?> cls, String tableName) {
+	protected Map<String, String> getBatchInsertFields(List<?> list, Class<?> cls, String tableName) {
 
 		List<String> fieldArr = new ArrayList<>();
 		List<String> valueArr = new ArrayList<>();
 
 		if (list.isEmpty() || list.size() == 0) {
-			throw new HandleException("error: insert batch list is empty");
+			throw new HandleException("error: batch insert list is empty");
 		}
 
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		for (int i = 0, j = list.size(); i < j; i++) {
 			Object obj = list.get(i);
 			if (!(obj instanceof CommonEntity)) {
-				throw new HandleException("error: the entity is not instanceof CommonEntity");
+				throw new HandleException("error: entity is not instanceof CommonEntity");
 			}
 			List<String> colValueArr = new ArrayList<>();
-			getInsertBatchValueColumnFields(obj, cls, columnMap, i, fieldArr, colValueArr);
+			getBatchInsertValidColumnFields(obj, cls, columnMap, i, fieldArr, colValueArr);
 			valueArr.add("(" + String.join(",", colValueArr) + ")");
 		}
 
@@ -65,8 +66,8 @@ public class HandleInsertBatchMethod extends AbstractInsertMethod {
 		}
 	}
 
-	private void getInsertBatchValueColumnFields(Object obj, Class<?> cls, Map<String, String> columnMap, int index, List<String> fieldArr,
-			List<String> colValueArr) {
+	private void getBatchInsertValidColumnFields(Object obj, Class<?> cls, Map<String, String> columnMap, int index, List<String> fieldArr,
+												 List<String> colValueArr) {
 
 		Field[] fields = cls.getDeclaredFields();
 		for (Field field : fields) {
@@ -109,7 +110,7 @@ public class HandleInsertBatchMethod extends AbstractInsertMethod {
 
 		Class<?> supCls = cls.getSuperclass();
 		if (supCls != null) {
-			getInsertBatchValueColumnFields(obj, supCls, columnMap, index, fieldArr, colValueArr);
+			getBatchInsertValidColumnFields(obj, supCls, columnMap, index, fieldArr, colValueArr);
 		}
 	}
 }

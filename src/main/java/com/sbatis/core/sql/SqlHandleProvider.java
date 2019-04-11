@@ -12,39 +12,95 @@ import java.util.Map;
  */
 public class SqlHandleProvider<T> {
 
-	protected static AbstractSqlHandleMethod method;
+	protected static AbstractSqlHandleMethod sqlHandleMethod;
 	protected static AbstractInsertMethod insertMethod;
 
 	private SqlHandleProvider() {
 
 	}
 
+	/**
+	 * 获取insert sql 语句
+	 * @author HuangLongPu
+	 * @param obj
+	 * @param cls
+	 * @param tableName
+	 * @return
+	 * @throws HandleException
+	 */
 	public static String getInsertSql(Object obj, Class<?> cls, String tableName) throws HandleException {
 		return insertMethod.getInsertSql(obj, cls, tableName);
 	}
 
-	public static String getInsertBatchSql(List<?> obj, Class<?> cls, String tableName) throws HandleException {
-		return insertMethod.handleInsertBatchSql(obj, cls, tableName);
+	/**
+	 * 获取批量添加 insert sql 语句
+	 * @author HuangLongPu
+	 * @param obj
+	 * @param cls
+	 * @param tableName
+	 * @return
+	 * @throws HandleException
+	 */
+	public static String getBatchInsertSql(List<?> obj, Class<?> cls, String tableName) throws HandleException {
+		return insertMethod.handleBatchInsertSql(obj, cls, tableName);
 	}
 
+	/**
+	 * 获取更新 update sql 语句
+	 * @author HuangLongPu
+	 * @param param
+	 * @param tableName
+	 * @return
+	 * @throws HandleException
+	 */
 	public static String getUpdateSql(Map<String, Object> param, String tableName) throws HandleException {
-		return method.getUpdateSql(param, tableName);
+		return sqlHandleMethod.getUpdateSql(param, tableName);
 	}
 
-	public static String getUpdateBatchSql(Map<String, Object> param, String tableName) throws HandleException {
-		return method.getUpdateBatchSql(param, tableName);
+	/**
+	 * 获取批量更新 update sql 语句
+	 * @author HuangLongPu
+	 * @param param
+	 * @param tableName
+	 * @return
+	 * @throws HandleException
+	 */
+	public static String getBatchUpdateSql(Map<String, Object> param, String tableName) throws HandleException {
+		return sqlHandleMethod.getUpdateBatchSql(param, tableName);
 	}
 
+	/**
+	 * 获取根据 id 进行删除的 delete sql 语句，例如 delete from tableName where id = ？
+	 * @author HuangLongPu
+	 * @param tableName
+	 * @return
+	 * @throws HandleException
+	 */
 	public static String getDeleteByIdSql(String tableName) throws HandleException {
-		return method.getDeleteByIdSql(tableName);
+		return sqlHandleMethod.getDeleteByIdSql(tableName);
 	}
 
+	/**
+	 * 获取常规删除的 delete sql 语句
+	 * @author HuangLongPu
+	 * @param param
+	 * @param tableName
+	 * @return
+	 * @throws HandleException
+	 */
 	public static String getDeleteSql(Map<String, Object> param, String tableName) throws HandleException {
-		return method.getDeleteSql(param, tableName);
+		return sqlHandleMethod.getDeleteSql(param, tableName);
 	}
 
+	/**
+	 * 获取根据ID查询的 select sql 语句，例如 select column from  tableName where id = ?
+	 * @param columns
+	 * @param id
+	 * @param tableName
+	 * @return
+	 */
 	public static String getSelectByIdSql(String[] columns, BigInteger id, String tableName) {
-		return method.getSelectByIdSql(columns, id, tableName);
+		return sqlHandleMethod.getSelectByIdSql(columns, id, tableName);
 	}
 
 	/**
@@ -56,23 +112,51 @@ public class SqlHandleProvider<T> {
 	 * @throws HandleException
 	 */
 	public static String getSelectSql(Map<String, Object> param, String tableName) throws HandleException {
-		return method.getSelectSql(param, tableName);
+		return sqlHandleMethod.getSelectSql(param, tableName);
 	}
 
+	/**
+	 * 获取校验的 sql 语句，原理为根据查询条件，得到count计数的值，映射 sql 为 select count(*) from tableName where filterName = ?
+	 * @author HuangLongPu
+	 * @param param
+	 * @param tableName
+	 * @return
+	 * @throws HandleException
+	 */
 	public static String getValidateSql(Map<String, Object> param, String tableName) throws HandleException {
-		return method.getValidateSql(param, tableName);
+		return sqlHandleMethod.getValidateSql(param, tableName);
 	}
 
+	/**
+	 * 获取分页查询的 sql 语句，总共包含两条 sql 语句，一条为查询数据，一条为求总条数，sql 存放于 map 中
+	 * @param param
+	 * @param tableName
+	 */
 	public static void getQueryPageSql(Map<String, Object> param, String tableName) {
-		method.getQueryPageSql(param, tableName);
+		sqlHandleMethod.getQueryPageSql(param, tableName);
 	}
 
+	/**
+	 * 替换 sql 语句，作用于程序里拼接的复杂 sql，将 filterName = ？格式转换为支持mybatis的格式
+	 * @author HuangLongPu
+	 * @param sql
+	 * @param index
+	 * @return
+	 */
 	public static String getReplaceSql(String sql, int index) {
-
-		return method.getReplaceSql(sql, index);
+		return sqlHandleMethod.getReplaceSql(sql, index);
 	}
 
+	/**
+	 * 作用于分页时拼接分页信息
+	 * @author HuangLongPu
+	 * @param sql
+	 * @param indexPage
+	 * @param pageSize
+	 * @param reset
+	 * @return
+	 */
 	public static String appendPageSql(String sql, int indexPage, int pageSize, boolean reset) {
-		return method.appendPageSql(sql, indexPage, pageSize, reset);
+		return sqlHandleMethod.appendPageSql(sql, indexPage, pageSize, reset);
 	}
 }

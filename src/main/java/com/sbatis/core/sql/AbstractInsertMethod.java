@@ -104,5 +104,5 @@ public abstract class AbstractInsertMethod {
 		}
 	}
 	
-	protected abstract String handleInsertBatchSql(List<?> list, Class<?> cls, String tableName);
+	protected abstract String handleBatchInsertSql(List<?> list, Class<?> cls, String tableName);
 }

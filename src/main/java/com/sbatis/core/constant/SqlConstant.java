@@ -7,25 +7,25 @@ public class SqlConstant {
 	/**
 	 * 字段属性
 	 */
-	public static final String BEAN_FIELD = "field";
+	public static final String BEAN_FIELD = "bean_field";
 	/**
 	 * 值属性
 	 */
-	public static final String BEAN_VALUE = "value";
+	public static final String BEAN_VALUE = "bean_value";
 	
-	public static final String PARAM_OBJ = "obj";
-	public static final String PARAM_FIELD = "fields";
-	public static final String PARAM_FILTER = "filters";
-	public static final String PARAM_ORDER = "orders";
+	public static final String PROVIDER_OBJ = "provider_obj";
+	public static final String PROVIDER_FIELD = "provider_fields";
+	public static final String PROVIDER_FILTER = "provider_filters";
+	public static final String PROVIDER_ORDER = "provider_orders";
 
 	/**
 	 * 统计计数的 sql
 	 */
-	public static final String COUNT_SQL = "count_sql";
+	public static final String PROVIDER_COUNT_SQL = "total_sql";
 	/**
 	 * 查询 sql
 	 */
-	public static final String QUERY_SQL = "query_sql";
+	public static final String PROVIDER_QUERY_SQL = "query_sql";
 	/**
 	 * 默认起始值
 	 */

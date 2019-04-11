@@ -36,7 +36,7 @@ public class QueryProvider {
 		ORDER_TYPE_MAP.put(RequestConstant.ORDER_DESC, OrderEnum.ORDER_DESC);
 	}
 
-	private int indexPage = RequestConstant.DEFAULT_PAGE;
+	private int pageNumber = RequestConstant.DEFAULT_PAGE;
 	private int pageSize = RequestConstant.DEFAULT_ROWS;
 	private PageEnum isPage = PageEnum.IS_PAGE_FALSE;
 	private boolean resetIndexPage = false;
@@ -45,17 +45,17 @@ public class QueryProvider {
 	private List<Object[]> filters;
 	private List<String[]> orders;
 	private List<String> groups;
-	private List<QueryProvider> orParams;
+	private List<QueryProvider> orProviders;
 	private Map<String, String> notFields;
-	private List<Object[]> leftJoinParams;
+	private List<Object[]> leftJoinProviders;
 	private String joinTableName;
 
-	public int getIndexPage() {
-		return indexPage;
+	public int getPageNumber() {
+		return pageNumber;
 	}
 
-	public void setIndexPage(int indexPage) {
-		this.indexPage = indexPage;
+	public void setPageNumber(int pageNumber) {
+		this.pageNumber = pageNumber;
 	}
 
 	public int getPageSize() {
@@ -74,13 +74,13 @@ public class QueryProvider {
 		this.isPage = isPage;
 	}
 
-	public void setPage(PageParam query) {
-		this.setIndexPage(query.getPage());
-		this.setPageSize(query.getRows());
+	public void setPage(PageParam pageParam) {
+		this.setPageNumber(pageParam.getPage());
+		this.setPageSize(pageParam.getRows());
 
-		String sort = query.getSort();
+		String sort = pageParam.getSort();
 		if (!ValidateTool.isEmpty(sort)) {
-			this.addOrder(sort, ORDER_TYPE_MAP.get(query.getOrder()));
+			this.addOrder(sort, ORDER_TYPE_MAP.get(pageParam.getOrder()));
 		}
 	}
 
@@ -108,16 +108,16 @@ public class QueryProvider {
 		return groups;
 	}
 
-	public List<QueryProvider> getOrParams() {
-		return orParams;
+	public List<QueryProvider> getOrProviders() {
+		return orProviders;
 	}
 
 	public Map<String, String> getNotFields() {
 		return notFields;
 	}
 
-	public List<Object[]> getLeftJoinParams() {
-		return leftJoinParams;
+	public List<Object[]> getLeftJoinProviders() {
+		return leftJoinProviders;
 	}
 
 	protected String getJoinTableName() {
@@ -750,7 +750,7 @@ public class QueryProvider {
 
 	/**
 	 * 添加查询添加，比如 and (type = 1 or name = 2)，主要作用于拼接 and 后括号中的表达式，主要用于 or
-	 * 查询的表达式，不然没必要。 从 V2.2.5.8 版本开始，该方法已被弃用，由方法 addOrParam 替代
+	 * 查询的表达式，不然没必要。 从 V2.2.5.8 版本开始，该方法已被弃用，由方法 addOrProvider 替代
 	 * @author HuangLongPu
 	 * @param param
 	 */
@@ -760,11 +760,11 @@ public class QueryProvider {
 			throw new HandleException("error: request is null");
 		}
 
-		if (this.orParams == null) {
-			orParams = new ArrayList<>();
+		if (this.orProviders == null) {
+			orProviders = new ArrayList<>();
 		}
 
-		this.orParams.add(param);
+		this.orProviders.add(param);
 	}
 
 	/**
@@ -774,16 +774,16 @@ public class QueryProvider {
 	 * @author HuangLongPu
 	 * @param queryProvider
 	 */
-	public void addOrParam(QueryProvider queryProvider) {
+	public void addOrProvider(QueryProvider queryProvider) {
 		if (queryProvider == null) {
 			throw new HandleException("error: queryProvider is null");
 		}
 
-		if (this.orParams == null) {
-			orParams = new ArrayList<>();
+		if (this.orProviders == null) {
+			orProviders = new ArrayList<>();
 		}
 
-		this.orParams.add(queryProvider);
+		this.orProviders.add(queryProvider);
 	}
 
 	/**
@@ -793,7 +793,7 @@ public class QueryProvider {
 	 * @param paramFieldName   表示left join 后紧跟表的关联字段。
 	 * @param queryProvider    被left join的封装对象。
 	 */
-	public void addLeftJoinParam(String fieldName, String paramFieldName, QueryProvider queryProvider) {
+	public void addLeftJoinProvider(String fieldName, String paramFieldName, QueryProvider queryProvider) {
 		if (fieldName == null) {
 			throw new HandleException("error: left join fieldName is null");
 		}
@@ -807,12 +807,12 @@ public class QueryProvider {
 			throw new HandleException("error: queryProvider joinTableName is null");
 		}
 
-		if (this.leftJoinParams == null) {
-			leftJoinParams = new ArrayList<>();
+		if (this.leftJoinProviders == null) {
+			leftJoinProviders = new ArrayList<>();
 		}
 
 		Object[] obj = { fieldName, paramFieldName, queryProvider };
-		this.leftJoinParams.add(obj);
+		this.leftJoinProviders.add(obj);
 	}
 
 	/**
@@ -823,7 +823,7 @@ public class QueryProvider {
 	 * @param paramFieldName    表示left join 后紧跟表的关联字段。
 	 * @param queryProvider             被left join的封装对象。
 	 */
-	public void addLeftJoinParam(String[] fieldName, String[] paramFieldName, QueryProvider queryProvider) {
+	public void addLeftJoinProvider(String[] fieldName, String[] paramFieldName, QueryProvider queryProvider) {
 		int fieldLength = 0;
 		if (fieldName == null || (fieldLength = fieldName.length) == 0) {
 			throw new HandleException("error: left join fieldName is null");
@@ -839,12 +839,12 @@ public class QueryProvider {
 			throw new HandleException("error: queryProvider is null");
 		}
 
-		if (this.leftJoinParams == null) {
-			leftJoinParams = new ArrayList<>();
+		if (this.leftJoinProviders == null) {
+			leftJoinProviders = new ArrayList<>();
 		}
 
 		Object[] obj = { fieldName, paramFieldName, queryProvider };
-		this.leftJoinParams.add(obj);
+		this.leftJoinProviders.add(obj);
 	}
 
 	/**

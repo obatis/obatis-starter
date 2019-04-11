@@ -13,7 +13,7 @@ public class SessionMapperCompilerTemplet {
     private SessionMapperCompilerTemplet() {}
 
     /**
-     * 构建sessionMappper接口类
+     * 构建 sessionMappper 接口类
      * @author HuangLongPu
      * @param canonicalName
      * @param mapperCls

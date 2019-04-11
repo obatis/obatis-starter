@@ -158,7 +158,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 		}
 		
 		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PARAM_OBJ, queryProvider);
+		paramMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		return this.getBaseBeanSessionMapper().update(paramMap, this.getTableName());
 	}
 
@@ -172,11 +172,11 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	public int updateBatch(List<QueryProvider> list) throws HandleException {
 		
 		if(list == null || list.isEmpty()) {
-			throw new HandleException("error: updateBatch QueryProvider is empty");
+			throw new HandleException("error: batchUpdate QueryProvider is empty");
 		}
 		
 		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PARAM_OBJ, list);
+		paramMap.put(SqlConstant.PROVIDER_OBJ, list);
 		return this.getBaseBeanSessionMapper().updateBatch(paramMap, this.getTableName());
 	}
 	
@@ -198,7 +198,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	 */
 	public int delete(QueryProvider queryProvider) throws HandleException {
 		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PARAM_OBJ, queryProvider);
+		paramMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		return this.getBaseBeanSessionMapper().delete(paramMap, this.getTableName());
 	}
 
@@ -265,7 +265,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	 */
 	public T find(QueryProvider queryProvider) {
 		Map<String, Object> providerMap = new HashMap<>();
-		providerMap.put(SqlConstant.PARAM_OBJ, queryProvider);
+		providerMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		return this.getBaseBeanSessionMapper().find(providerMap, this.getTableName());
 	}
 
@@ -279,7 +279,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	 */
 	public <M> M find(QueryProvider queryProvider, Class<M> resultCls) {
 		Map<String, Object> providerMap = new HashMap<>();
-		providerMap.put(SqlConstant.PARAM_OBJ, queryProvider);
+		providerMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		return this.getBaseResultSessionMapper(resultCls).findR(providerMap, this.getTableName());
 	}
 	
@@ -292,7 +292,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	 */
 	public boolean validate(QueryProvider queryProvider) {
 		Map<String, Object> providerMap = new HashMap<>();
-		providerMap.put(SqlConstant.PARAM_OBJ, queryProvider);
+		providerMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		return this.getBaseBeanSessionMapper().validate(providerMap, this.getTableName()) > 0;
 	}
 
@@ -304,7 +304,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	 */
 	public Map<String, Object> findConvertMap(QueryProvider queryProvider) {
 		Map<String, Object> providerMap = new HashMap<>();
-		providerMap.put(SqlConstant.PARAM_OBJ, queryProvider);
+		providerMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		return this.getBaseBeanSessionMapper().findToMap(providerMap, this.getTableName());
 	}
 
@@ -317,7 +317,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	 */
 	public List<T> list(QueryProvider queryProvider) {
 		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PARAM_OBJ, queryProvider);
+		paramMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		return this.getBaseBeanSessionMapper().list(paramMap, this.getTableName());
 	}
 
@@ -330,7 +330,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	 */
 	public <M> List<M> list(QueryProvider queryProvider, Class<M> resultCls) {
 		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PARAM_OBJ, queryProvider);
+		paramMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		return this.getBaseResultSessionMapper(resultCls).listR(paramMap, this.getTableName());
 	}
 
@@ -343,7 +343,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	 */
 	public List<Map<String, Object>> listConvertMap(QueryProvider queryProvider) {
 		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PARAM_OBJ, queryProvider);
+		paramMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		return this.getBaseBeanSessionMapper().query(paramMap, this.getTableName());
 	}
 
@@ -400,7 +400,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	 */
 	private Object findObject(QueryProvider queryProvider) {
 		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PARAM_OBJ, queryProvider);
+		paramMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		return this.getBaseBeanSessionMapper().findObject(paramMap, this.getTableName());
 	}
 
@@ -583,11 +583,11 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	public PageResultInfo<T> page(QueryProvider queryProvider) {
 		Map<String, Object> providerMap = new HashMap<String, Object>();
 		queryProvider.setIsPage(PageEnum.IS_PAGE_TRUE);
-		providerMap.put(SqlConstant.PARAM_OBJ, queryProvider);
+		providerMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		// 拼装SQL语句
 		SqlHandleProvider.getQueryPageSql(providerMap, this.getTableName());
 
-		int total = this.getBaseBeanSessionMapper().findTotal((String) providerMap.get(SqlConstant.COUNT_SQL), providerMap);
+		int total = this.getBaseBeanSessionMapper().findTotal((String) providerMap.get(SqlConstant.PROVIDER_COUNT_SQL), providerMap);
 		PageResultInfo<T> page = new PageResultInfo<T>();
 		page.setTotal(total);
 		if (total == 0) {
@@ -595,14 +595,14 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 			return page;
 		}
 
-		String querySql = (String) providerMap.get(SqlConstant.QUERY_SQL);
+		String querySql = (String) providerMap.get(SqlConstant.PROVIDER_QUERY_SQL);
 		// 说明页面超出真实数据，为了保证前端的兼容效果，重置到第一页
-		boolean resetIndexPage = getPageInfo(total, queryProvider.getIndexPage(), queryProvider.getPageSize());
+		boolean resetIndexPage = getPageInfo(total, queryProvider.getPageNumber(), queryProvider.getPageSize());
 		if (resetIndexPage) {
 			queryProvider.setResetIndexPage(true);
 		}
 
-		providerMap.put(SqlConstant.PARAM_OBJ, queryProvider);
+		providerMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		page.setList(this.getBaseBeanSessionMapper().page(querySql, providerMap));
 		return page;
 	}
@@ -618,11 +618,11 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	public <M> PageResultInfo<M> PageResultInfo(QueryProvider queryProvider, Class<M> resultCls) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		queryProvider.setIsPage(PageEnum.IS_PAGE_TRUE);
-		paramMap.put(SqlConstant.PARAM_OBJ, queryProvider);
+		paramMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		// 拼装SQL语句
 		SqlHandleProvider.getQueryPageSql(paramMap, this.getTableName());
 
-		int total = this.getBaseBeanSessionMapper().findTotal((String) paramMap.get(SqlConstant.COUNT_SQL), paramMap);
+		int total = this.getBaseBeanSessionMapper().findTotal((String) paramMap.get(SqlConstant.PROVIDER_COUNT_SQL), paramMap);
 		PageResultInfo<M> page = new PageResultInfo<M>();
 		page.setTotal(total);
 		
@@ -631,15 +631,15 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 			return page;
 		}
 
-		String querySql = (String) paramMap.get(SqlConstant.QUERY_SQL);
+		String querySql = (String) paramMap.get(SqlConstant.PROVIDER_QUERY_SQL);
 
 		// 说明页面超出真实数据，为了保证前端的兼容效果，重置到第一页
-		boolean resetIndexPage = getPageInfo(total, queryProvider.getIndexPage(), queryProvider.getPageSize());
+		boolean resetIndexPage = getPageInfo(total, queryProvider.getPageNumber(), queryProvider.getPageSize());
 		if (resetIndexPage) {
 			queryProvider.setResetIndexPage(true);
 		}
 
-		paramMap.put(SqlConstant.PARAM_OBJ, queryProvider);
+		paramMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		page.setList(this.getBaseResultSessionMapper(resultCls).pageR(querySql, paramMap));
 		return page;
 	}

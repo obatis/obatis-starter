@@ -16,14 +16,14 @@ public interface BaseResultSessionMapper<R> {
 	List<R> listR(@Param("request") Map<String, Object> param, String tableName);
 	
 	@SelectProvider(type = SqlProvider.class, method = "replaceSql")
-	R findBySqlR(String sql, @Param("request") List<Object> param);
+	R findBySqlR(String sql, @Param("request") List<Object> list);
 	
 	@SelectProvider(type = SqlProvider.class, method = "replaceSql")
-	List<R> listBySqlR(String sql, @Param("request") List<Object> param);
+	List<R> listBySqlR(String sql, @Param("request") List<Object> list);
 	
 	@SelectProvider(type = SqlProvider.class, method = "replaceSql")
-	List<Map<String, Object>> listMapBySqlR(String sql, @Param("request") List<Object> param);
+	List<Map<String, Object>> listMapBySqlR(String sql, @Param("request") List<Object> list);
 	
 	@SelectProvider(type = SqlProvider.class, method = "pageSql")
-	List<R> pageR(String sql, @Param("request") Map<String, Object> param);
+	List<R> pageR(String sql, @Param("request") Map<String, Object> params);
 }

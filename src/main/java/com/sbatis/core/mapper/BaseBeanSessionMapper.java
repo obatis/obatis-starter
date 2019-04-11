@@ -16,14 +16,14 @@ public interface BaseBeanSessionMapper<T extends CommonEntity> {
 	@InsertProvider(type = SqlProvider.class, method = "insert")
 	int insert(@Param("request") T t, String tableName, Class<T> cls);
 	
-	@InsertProvider(type = SqlProvider.class, method = "insertBatch")
+	@InsertProvider(type = SqlProvider.class, method = "batchInsert")
 	int insertBatch(@Param("request") List<T> list, String tableName, Class<T> cls);
 	
 	@UpdateProvider(type = SqlProvider.class, method = "update")
-	int update(@Param("request") Map<String, Object> param, String tableName);
+	int update(@Param("request") Map<String, Object> params, String tableName);
 	
-	@UpdateProvider(type = SqlProvider.class, method = "updateBatch")
-	int updateBatch(@Param("request") Map<String, Object> param, String tableName);
+	@UpdateProvider(type = SqlProvider.class, method = "batchUpdate")
+	int updateBatch(@Param("request") Map<String, Object> params, String tableName);
 	
 	@DeleteProvider(type = SqlProvider.class, method = "deleteById")
 	int deleteById(@Param("id") BigInteger id, String tableName);
@@ -38,38 +38,38 @@ public interface BaseBeanSessionMapper<T extends CommonEntity> {
 	int validate(@Param("request") Map<String, Object> param, String tableName);
 	
 	@SelectProvider(type = SqlProvider.class, method = "find")
-	Map<String, Object> findToMap(@Param("request") Map<String, Object> param, String tableName);
+	Map<String, Object> findToMap(@Param("request") Map<String, Object> params, String tableName);
 	
 	@SelectProvider(type = SqlProvider.class, method = "find")
 	Object findObject(@Param("request") Map<String, Object> param, String tableName);
 	
 	@SelectProvider(type = SqlProvider.class, method = "replaceSql")
-	Object findObjectBySql(String sql, @Param("request") List<Object> param);
+	Object findObjectBySql(String sql, @Param("request") List<Object> list);
 	
 	@SelectProvider(type = SqlProvider.class, method = "replaceSql")
-	T findBySql(String sql, @Param("request") List<Object> param);
+	T findBySql(String sql, @Param("request") List<Object> list);
 	
 	@SelectProvider(type = SqlProvider.class, method = "replaceSql")
-	Map<String, Object> findMapBySql(String sql, @Param("request") List<Object> param);
+	Map<String, Object> findMapBySql(String sql, @Param("request") List<Object> list);
 	
 	@SelectProvider(type = SqlProvider.class, method = "find")
-	List<T> list(@Param("request") Map<String, Object> param, String tableName);
+	List<T> list(@Param("request") Map<String, Object> params, String tableName);
 	
 	@SelectProvider(type = SqlProvider.class, method = "find")
-	List<Map<String, Object>> query(@Param("request") Map<String, Object> param, String tableName);
+	List<Map<String, Object>> query(@Param("request") Map<String, Object> params, String tableName);
 	
 	@SelectProvider(type = SqlProvider.class, method = "replaceSql")
-	List<T> listBySql(String sql, @Param("request") List<Object> param);
+	List<T> listBySql(String sql, @Param("request") List<Object> list);
 	
 	@SelectProvider(type = SqlProvider.class, method = "replaceSql")
-	List<Map<String, Object>> listMapBySql(String sql, @Param("request") List<Object> param);
+	List<Map<String, Object>> listMapBySql(String sql, @Param("request") List<Object> list);
 	
 	@SelectProvider(type = SqlProvider.class, method = "returnParamSql")
-	int findTotal(String sql, @Param("request") Map<String, Object> param);
+	int findTotal(String sql, @Param("request") Map<String, Object> params);
 	
 	@SelectProvider(type = SqlProvider.class, method = "replaceSql")
-	int findTotalByParam(String sql, @Param("request") List<Object> param);
+	int findTotalByParam(String sql, @Param("request") List<Object> params);
 	
 	@SelectProvider(type = SqlProvider.class, method = "pageSql")
-	List<T> page(String sql, @Param("request") Map<String, Object> param);
+	List<T> page(String sql, @Param("request") Map<String, Object> params);
 }
