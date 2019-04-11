@@ -48,25 +48,25 @@ public class SqlHandleProvider<T> {
 	/**
 	 * 获取更新 update sql 语句
 	 * @author HuangLongPu
-	 * @param param
+	 * @param providers
 	 * @param tableName
 	 * @return
 	 * @throws HandleException
 	 */
-	public static String getUpdateSql(Map<String, Object> param, String tableName) throws HandleException {
-		return sqlHandleMethod.getUpdateSql(param, tableName);
+	public static String getUpdateSql(Map<String, Object> providers, String tableName) throws HandleException {
+		return sqlHandleMethod.getUpdateSql(providers, tableName);
 	}
 
 	/**
 	 * 获取批量更新 update sql 语句
 	 * @author HuangLongPu
-	 * @param param
+	 * @param providers
 	 * @param tableName
 	 * @return
 	 * @throws HandleException
 	 */
-	public static String getBatchUpdateSql(Map<String, Object> param, String tableName) throws HandleException {
-		return sqlHandleMethod.getUpdateBatchSql(param, tableName);
+	public static String getBatchUpdateSql(Map<String, Object> providers, String tableName) throws HandleException {
+		return sqlHandleMethod.getUpdateBatchSql(providers, tableName);
 	}
 
 	/**
@@ -83,13 +83,13 @@ public class SqlHandleProvider<T> {
 	/**
 	 * 获取常规删除的 delete sql 语句
 	 * @author HuangLongPu
-	 * @param param
+	 * @param providers
 	 * @param tableName
 	 * @return
 	 * @throws HandleException
 	 */
-	public static String getDeleteSql(Map<String, Object> param, String tableName) throws HandleException {
-		return sqlHandleMethod.getDeleteSql(param, tableName);
+	public static String getDeleteSql(Map<String, Object> providers, String tableName) throws HandleException {
+		return sqlHandleMethod.getDeleteSql(providers, tableName);
 	}
 
 	/**
@@ -106,34 +106,34 @@ public class SqlHandleProvider<T> {
 	/**
 	 * 根据map，拼接SQL
 	 * @author HuangLongPu
-	 * @param param
+	 * @param providers
 	 * @param tableName
 	 * @return
 	 * @throws HandleException
 	 */
-	public static String getSelectSql(Map<String, Object> param, String tableName) throws HandleException {
-		return sqlHandleMethod.getSelectSql(param, tableName);
+	public static String getSelectSql(Map<String, Object> providers, String tableName) throws HandleException {
+		return sqlHandleMethod.getSelectSql(providers, tableName);
 	}
 
 	/**
 	 * 获取校验的 sql 语句，原理为根据查询条件，得到count计数的值，映射 sql 为 select count(*) from tableName where filterName = ?
 	 * @author HuangLongPu
-	 * @param param
+	 * @param providers
 	 * @param tableName
 	 * @return
 	 * @throws HandleException
 	 */
-	public static String getValidateSql(Map<String, Object> param, String tableName) throws HandleException {
-		return sqlHandleMethod.getValidateSql(param, tableName);
+	public static String getValidateSql(Map<String, Object> providers, String tableName) throws HandleException {
+		return sqlHandleMethod.getValidateSql(providers, tableName);
 	}
 
 	/**
 	 * 获取分页查询的 sql 语句，总共包含两条 sql 语句，一条为查询数据，一条为求总条数，sql 存放于 map 中
-	 * @param param
+	 * @param providers
 	 * @param tableName
 	 */
-	public static void getQueryPageSql(Map<String, Object> param, String tableName) {
-		sqlHandleMethod.getQueryPageSql(param, tableName);
+	public static void getQueryPageSql(Map<String, Object> providers, String tableName) {
+		sqlHandleMethod.getQueryPageSql(providers, tableName);
 	}
 
 	/**
@@ -151,12 +151,12 @@ public class SqlHandleProvider<T> {
 	 * 作用于分页时拼接分页信息
 	 * @author HuangLongPu
 	 * @param sql
-	 * @param indexPage
+	 * @param pageNumber
 	 * @param pageSize
 	 * @param reset
 	 * @return
 	 */
-	public static String appendPageSql(String sql, int indexPage, int pageSize, boolean reset) {
-		return sqlHandleMethod.appendPageSql(sql, indexPage, pageSize, reset);
+	public static String appendPageSql(String sql, int pageNumber, int pageSize, boolean reset) {
+		return sqlHandleMethod.appendPageSql(sql, pageNumber, pageSize, reset);
 	}
 }

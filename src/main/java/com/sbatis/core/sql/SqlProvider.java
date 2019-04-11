@@ -25,28 +25,28 @@ public class SqlProvider<T> {
 		return SqlHandleProvider.getBatchInsertSql(list, cls, tableName);
 	}
 	
-	public String update(@Param("request") Map<String, Object> param, String tableName) throws HandleException {
-		return SqlHandleProvider.getUpdateSql(param, tableName);
+	public String update(@Param("request") Map<String, Object> providers, String tableName) throws HandleException {
+		return SqlHandleProvider.getUpdateSql(providers, tableName);
 	}
 	
-	public String batchUpdate(@Param("request") Map<String, Object> param, String tableName) throws HandleException {
-		return SqlHandleProvider.getBatchUpdateSql(param, tableName);
+	public String batchUpdate(@Param("request") Map<String, Object> providers, String tableName) throws HandleException {
+		return SqlHandleProvider.getBatchUpdateSql(providers, tableName);
 	}
 	
 	public String deleteById(@Param("id") BigInteger id, String tableName) throws HandleException {
 		return SqlHandleProvider.getDeleteByIdSql(tableName);
 	}
 	
-	public String delete(@Param("request") Map<String, Object> param, String tableName) throws HandleException {
-		return SqlHandleProvider.getDeleteSql(param, tableName);
+	public String delete(@Param("request") Map<String, Object> providers, String tableName) throws HandleException {
+		return SqlHandleProvider.getDeleteSql(providers, tableName);
 	}
 	
-	public String find(@Param("request") Map<String, Object> param, String tableName) throws HandleException {
-		return SqlHandleProvider.getSelectSql(param, tableName);
+	public String find(@Param("request") Map<String, Object> providers, String tableName) throws HandleException {
+		return SqlHandleProvider.getSelectSql(providers, tableName);
 	}
 	
-	public String validate(@Param("request") Map<String, Object> param, String tableName) throws HandleException {
-		return SqlHandleProvider.getValidateSql(param, tableName);
+	public String validate(@Param("request") Map<String, Object> providers, String tableName) throws HandleException {
+		return SqlHandleProvider.getValidateSql(providers, tableName);
 	}
 	
 	public String replaceSql(String sql, @Param("request") List<Object> object) {
@@ -54,14 +54,14 @@ public class SqlProvider<T> {
 		return SqlHandleProvider.getReplaceSql(sql, index);
 	}
 
-	public String returnParamSql(String sql, @Param("request") Map<String, Object> param) {
+	public String returnParamSql(String sql, @Param("request") Map<String, Object> providers) {
 		return sql;
 	}
 	
-	public String pageSql(String sql, @Param("request") Map<String, Object> param) {
-		QueryProvider QueryProvider = (QueryProvider) param.get(SqlConstant.PROVIDER_OBJ);
-		if (PageEnum.IS_PAGE_TRUE.equals(QueryProvider.getIsPage())) {
-			return SqlHandleProvider.appendPageSql(sql, QueryProvider.getPageNumber(), QueryProvider.getPageSize(), QueryProvider.isResetIndexPage());
+	public String pageSql(String sql, @Param("request") Map<String, Object> providers) {
+		QueryProvider queryProvider = (QueryProvider) providers.get(SqlConstant.PROVIDER_OBJ);
+		if (PageEnum.IS_PAGE_TRUE.equals(queryProvider.getIsPage())) {
+			return SqlHandleProvider.appendPageSql(sql, queryProvider.getPageNumber(), queryProvider.getPageSize(), queryProvider.isResetIndexPage());
 		}
 		return sql;
 	}
