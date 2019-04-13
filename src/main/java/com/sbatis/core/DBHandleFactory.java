@@ -1,6 +1,7 @@
 package com.sbatis.core;
 
-import com.sbatis.config.response.result.PageResultInfo;
+import com.sbatis.config.response.result.PageResultHandle;
+import com.sbatis.config.response.result.PageResultHandle;
 import com.sbatis.core.constant.SqlConstant;
 import com.sbatis.core.constant.type.PageEnum;
 import com.sbatis.core.exception.HandleException;
@@ -506,10 +507,10 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	 * @param pageSize      每行显示条数
 	 * @return
 	 */
-	public PageResultInfo<T> page(String sql, String totalSql, List<Object> list, int pageNumber, int pageSize) {
+	public PageResultHandle<T> page(String sql, String totalSql, List<Object> list, int pageNumber, int pageSize) {
 
 		int total = this.findTotal(totalSql, list);
-		PageResultInfo<T> page = new PageResultInfo<>();
+		PageResultHandle<T> page = new PageResultHandle<>();
 		page.setTotal(total);
 		if (total == 0) {
 			// 当没有数据的时候，直接不进行数据查询
@@ -533,9 +534,9 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	 * @param resultCls     resultCls 返回 预定义的 resultCls Bean 泛型数据类型
 	 * @return
 	 */
-	public <M> PageResultInfo<M> page(String sql, String totalSql, List<Object> list, int pageNumber, int pageSize, Class<M> resultCls) {
+	public <M> PageResultHandle<M> page(String sql, String totalSql, List<Object> list, int pageNumber, int pageSize, Class<M> resultCls) {
 		int total = this.findTotal(totalSql, list);
-		PageResultInfo<M> page = new PageResultInfo<>();
+		PageResultHandle<M> page = new PageResultHandle<>();
 		page.setTotal(total);
 		if (total == 0) {
 			// 当没有数据的时候，直接不进行数据查询
@@ -558,9 +559,9 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	 * @param pageSize      每行显示条数
 	 * @return
 	 */
-	public PageResultInfo<Map<String, Object>> pageResultMap(String sql, String totalSql, List<Object> list, int pageNumber, int pageSize) {
+	public PageResultHandle<Map<String, Object>> pageResultMap(String sql, String totalSql, List<Object> list, int pageNumber, int pageSize) {
 		int total = this.findTotal(totalSql, list);
-		PageResultInfo<Map<String, Object>> page = new PageResultInfo<>();
+		PageResultHandle<Map<String, Object>> page = new PageResultHandle<>();
 		page.setTotal(total);
 		if (total == 0) {
 			// 当没有数据的时候，直接不进行数据查询
@@ -580,7 +581,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	 * @param queryProvider 封装的参数对象
 	 * @return
 	 */
-	public PageResultInfo<T> page(QueryProvider queryProvider) {
+	public PageResultHandle<T> page(QueryProvider queryProvider) {
 		Map<String, Object> providerMap = new HashMap<>();
 		queryProvider.setIsPage(PageEnum.IS_PAGE_TRUE);
 		providerMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
@@ -588,7 +589,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 		SqlHandleProvider.getQueryPageSql(providerMap, this.getTableName());
 
 		int total = this.getBaseBeanSessionMapper().findTotal((String) providerMap.get(SqlConstant.PROVIDER_COUNT_SQL), providerMap);
-		PageResultInfo<T> page = new PageResultInfo<>();
+		PageResultHandle<T> page = new PageResultHandle<>();
 		page.setTotal(total);
 		if (total == 0) {
 			// 当总条数为0时，直接取消数据查询
@@ -615,7 +616,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 	 * @param resultCls      返回 预定义的 resultCls Bean 泛型数据类型
 	 * @return 
 	 */
-	public <M> PageResultInfo<M> PageResultInfo(QueryProvider queryProvider, Class<M> resultCls) {
+	public <M> PageResultHandle<M> PageResultHandle(QueryProvider queryProvider, Class<M> resultCls) {
 		Map<String, Object> paramMap = new HashMap<>();
 		queryProvider.setIsPage(PageEnum.IS_PAGE_TRUE);
 		paramMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
@@ -623,7 +624,7 @@ public abstract class DBHandleFactory<T extends CommonEntity> {
 		SqlHandleProvider.getQueryPageSql(paramMap, this.getTableName());
 
 		int total = this.getBaseBeanSessionMapper().findTotal((String) paramMap.get(SqlConstant.PROVIDER_COUNT_SQL), paramMap);
-		PageResultInfo<M> page = new PageResultInfo<>();
+		PageResultHandle<M> page = new PageResultHandle<>();
 		page.setTotal(total);
 		
 		if (total == 0) {

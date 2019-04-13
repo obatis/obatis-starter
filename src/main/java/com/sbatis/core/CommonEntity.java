@@ -10,8 +10,14 @@ import java.util.Date;
  * @author HuangLongPu
  */
 public class CommonEntity {
-	
+
+	/**
+	 * ID 主键，唯一性标识
+	 */
 	private BigInteger id;
+	/**
+	 * 创建时间
+	 */
 	@Column(name = CommonField.FIELD_CREATE_TIME)
 	private Date createTime;
 
