@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="sbatis-core" />
+        <module name="obatis-core" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="sbatis-core" target="1.8" />
+      <module name="obatis-core" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

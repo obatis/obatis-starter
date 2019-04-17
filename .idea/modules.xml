@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/sbatis-core.iml" filepath="$PROJECT_DIR$/sbatis-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/obatis-core.iml" filepath="$PROJECT_DIR$/obatis-core.iml" />
     </modules>
   </component>
 </project>
