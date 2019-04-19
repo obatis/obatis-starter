@@ -126,7 +126,6 @@ public class QueryProvider {
 
 	/**
 	 * 设置连接查询时 QueryProvider 属性表名，如果只是简单常规单表查询，即使设置了也无效。 目前主要支持 left join
-	 * @author HuangLongPu
 	 * @param joinTableName
 	 */
 	public void setJoinTableName(String joinTableName) {
@@ -138,7 +137,6 @@ public class QueryProvider {
 
 	/**
 	 * 添加字段方法，接收一个参数，此方法主要用于查询 传入的值表示为要查询的字段名称
-	 * @author HuangLongPu
 	 * @param fieldName
 	 * @throws HandleException
 	 */
@@ -150,7 +148,6 @@ public class QueryProvider {
 	 * 添加字段方法，接收两个参数，此方法主要用于查询(select)或者修改(update) 此方法用于查询或者修改
 	 * 用于查询时，第一个参数为要查询的字段名称，第二个参数可为null或者为要查询的别名，类似sql语句中的as name
 	 * 用于修改时，第一个参数为要修改的字段名称，第二个为修改后的值
-	 * @@author HuangLongPu
 	 * @param fieldName
 	 * @param value
 	 * @throws HandleException
@@ -161,7 +158,6 @@ public class QueryProvider {
 
 	/**
 	 * 实现累加，比如money = money + 20类似的SQL语句; fieldName 表示要操作的字段名称,value 表示要操作的值
-	 * @author HuangLongPu
 	 * @param fieldName
 	 * @param value
 	 */
@@ -171,7 +167,6 @@ public class QueryProvider {
 
 	/**
 	 * 实现累加，比如money = money - 20类似的SQL语句; fieldName 表示要操作的字段名称,value 表示要操作的值
-	 * @author HuangLongPu
 	 * @param fieldName
 	 * @param value
 	 */
@@ -181,7 +176,6 @@ public class QueryProvider {
 	
 	/**
 	 * count 统计函数 >> count(1)
-	 * @author HuangLongPu
 	 */
 	public void addFieldCount() {
 		this.addFieldCount("");
@@ -198,7 +192,6 @@ public class QueryProvider {
 	
 	/**
 	 * distinct 去重函数 >> distinct 'fieldName'
-	 * @author HuangLongPu
 	 * @param fieldName
 	 */
 	public void addFieldCountDistinct(String fieldName) {
@@ -210,7 +203,6 @@ public class QueryProvider {
 	
 	/**
 	 * distinct 去重函数 >> distinct 'fieldName' as 'aliasName'
-	 * @author HuangLongPu
 	 * @param fieldName
 	 * @param aliasName
 	 */
@@ -223,7 +215,6 @@ public class QueryProvider {
 	
 	/**
 	 * sum 求和函数 >> sum('fieldName')
-	 * @author HuangLongPu
 	 * @param fieldName
 	 */
 	public void addFieldSum(String fieldName) {
@@ -232,7 +223,6 @@ public class QueryProvider {
 	
 	/**
 	 * sum 求和函数 >> sum('fieldName') as 'aliasName'
-	 * @author HuangLongPu
 	 * @param fieldName
 	 * @param aliasName
 	 */
@@ -242,7 +232,6 @@ public class QueryProvider {
 	
 	/**
 	 * min 最小值函数 >> min('fieldName')
-	 * @author HuangLongPu
 	 * @param fieldName
 	 */
 	public void addFieldMin(String fieldName) {
@@ -251,7 +240,6 @@ public class QueryProvider {
 	
 	/**
 	 * min 最小值函数 >> min('fieldName') as 'aliasName'
-	 * @author HuangLongPu
 	 * @param fieldName
 	 * @param aliasName
 	 */
@@ -261,7 +249,6 @@ public class QueryProvider {
 	
 	/**
 	 * max 最大值函数 >> max('fieldName')
-	 * @author HuangLongPu
 	 * @param fieldName
 	 */
 	public void addFieldMax(String fieldName) {
@@ -270,7 +257,6 @@ public class QueryProvider {
 	
 	/**
 	 * max 最大值函数 >> max('fieldName') as 'aliasName'
-	 * @author HuangLongPu
 	 * @param fieldName
 	 * @param aliasName
 	 */
@@ -280,7 +266,6 @@ public class QueryProvider {
 	
 	/**
 	 * avg 平均值函数 >> avg('fieldName')
-	 * @author HuangLongPu
 	 * @param fieldName
 	 */
 	public void addFieldAvg(String fieldName) {
@@ -289,7 +274,6 @@ public class QueryProvider {
 	
 	/**
 	 * avg 平均值函数 >> avg('fieldName') as 'aliasName'
-	 * @author HuangLongPu
 	 * @param fieldName
 	 * @param aliasName
 	 */
@@ -299,7 +283,6 @@ public class QueryProvider {
 	
 	/**
 	 * 表达式函数，非聚合函数时使用，如需聚合，直接使用提供的聚合函数方法即可，同等原理
-	 * @author HuangLongPu
 	 * @param fieldName
 	 */
 	public void addFieldExp(String fieldName) {
@@ -308,7 +291,6 @@ public class QueryProvider {
 	
 	/**
 	 * 表达式函数，非聚合函数时使用，如需聚合，直接使用提供的聚合函数方法即可，同等原理
-	 * @author HuangLongPu
 	 * @param fieldName
 	 * @param aliasName
 	 */
@@ -318,7 +300,6 @@ public class QueryProvider {
 
 	/**
 	 * 设置表达式属性
-	 * @author HuangLongPu
 	 * @param fieldName
 	 * @param fieldType
 	 * @param value
@@ -336,7 +317,6 @@ public class QueryProvider {
 
 	/**
 	 * 添加不需要查询的字段，主要针对实体泛型返回的查询中，如果字段被加入，则会在 SQL 中过滤。
-	 * @author HuangLongPu
 	 * @param fieldName
 	 */
 	public void addNotField(String fieldName) {
@@ -353,7 +333,6 @@ public class QueryProvider {
 	 * 添加查询条件，where后的字段;
 	 * 参数分别为字段名称，比如name。条件类型，比如=，具体的值参考QueryParam的FILTER开头的常量。值
 	 * ，比如张三。一起即可name='张三'; 该方法已过期，已由新的方法（addFilter*）替代，将会在后期版本中移除该方法;
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param filterType
 	 * @param value
@@ -364,7 +343,6 @@ public class QueryProvider {
 
 	/**
 	 * 设置or 查询条件数据
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param filterType
 	 * @param value
@@ -375,7 +353,6 @@ public class QueryProvider {
 
 	/**
 	 * 设置条件
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param filterType
 	 * @param value
@@ -396,7 +373,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 and 查询条件，模糊查询, like
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -406,7 +382,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 or 查询条件，模糊查询, like
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -416,7 +391,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 and 查询条件，左模糊查询, like
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -426,7 +400,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 or 查询条件，左模糊查询, like
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -436,7 +409,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 and 查询条件，右模糊查询, like
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -446,7 +418,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 or 查询条件，右模糊查询, like
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -456,7 +427,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 and 查询条件，等于查询，=
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -466,7 +436,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 or 查询条件，等于查询，=
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -476,7 +445,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 and 查询条件，大于查询，>
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -486,7 +454,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 or 查询条件，大于查询，>
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -496,7 +463,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 and 查询条件，大于等于查询，>=
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -506,7 +472,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 or 查询条件，大于等于查询，>=
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -516,7 +481,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 and 大于等于0的条件表达式，传入字段名称即可
-	 * @author HuangLongPu
 	 * @param filterName
 	 */
 	public void addFilterGreateEqualZero(String filterName) {
@@ -525,7 +489,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 or 大于等于0的条件表达式，传入字段名称即可
-	 * @author HuangLongPu
 	 * @param filterName
 	 */
 	public void orFilterGreateEqualZero(String filterName) {
@@ -534,7 +497,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 and 查询条件，小于查询，<
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -544,7 +506,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 or 查询条件，小于查询，<
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -554,7 +515,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 and 查询条件，小于等于查询，<=
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -564,7 +524,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 or 查询条件，小于等于查询，<=
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -574,7 +533,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 and 查询，不等于查询，<>
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -584,7 +542,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 or 查询，不等于查询，<>
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -594,7 +551,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 and 查询条件，属于查询，in
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -604,7 +560,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 or 查询条件，属于查询，in
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -614,7 +569,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 and 查询条件，不属于查询，not in
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -624,7 +578,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 or 查询条件，不属于查询，not in
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -634,7 +587,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 and 查询条件，表示null值查询，is null
-	 * @author HuangLongPu
 	 * @param filterName
 	 */
 	public void addFilterIsNull(String filterName) {
@@ -643,7 +595,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 or 查询条件，表示null值查询，is null
-	 * @author HuangLongPu
 	 * @param filterName
 	 */
 	public void orFilterIsNull(String filterName) {
@@ -652,7 +603,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 and 查询条件，表示null值查询，is not null
-	 * @author HuangLongPu
 	 * @param filterName
 	 */
 	public void addFilterIsNotNull(String filterName) {
@@ -661,7 +611,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 or 查询条件，表示null值查询，is not null
-	 * @author HuangLongPu
 	 * @param filterName
 	 */
 	public void orFilterIsNotNull(String filterName) {
@@ -670,7 +619,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 and 设定值后大于条件判断，比如count + 10 > 0
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -680,7 +628,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 or 设定值后大于条件判断，比如count + 10 > 0
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -690,7 +637,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 and 设定值后大于等于条件判断，比如count + 10 >= 0
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -700,7 +646,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 or 设定值后大于等于条件判断，比如count + 10 >= 0
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -710,7 +655,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 and 设定值后大于条件判断，比如count + 10 > 0
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -720,7 +664,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加 or 设定值后大于条件判断，比如count + 10 > 0
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -730,7 +673,6 @@ public class QueryProvider {
 
 	/**
 	 * 减少 and 设定值后小于等于条件判断，比如count - 10 >= 0
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -740,7 +682,6 @@ public class QueryProvider {
 
 	/**
 	 * 减少 or 设定值后小于等于条件判断，比如count - 10 >= 0
-	 * @author HuangLongPu
 	 * @param filterName
 	 * @param value
 	 */
@@ -751,7 +692,6 @@ public class QueryProvider {
 	/**
 	 * 添加查询添加，比如 and (type = 1 or name = 2)，主要作用于拼接 and 后括号中的表达式，主要用于 or
 	 * 查询的表达式，不然没必要。 从 V2.2.5.8 版本开始，该方法已被弃用，由方法 addOrProvider 替代
-	 * @author HuangLongPu
 	 * @param param
 	 */
 	@Deprecated
@@ -771,7 +711,6 @@ public class QueryProvider {
 	 * 添加查询添加，比如 and (type = 1 or name = 2)，主要作用于拼接 and 后括号中的表达式，主要用于 or
 	 * 查询的表达式，不然没必要。 如果 多条件拼接 or 查询(类似 where id = ? and name = ? or type = 1
 	 * 的条件)，or 条件查询不能被当成第一个条件放入(type属性 orFilter 方法不能在第一个加入)，否则会被解析为 and 条件查询。 V
-	 * @author HuangLongPu
 	 * @param queryProvider
 	 */
 	public void addOrProvider(QueryProvider queryProvider) {
@@ -788,7 +727,6 @@ public class QueryProvider {
 
 	/**
 	 * 添加 left join 查询，会被拼接到left join 的连体SQL。 当使用这个属性时，必须设置 joinTableName的连接表名。
-	 * @author HuangLongPu
 	 * @param fieldName        表示left join 前面一张关联字段。
 	 * @param paramFieldName   表示left join 后紧跟表的关联字段。
 	 * @param queryProvider    被left join的封装对象。
@@ -818,7 +756,6 @@ public class QueryProvider {
 	/**
 	 * 添加 left join 查询，会被拼接到left join 的连体SQL。 当使用这个属性时，必须设置 joinTableName
 	 * 的连接表名。 针对多条件，两数组长度必须一致。
-	 * @author HuangLongPu
 	 * @param fieldName         表示left join 前面一张关联字段。
 	 * @param paramFieldName    表示left join 后紧跟表的关联字段。
 	 * @param queryProvider             被left join的封装对象。
@@ -849,7 +786,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加排序，参数分别为排序字段，排序值，排序值类型参考QueryParam中ORDER开头的常量
-	 * @author HuangLongPu
 	 * @param orderName
 	 * @param orderType
 	 */
@@ -866,7 +802,6 @@ public class QueryProvider {
 
 	/**
 	 * 增加分组，根据字段名称进行分组
-	 * @author HuangLongPu
 	 * @param groupName
 	 */
 	public void addGroup(String groupName) {
@@ -881,7 +816,6 @@ public class QueryProvider {
 
 	/**
 	 * 移除所有查询条件
-	 * @author HuangLongPu
 	 * @param
 	 */
 	public void removeFilter() {
@@ -902,7 +836,6 @@ public class QueryProvider {
 
 	/**
 	 * 根据前端传入的 command 实体，获取修改属性的 @UpdateField 注解值
-	 * @author HuangLongPu
 	 * @param obj
 	 */
 	public void setUpdateField(Object obj) {
@@ -916,7 +849,6 @@ public class QueryProvider {
 	 * 传入 ResultInfoOutput 的子类进行自动转换。
 	 * 如果接收的属性与数据库字段不一致，用@Column 注解映射，映射可以是实体属性名和字段名。
 	 * 如果有属性不想被添加到addField中，用@NotColumn 注解映射，将会自动过滤。
-	 * @author HuangLongPu
 	 * @param cls
 	 */
 	public void setFieldColumn(Class<?> cls) {

@@ -44,7 +44,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 获取泛型注入类的 sessionMapper
 	 * 如果未获取到，则进行编译处理操作，默认先从缓存中取值
-	 * @author HuangLongPu
 	 * @return
 	 */
 	private BaseBeanSessionMapper<T> getBaseBeanSessionMapper() {
@@ -62,7 +61,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 获取 ResultInfoOutput 子类的 sessionMapper
 	 * 需传入泛型class，如果未获取到，则进行编译处理操作，默认先从缓存中取值
-	 * @author HuangLongPu
 	 * @param resultCls
 	 * @param <M>
 	 * @return
@@ -95,7 +93,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 获取泛型注入的实体类
-	 * @author HuangLongPu
 	 */
 	private void getEntityCls() {
 		entityCls = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
@@ -104,7 +101,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 获取存入缓存中的表名
-	 * @author HuangLongPu
 	 * @return
 	 * @throws HandleException
 	 */
@@ -124,7 +120,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 单个添加，传入一个 CommonEntity对象，并返回影响行数
-	 * @author HuangLongPu
 	 * @param t
 	 * @return
 	 */
@@ -137,7 +132,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 批量添加，传入list CommonModel 对象，返回影响行数
-	 * @author HuangLongPu
 	 * @param list
 	 * @return
 	 */
@@ -147,7 +141,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 传入数据库封装操作对象 QueryProvider，进行更新
-	 * @author HuangLongPu
 	 * @param queryProvider
 	 * @return
 	 */
@@ -164,7 +157,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 批量更新，传入list 操作对象，返回影响行数
-	 * @author HuangLongPu
 	 * @param list
 	 * @return
 	 * @throws HandleException
@@ -182,7 +174,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	
 	/**
 	 * 根据传入的id主键，删除一条记录
-	 * @author HuangLongPu
 	 * @param id
 	 * @return
 	 */
@@ -192,7 +183,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 根据传入的 QueryProvider 对象，进行删除操作
-	 * @author HuangLongPu
 	 * @param queryProvider
 	 * @return
 	 */
@@ -205,7 +195,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 1、根据id主键查询一条记录，返回所有字段。
 	 * 2、如果根据条件有多条数据符合，则抛出异常。
-	 * @author HuangLongPu
 	 * @param id
 	 * @return
 	 */
@@ -218,7 +207,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 1、根据id主键查询一条记录，返回所有字段，返回类型为预设的class类型，需强制转换一次。
 	 * 2、如果根据条件有多条数据符合，则抛出异常。
-	 * @author HuangLongPu
 	 * @param id
 	 * @param resultCls
 	 * @return
@@ -232,7 +220,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 1、根据id主键查询一条记录，返回设定的字段。
 	 * 2、如果根据条件有多条数据符合，则抛出异常。
-	 * @author HuangLongPu
 	 * @param queryProvider
 	 * @param id
 	 * @return
@@ -245,7 +232,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 1、根据id主键查询一条记录，返回设定的字段，返回类型为预设的class类型，需强制转换一次。
 	 * 2、如果根据条件有多条数据符合，则抛出异常。
-	 * @author HuangLongPu
 	 * @param queryProvider
 	 * @param id
 	 * @param resultCls
@@ -259,7 +245,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 1、根据传入的 QueryProvider 对象，查询一条 CommonModel 子类的记录。
 	 * 2、如果根据条件有多条数据符合，则抛出异常。
-	 * @author HuangLongPu
 	 * @param queryProvider
 	 * @return
 	 */
@@ -272,7 +257,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 1、根据传入的 QueryProvider 对象，返回类型为预设的class类型，需强制转换一次。
 	 * 2、如果根据条件有多条数据符合，则抛出异常。
-	 * @author HuangLongPu
 	 * @param queryProvider
 	 * @param resultCls
 	 * @return
@@ -286,7 +270,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 1、主要作用为校验，queryProvider 只需传入条件值即可，映射的SQL语句例如：select count(1) from test t where t.name='test';
 	 * 2、根据 count 函数的返回值进行判断，返回值大于0表示存在，否则不存在。
-	 * @author HuangLongPu
 	 * @param queryProvider
 	 * @return
 	 */
@@ -298,7 +281,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 根据传入的 QueryProvider 对象，返回一条Map格式记录。 如果根据条件有多条数据符合，则抛出异常。
-	 * @author HuangLongPu
 	 * @param queryProvider
 	 * @return
 	 */
@@ -311,7 +293,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 根据传入的 QueryProvider 对象，返回符合条件的list集合的BaseEntity记录。
 	 * 如果有传入分页标识，只返回设置页面的极限值，否则返回所有符合条件的数据。
-	 * @author HuangLongPu
 	 * @param queryProvider
 	 * @return
 	 */
@@ -324,7 +305,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 根据传入的 QueryProvider 对象，返回符合条件的list集合，返回类型为预设的class类型，需强制转换一次。
 	 * 如果有传入分页标识，只返回设置页面的极限值，否则返回所有符合条件的数据。
-	 * @author HuangLongPu
 	 * @param queryProvider
 	 * @return
 	 */
@@ -337,7 +317,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 根据传入的 QueryProvider 对象，返回符合条件的List集合的Map格式记录。
 	 * 如果有传入分页标识，只返回设置页面的极限值，否则返回所有符合条件的数据。
-	 * @author HuangLongPu
 	 * @param queryProvider
 	 * @return
 	 */
@@ -350,7 +329,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 根据传入的 QueryProvider 对象，返回BigDecimal的类型值。 该方法常用于查询金额字段。
 	 * 如果根据条件有多条数据符合，则抛出异常。
-	 * @author HuangLongPu
 	 * @param queryProvider
 	 * @return
 	 */
@@ -365,7 +343,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 根据传入的 QueryProvider 对象，返回int的类型值。 该方法常用于查询count等类型的业务。
 	 * 如果根据条件有多条数据符合，则抛出异常。
-	 * @author HuangLongPu
 	 * @param queryProvider
 	 * @return
 	 */
@@ -379,7 +356,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 根据传入的 QueryProvider 对象，返回Double的类型值。 如果根据条件有多条数据符合，则抛出异常。
-	 * @author HuangLongPu
 	 * @param queryProvider
 	 * @return
 	 */
@@ -394,7 +370,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 根据传入的 QueryProvider 对象，返回Object的类型值。
 	 * 如果根据条件有多条数据符合，则抛出异常。
-	 * @author HuangLongPu
 	 * @param queryProvider
 	 * @return
 	 */
@@ -406,7 +381,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 需传入的条件值。
-	 *
 	 * @param sql     sql语句中的条件，用 "?" 号代替，防止SQL注入
 	 * @param list    需传入的条件值，按顺序存放
 	 * @return
@@ -417,7 +391,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 返回Object 类型，比如int、decimal、String等。
-	 * @author HuangLongPu
 	 * @param sql
 	 * @param list
 	 * @return
@@ -428,7 +401,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 获取总条数，针对count 等SQL语句。
-	 * @author HuangLongPu
 	 * @param sql
 	 * @param list
 	 * @return
@@ -439,7 +411,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 传入SQL，返回预设类型对象。返回类型为预设的class类型，需强制转换一次。
-	 * @author HuangLongPu
 	 * @param sql          sql语句中的条件，用 "?" 号代替，防止SQL注入
 	 * @param list         需传入的条件值，按顺序存放
 	 * @param resultCls    返回类型
@@ -451,7 +422,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 传入SQL，返回map类型。
-	 * @author HuangLongPu
 	 * @param sql    sql语句中的条件，用 "?" 号代替，防止SQL注入
 	 * @param list   需传入的条件值，按顺序存放
 	 * @return
@@ -462,7 +432,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 根据传入的SQL语句，返回符合条件的list集合的Map格式记录。
-	 * @author HuangLongPu
 	 * @param sql   sql语句中的条件，用 "?" 号代替，防止SQL注入
 	 * @param list  需传入的条件值，按顺序存放
 	 * @return
@@ -473,7 +442,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 传入SQL，返回预设类型集合。返回类型为预设的class类型，需强制转换一次。
-	 * @author HuangLongPu
 	 * @param sql          sql语句中的条件，用 "?" 号代替，防止SQL注入
 	 * @param param        需传入的条件值，按顺序存放
 	 * @param resultCls    返回bean类型
@@ -485,7 +453,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 根据传入的SQL语句，返回符合条件的list集合的Map格式记录。
-	 * @author HuangLongPu
 	 * @param sql     sql语句中的条件，用 "?" 号代替，防止SQL注入
 	 * @param param   需传入的条件值，按顺序存放
 	 * @return
@@ -498,7 +465,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 主要实现于在前端查询时选中的页面超过总条数，非前端分页查询，不建议使用。
 	 * 分页查询，同时返回分页数据和总条数。
-	 * @author HuangLongPu
 	 * @param sql           主体查询语句
 	 * @param totalSql      总条数查询语句
 	 * @param list          条件值
@@ -524,7 +490,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 主要实现于在前端查询时选中的页面超过总条数，非前端分页查询，不建议使用。
 	 * 分页查询，同时返回分页数据和总条数。
-	 * @author HuangLongPu
 	 * @param sql           主体查询语句
 	 * @param totalSql      总条数查询语句
 	 * @param list          条件值
@@ -550,7 +515,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 主要实现于在前端查询时选中的页面超过总条数，非前端分页查询，不建议使用。
 	 * 分页查询，同时返回分页数据和总条数，返回 Map 数据。
-	 * @author HuangLongPu
 	 * @param sql           主体查询语句
 	 * @param totalSql      总条数查询语句
 	 * @param list          条件值
@@ -576,7 +540,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 主要实现于在前端查询时选中的页面超过总条数，非前端分页查询，不建议使用。
 	 * 分页查询，同时返回分页数据和总条数。
-	 * @author HuangLongPu
 	 * @param queryProvider 封装的参数对象
 	 * @return
 	 */
@@ -610,7 +573,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 主要实现于在前端查询时选中的页面超过总条数，非前端分页查询，不建议使用。
 	 * 分页查询，同时返回分页数据和总条数。
-	 * @author HuangLongPu
 	 * @param queryProvider  封装的参数对象
 	 * @param resultCls      返回 预定义的 resultCls Bean 泛型数据类型
 	 * @return 
@@ -646,7 +608,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 获取分页信息
-	 * @author HuangLongPu
 	 * @param total
 	 * @param pageNumber
 	 * @param pageSize

@@ -19,7 +19,6 @@ import java.util.*;
 /**
  * sql方法抽象类
  * @author HuangLongPu
- *
  */
 public abstract class AbstractSqlHandleMethod {
 

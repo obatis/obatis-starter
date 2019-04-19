@@ -13,7 +13,6 @@ public class HandleOrderMethod extends AbstractOrder {
 
 	/**
 	 * 实现 mysql 排序的 sql 语句构建
-	 * @author HuangLongPu
 	 * @param orders
 	 * @param orderName
 	 * @param orderType

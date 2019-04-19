@@ -21,7 +21,6 @@ public class SqlHandleProvider<T> {
 
 	/**
 	 * 获取insert sql 语句
-	 * @author HuangLongPu
 	 * @param obj
 	 * @param cls
 	 * @param tableName
@@ -34,7 +33,6 @@ public class SqlHandleProvider<T> {
 
 	/**
 	 * 获取批量添加 insert sql 语句
-	 * @author HuangLongPu
 	 * @param obj
 	 * @param cls
 	 * @param tableName
@@ -47,7 +45,6 @@ public class SqlHandleProvider<T> {
 
 	/**
 	 * 获取更新 update sql 语句
-	 * @author HuangLongPu
 	 * @param providers
 	 * @param tableName
 	 * @return
@@ -59,7 +56,6 @@ public class SqlHandleProvider<T> {
 
 	/**
 	 * 获取批量更新 update sql 语句
-	 * @author HuangLongPu
 	 * @param providers
 	 * @param tableName
 	 * @return
@@ -71,7 +67,6 @@ public class SqlHandleProvider<T> {
 
 	/**
 	 * 获取根据 id 进行删除的 delete sql 语句，例如 delete from tableName where id = ？
-	 * @author HuangLongPu
 	 * @param tableName
 	 * @return
 	 * @throws HandleException
@@ -82,7 +77,6 @@ public class SqlHandleProvider<T> {
 
 	/**
 	 * 获取常规删除的 delete sql 语句
-	 * @author HuangLongPu
 	 * @param providers
 	 * @param tableName
 	 * @return
@@ -105,7 +99,6 @@ public class SqlHandleProvider<T> {
 
 	/**
 	 * 根据map，拼接SQL
-	 * @author HuangLongPu
 	 * @param providers
 	 * @param tableName
 	 * @return
@@ -117,7 +110,6 @@ public class SqlHandleProvider<T> {
 
 	/**
 	 * 获取校验的 sql 语句，原理为根据查询条件，得到count计数的值，映射 sql 为 select count(*) from tableName where filterName = ?
-	 * @author HuangLongPu
 	 * @param providers
 	 * @param tableName
 	 * @return
@@ -138,7 +130,6 @@ public class SqlHandleProvider<T> {
 
 	/**
 	 * 替换 sql 语句，作用于程序里拼接的复杂 sql，将 filterName = ？格式转换为支持mybatis的格式
-	 * @author HuangLongPu
 	 * @param sql
 	 * @param index
 	 * @return
@@ -149,7 +140,6 @@ public class SqlHandleProvider<T> {
 
 	/**
 	 * 作用于分页时拼接分页信息
-	 * @author HuangLongPu
 	 * @param sql
 	 * @param pageNumber
 	 * @param pageSize
