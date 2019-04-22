@@ -257,8 +257,8 @@ public class QueryProvider {
 	
 	/**
 	 * max 最大值函数 >> max('fieldName') as 'aliasName'
-	 * @param fieldName
-	 * @param aliasName
+	 * @param fieldName    字段名
+	 * @param aliasName    别名
 	 */
 	public void addFieldMax(String fieldName, String  aliasName) {
 		this.addFieldValue(fieldName, SqlHandleEnum.HANDLE_MAX, aliasName);
@@ -266,7 +266,7 @@ public class QueryProvider {
 	
 	/**
 	 * avg 平均值函数 >> avg('fieldName')
-	 * @param fieldName
+	 * @param fieldName    字段名
 	 */
 	public void addFieldAvg(String fieldName) {
 		this.addFieldAvg(fieldName, null);
@@ -274,8 +274,8 @@ public class QueryProvider {
 	
 	/**
 	 * avg 平均值函数 >> avg('fieldName') as 'aliasName'
-	 * @param fieldName
-	 * @param aliasName
+	 * @param fieldName    字段名
+	 * @param aliasName    别名
 	 */
 	public void addFieldAvg(String fieldName, String  aliasName) {
 		this.addFieldValue(fieldName, SqlHandleEnum.HANDLE_AVG, aliasName);
