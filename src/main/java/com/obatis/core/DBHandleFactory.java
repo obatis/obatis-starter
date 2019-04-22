@@ -61,8 +61,8 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 获取 ResultInfoOutput 子类的 sessionMapper
 	 * 需传入泛型class，如果未获取到，则进行编译处理操作，默认先从缓存中取值
-	 * @param resultCls
-	 * @param <M>
+	 * @param resultCls   结果集 class 类型
+	 * @param <M>         泛型数据类型
 	 * @return
 	 * @throws HandleException
 	 */
@@ -120,7 +120,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 单个添加，传入一个 CommonEntity对象，并返回影响行数
-	 * @param t
+	 * @param t    单个添加的实体数据
 	 * @return
 	 */
 	public int insert(T t) throws HandleException {
@@ -132,7 +132,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 批量添加，传入list CommonModel 对象，返回影响行数
-	 * @param list
+	 * @param list    批量添加的 list 实体泛型数据
 	 * @return
 	 */
 	public int insertBatch(List<T> list) throws HandleException {
@@ -141,7 +141,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 传入数据库封装操作对象 QueryProvider，进行更新
-	 * @param queryProvider
+	 * @param queryProvider    sql 操作代理类
 	 * @return
 	 */
 	public int update(QueryProvider queryProvider) throws HandleException {

@@ -73,5 +73,5 @@ public enum FilterEnum {
 	/**
 	 * 表示右模糊查询，like
 	 */
-	FILTER_RIGHT_LIKE;
+	FILTER_RIGHT_LIKE
 }

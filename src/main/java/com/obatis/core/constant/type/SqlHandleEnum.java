@@ -41,5 +41,5 @@ public enum SqlHandleEnum {
 	/**
 	 * 运算表达式
 	 */
-	HANDLE_EXP;
+	HANDLE_EXP
 }

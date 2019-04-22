@@ -2,7 +2,7 @@ package com.obatis.core.constant;
 
 public class SqlConstant {
 	
-	private SqlConstant(){};
+	private SqlConstant(){}
 
 	/**
 	 * 字段属性

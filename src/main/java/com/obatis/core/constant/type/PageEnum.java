@@ -13,5 +13,5 @@ public enum PageEnum {
 	/**
 	 * 表示分页
 	 */
-	IS_PAGE_TRUE;
+	IS_PAGE_TRUE
 }

@@ -691,24 +691,6 @@ public class QueryProvider {
 
 	/**
 	 * 添加查询添加，比如 and (type = 1 or name = 2)，主要作用于拼接 and 后括号中的表达式，主要用于 or
-	 * 查询的表达式，不然没必要。 从 V2.2.5.8 版本开始，该方法已被弃用，由方法 addOrProvider 替代
-	 * @param param
-	 */
-	@Deprecated
-	public void addParam(QueryProvider param) {
-		if (param == null) {
-			throw new HandleException("error: request is null");
-		}
-
-		if (this.orProviders == null) {
-			orProviders = new ArrayList<>();
-		}
-
-		this.orProviders.add(param);
-	}
-
-	/**
-	 * 添加查询添加，比如 and (type = 1 or name = 2)，主要作用于拼接 and 后括号中的表达式，主要用于 or
 	 * 查询的表达式，不然没必要。 如果 多条件拼接 or 查询(类似 where id = ? and name = ? or type = 1
 	 * 的条件)，or 条件查询不能被当成第一个条件放入(type属性 orFilter 方法不能在第一个加入)，否则会被解析为 and 条件查询。 V
 	 * @param queryProvider

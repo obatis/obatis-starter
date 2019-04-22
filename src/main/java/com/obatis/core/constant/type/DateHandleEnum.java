@@ -17,5 +17,5 @@ public enum DateHandleEnum {
 	/**
 	 * 结束时间，自动处理为 yyyy-MM-dd 23:59:59 格式
 	 */
-	END;
+	END
 }

@@ -13,5 +13,5 @@ public enum OrderEnum {
 	/**
 	 * 表示按降序排序，order desc
 	 */
-	ORDER_DESC;
+	ORDER_DESC
 }

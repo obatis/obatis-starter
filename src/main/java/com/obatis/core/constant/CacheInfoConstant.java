@@ -13,6 +13,8 @@ import java.util.Map;
  */
 public class CacheInfoConstant {
 
+	private CacheInfoConstant() {}
+
 	/**
 	 * 存放表名
 	 */

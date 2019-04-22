@@ -49,7 +49,7 @@ public class SqlProvider<T> {
 		return SqlHandleProvider.getValidateSql(providers, tableName);
 	}
 	
-	public String replaceSql(String sql, @Param("request") List<Object> object) {
+	public String replaceSql(String sql, @Param("request") List<Object> params) {
 		int index = 0;
 		return SqlHandleProvider.getReplaceSql(sql, index);
 	}
