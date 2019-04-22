@@ -132,7 +132,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 批量添加，传入list CommonModel 对象，返回影响行数
-	 * @param list    批量添加的 list 实体泛型数据
+	 * @param list
 	 * @return
 	 */
 	public int insertBatch(List<T> list) throws HandleException {
@@ -141,7 +141,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 传入数据库封装操作对象 QueryProvider，进行更新
-	 * @param queryProvider    sql 操作代理类
+	 * @param queryProvider
 	 * @return
 	 */
 	public int update(QueryProvider queryProvider) throws HandleException {
