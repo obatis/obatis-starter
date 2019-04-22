@@ -3,7 +3,7 @@ package com.obatis.core.sql;
 import com.obatis.convert.date.DateCommonConvert;
 import com.obatis.core.annotation.request.QueryFilter;
 import com.obatis.core.annotation.request.UpdateField;
-import com.obatis.core.constant.type.DateFilterEnum;
+import com.obatis.core.constant.type.DateHandleEnum;
 import com.obatis.core.constant.type.FilterEnum;
 import com.obatis.core.constant.type.SqlHandleEnum;
 import com.obatis.core.exception.HandleException;
@@ -49,11 +49,11 @@ public class QueryHandle {
 				continue;
 			}
 			
-			DateFilterEnum dateType = filter.datetype();
+			DateHandleEnum dateType = filter.datetype();
 			if(value instanceof Date) {
-				if(DateFilterEnum.BEGIN.equals(dateType)) {
+				if(DateHandleEnum.BEGIN.equals(dateType)) {
 					value = DateCommonConvert.formatBeginDateTime((Date) value);
-				} else if (DateFilterEnum.END.equals(dateType)) {
+				} else if (DateHandleEnum.END.equals(dateType)) {
 					value = DateCommonConvert.formatEndDateTime((Date) value);
 				}
 			}

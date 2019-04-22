@@ -1,6 +1,6 @@
 package com.obatis.core.annotation.request;
 
-import com.obatis.core.constant.type.DateFilterEnum;
+import com.obatis.core.constant.type.DateHandleEnum;
 import com.obatis.core.constant.type.FilterEnum;
 
 import java.lang.annotation.*;
@@ -36,5 +36,5 @@ public @interface QueryFilter {
 	 * 表示时间区间
 	 * @return
 	 */
-	DateFilterEnum datetype() default DateFilterEnum.NOT_HANDLE;
+	DateHandleEnum datetype() default DateHandleEnum.NOT_HANDLE;
 }

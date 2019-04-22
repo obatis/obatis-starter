@@ -4,7 +4,7 @@ package com.obatis.core.constant.type;
  * 时间操作类型
  * @author HuangLongPu
  */
-public enum DateFilterEnum {
+public enum DateHandleEnum {
 
 	/**
 	 * 默认，表示对日期不作处理
