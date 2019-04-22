@@ -58,7 +58,7 @@ public class BeanCacheConvert {
 			if (column != null) {
 				String name = column.name();
 				if (ValidateTool.isEmpty(name)) {
-					throw new HandleException("error: column annotaton name is not null");
+					throw new HandleException("error: column annotaton name is null");
 				}
 				columnMap.put(fieldName, name);
 				/**
@@ -122,7 +122,7 @@ public class BeanCacheConvert {
 			if (column != null) {
 				String name = column.name();
 				if (ValidateTool.isEmpty(name)) {
-					throw new HandleException("error: column annotaton name is not null");
+					throw new HandleException("error: column annotaton name is null");
 				}
 				String[] result = {name, fieldName};
 				resultList.add(result);
