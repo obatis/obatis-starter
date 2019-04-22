@@ -27,15 +27,15 @@ public class BeanCacheConvert {
 		Table table = cls.getAnnotation(Table.class);
 		String canonicalName = cls.getCanonicalName();
 		if(ValidateTool.isEmpty(table)) {
-			throw new HandleException("error: " + canonicalName + " tableName must be anotation!!!");
+			throw new HandleException("error: " + canonicalName + " tableName must be anotation");
 		}
 		String name = table.name();
 		if(ValidateTool.isEmpty(name)) {
-			throw new HandleException("error: " + canonicalName + " tableName is empty!!!");
+			throw new HandleException("error: " + canonicalName + " tableName is empty");
 		}
 		
 		if(CacheInfoConstant.FIELD_CACHE.containsKey(name)) {
-			throw new HandleException("error: " + canonicalName + " tableName(" + name + ") is exist!!!");
+			throw new HandleException("error: " + canonicalName + " tableName(" + name + ") is exist");
 		}
 		CacheInfoConstant.TABLE_CACHE.put(canonicalName, name);
 		addColumnCache(cls, name, columnMap, fieldMap, 0);
