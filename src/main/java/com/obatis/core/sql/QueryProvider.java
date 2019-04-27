@@ -140,8 +140,8 @@ public class QueryProvider {
 	 * @param fieldName
 	 * @throws HandleException
 	 */
-	public void addField(String fieldName) throws HandleException {
-		this.addField(fieldName, null);
+	public void add(String fieldName) throws HandleException {
+		this.add(fieldName, null);
 	}
 
 	/**
@@ -152,8 +152,8 @@ public class QueryProvider {
 	 * @param value
 	 * @throws HandleException
 	 */
-	public void addField(String fieldName, Object value) throws HandleException {
-		this.addFieldValue(fieldName, SqlHandleEnum.HANDLE_DEFAULT, value);
+	public void add(String fieldName, Object value) throws HandleException {
+		this.addValue(fieldName, SqlHandleEnum.HANDLE_DEFAULT, value);
 	}
 
 	/**
@@ -161,8 +161,8 @@ public class QueryProvider {
 	 * @param fieldName
 	 * @param value
 	 */
-	public void addFieldUp(String fieldName, Object value) {
-		this.addFieldValue(fieldName, SqlHandleEnum.HANDLE_UP, value);
+	public void addUp(String fieldName, Object value) {
+		this.addValue(fieldName, SqlHandleEnum.HANDLE_UP, value);
 	}
 
 	/**
@@ -170,15 +170,15 @@ public class QueryProvider {
 	 * @param fieldName
 	 * @param value
 	 */
-	public void addFieldReduce(String fieldName, Object value) {
-		this.addFieldValue(fieldName, SqlHandleEnum.HANDLE_REDUCE, value);
+	public void addReduce(String fieldName, Object value) {
+		this.addValue(fieldName, SqlHandleEnum.HANDLE_REDUCE, value);
 	}
 	
 	/**
 	 * count 统计函数 >> count(1)
 	 */
-	public void addFieldCount() {
-		this.addFieldCount("");
+	public void addCount() {
+		this.addCount("");
 	}
 	
 	/**
@@ -186,19 +186,19 @@ public class QueryProvider {
 	 * @author HuangLongPu
 	 * @param aliasName
 	 */
-	public void addFieldCount(String  aliasName) {
-		this.addFieldValue("", SqlHandleEnum.HANDLE_COUNT, aliasName);
+	public void addCount(String  aliasName) {
+		this.addValue("", SqlHandleEnum.HANDLE_COUNT, aliasName);
 	}
 	
 	/**
 	 * distinct 去重函数 >> distinct 'fieldName'
 	 * @param fieldName
 	 */
-	public void addFieldCountDistinct(String fieldName) {
+	public void addCountDistinct(String fieldName) {
 		if(ValidateTool.isEmpty(fieldName)) {
 			throw new HandleException("error:field is null");
 		}
-		this.addFieldCountDistinct(fieldName, "");
+		this.addCountDistinct(fieldName, "");
 	}
 	
 	/**
@@ -206,19 +206,19 @@ public class QueryProvider {
 	 * @param fieldName
 	 * @param aliasName
 	 */
-	public void addFieldCountDistinct(String fieldName, String aliasName) {
+	public void addCountDistinct(String fieldName, String aliasName) {
 		if(ValidateTool.isEmpty(fieldName)) {
 			throw new HandleException("error: field is null");
 		}
-		this.addFieldValue(fieldName, SqlHandleEnum.HANDLE_COUNT, aliasName);
+		this.addValue(fieldName, SqlHandleEnum.HANDLE_COUNT, aliasName);
 	}
 	
 	/**
 	 * sum 求和函数 >> sum('fieldName')
 	 * @param fieldName
 	 */
-	public void addFieldSum(String fieldName) {
-		this.addFieldSum(fieldName, null);
+	public void addSum(String fieldName) {
+		this.addSum(fieldName, null);
 	}
 	
 	/**
@@ -226,16 +226,16 @@ public class QueryProvider {
 	 * @param fieldName
 	 * @param aliasName
 	 */
-	public void addFieldSum(String fieldName, String  aliasName) {
-		this.addFieldValue(fieldName, SqlHandleEnum.HANDLE_SUM, aliasName);
+	public void addSum(String fieldName, String  aliasName) {
+		this.addValue(fieldName, SqlHandleEnum.HANDLE_SUM, aliasName);
 	}
 	
 	/**
 	 * min 最小值函数 >> min('fieldName')
 	 * @param fieldName
 	 */
-	public void addFieldMin(String fieldName) {
-		this.addFieldMin(fieldName, null);
+	public void addMin(String fieldName) {
+		this.addMin(fieldName, null);
 	}
 	
 	/**
@@ -243,16 +243,16 @@ public class QueryProvider {
 	 * @param fieldName
 	 * @param aliasName
 	 */
-	public void addFieldMin(String fieldName, String  aliasName) {
-		this.addFieldValue(fieldName, SqlHandleEnum.HANDLE_MIN, aliasName);
+	public void addMin(String fieldName, String  aliasName) {
+		this.addValue(fieldName, SqlHandleEnum.HANDLE_MIN, aliasName);
 	}
 	
 	/**
 	 * max 最大值函数 >> max('fieldName')
 	 * @param fieldName
 	 */
-	public void addFieldMax(String fieldName) {
-		this.addFieldMax(fieldName, null);
+	public void addMax(String fieldName) {
+		this.addMax(fieldName, null);
 	}
 	
 	/**
@@ -260,16 +260,16 @@ public class QueryProvider {
 	 * @param fieldName    字段名
 	 * @param aliasName    别名
 	 */
-	public void addFieldMax(String fieldName, String  aliasName) {
-		this.addFieldValue(fieldName, SqlHandleEnum.HANDLE_MAX, aliasName);
+	public void addMax(String fieldName, String  aliasName) {
+		this.addValue(fieldName, SqlHandleEnum.HANDLE_MAX, aliasName);
 	}
 	
 	/**
 	 * avg 平均值函数 >> avg('fieldName')
 	 * @param fieldName    字段名
 	 */
-	public void addFieldAvg(String fieldName) {
-		this.addFieldAvg(fieldName, null);
+	public void addAvg(String fieldName) {
+		this.addAvg(fieldName, null);
 	}
 	
 	/**
@@ -277,16 +277,16 @@ public class QueryProvider {
 	 * @param fieldName    字段名
 	 * @param aliasName    别名
 	 */
-	public void addFieldAvg(String fieldName, String  aliasName) {
-		this.addFieldValue(fieldName, SqlHandleEnum.HANDLE_AVG, aliasName);
+	public void addAvg(String fieldName, String  aliasName) {
+		this.addValue(fieldName, SqlHandleEnum.HANDLE_AVG, aliasName);
 	}
 	
 	/**
 	 * 表达式函数，非聚合函数时使用，如需聚合，直接使用提供的聚合函数方法即可，同等原理
 	 * @param fieldName
 	 */
-	public void addFieldExp(String fieldName) {
-		this.addFieldExp(fieldName, null);
+	public void addExp(String fieldName) {
+		this.addExp(fieldName, null);
 	}
 	
 	/**
@@ -294,8 +294,8 @@ public class QueryProvider {
 	 * @param fieldName
 	 * @param aliasName
 	 */
-	public void addFieldExp(String fieldName, String  aliasName) {
-		this.addFieldValue(fieldName, SqlHandleEnum.HANDLE_EXP, aliasName);
+	public void addExp(String fieldName, String  aliasName) {
+		this.addValue(fieldName, SqlHandleEnum.HANDLE_EXP, aliasName);
 	}
 
 	/**
@@ -304,7 +304,7 @@ public class QueryProvider {
 	 * @param fieldType
 	 * @param value
 	 */
-	private void addFieldValue(String fieldName, SqlHandleEnum fieldType, Object value) {
+	private void addValue(String fieldName, SqlHandleEnum fieldType, Object value) {
 		if (ValidateTool.isEmpty(fieldName) && !SqlHandleEnum.HANDLE_COUNT.equals(fieldType)) {
 			throw new HandleException("error: field is null");
 		}
@@ -820,7 +820,7 @@ public class QueryProvider {
 	 * 根据前端传入的 command 实体，获取修改属性的 @UpdateField 注解值
 	 * @param obj
 	 */
-	public void setUpdateField(Object obj) {
+	public void setUpdate(Object obj) {
 		if (!(obj instanceof RequestParam)) {
 			throw new HandleException("error: the update is not instanceof RequestQueryParam");
 		}
@@ -833,14 +833,14 @@ public class QueryProvider {
 	 * 如果有属性不想被添加到addField中，用@NotColumn 注解映射，将会自动过滤。
 	 * @param cls
 	 */
-	public void setFieldColumn(Class<?> cls) {
+	public void setColumn(Class<?> cls) {
 		if(!ResultInfoOutput.class.isAssignableFrom(cls)) {
 			throw new HandleException("error: the select is not instanceof ResultInfoOutput");
 		}
 		
 		List<String[]> result = BeanCacheConvert.getResultFields(cls);
 		for (String[] field : result) {
-			this.addField(field[0], field[1]);
+			this.add(field[0], field[1]);
 		}
 	}
 

@@ -155,19 +155,19 @@ public class QueryHandle {
 				/**
 				 * 常规类型操作
 				 */
-				queryProvider.addField(fieldName, value);
+				queryProvider.add(fieldName, value);
 				break;
 			case HANDLE_UP:
 				/**
 				 * 累加
 				 */
-				queryProvider.addFieldUp(fieldName, value);
+				queryProvider.addUp(fieldName, value);
 				break;
 			case HANDLE_REDUCE:
 				/**
 				 * 累加
 				 */
-				queryProvider.addFieldReduce(fieldName, value);
+				queryProvider.addReduce(fieldName, value);
 				break;
 			default:
 				throw new HandleException("error: update annotation invalid");
