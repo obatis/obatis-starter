@@ -1,6 +1,6 @@
 package com.obatis.core;
 
-import com.obatis.config.response.result.PageResultHandle;
+import com.obatis.config.response.result.PageInfo;
 import com.obatis.core.constant.SqlConstant;
 import com.obatis.core.exception.HandleException;
 import com.obatis.core.mapper.BaseBeanSessionMapper;
@@ -471,10 +471,10 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param pageSize      每行显示条数
 	 * @return
 	 */
-	public PageResultHandle<T> page(String sql, String totalSql, List<Object> params, int pageNumber, int pageSize) {
+	public PageInfo<T> page(String sql, String totalSql, List<Object> params, int pageNumber, int pageSize) {
 
 		int total = this.findTotal(totalSql, params);
-		PageResultHandle<T> page = new PageResultHandle<>();
+		PageInfo<T> page = new PageInfo<>();
 		page.setTotal(total);
 		if (total == 0) {
 			// 当没有数据的时候，直接不进行数据查询
@@ -496,9 +496,9 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param resultCls     resultCls 返回 预定义的 resultCls Bean 泛型数据类型
 	 * @return
 	 */
-	public <M> PageResultHandle<M> page(String sql, String totalSql, List<Object> params, int pageNumber, int pageSize, Class<M> resultCls) {
+	public <M> PageInfo<M> page(String sql, String totalSql, List<Object> params, int pageNumber, int pageSize, Class<M> resultCls) {
 		int total = this.findTotal(totalSql, params);
-		PageResultHandle<M> page = new PageResultHandle<>();
+		PageInfo<M> page = new PageInfo<>();
 		page.setTotal(total);
 		if (total == 0) {
 			// 当没有数据的时候，直接不进行数据查询
@@ -519,9 +519,9 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param pageSize      每行显示条数
 	 * @return
 	 */
-	public PageResultHandle<Map<String, Object>> pageResultMap(String sql, String totalSql, List<Object> params, int pageNumber, int pageSize) {
+	public PageInfo<Map<String, Object>> pageResultMap(String sql, String totalSql, List<Object> params, int pageNumber, int pageSize) {
 		int total = this.findTotal(totalSql, params);
-		PageResultHandle<Map<String, Object>> page = new PageResultHandle<>();
+		PageInfo<Map<String, Object>> page = new PageInfo<>();
 		page.setTotal(total);
 		if (total == 0) {
 			// 当没有数据的时候，直接不进行数据查询
@@ -539,14 +539,14 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param queryProvider 封装的参数对象
 	 * @return
 	 */
-	public PageResultHandle<T> page(QueryProvider queryProvider) {
+	public PageInfo<T> page(QueryProvider queryProvider) {
 		Map<String, Object> providerMap = new HashMap<>();
 		providerMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		// 拼装SQL语句
 		SqlHandleProvider.getQueryPageSql(providerMap, this.getTableName());
 
 		int total = this.getBaseBeanSessionMapper().findTotal((String) providerMap.get(SqlConstant.PROVIDER_COUNT_SQL), providerMap);
-		PageResultHandle<T> page = new PageResultHandle<>();
+		PageInfo<T> page = new PageInfo<>();
 		page.setTotal(total);
 		if (total == 0) {
 			// 当总条数为0时，直接取消数据查询
@@ -566,14 +566,14 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param resultCls      返回 预定义的 resultCls Bean 泛型数据类型
 	 * @return 
 	 */
-	public <M> PageResultHandle<M> PageResultHandle(QueryProvider queryProvider, Class<M> resultCls) {
+	public <M> PageInfo<M> PageResultHandle(QueryProvider queryProvider, Class<M> resultCls) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		// 拼装SQL语句
 		SqlHandleProvider.getQueryPageSql(paramMap, this.getTableName());
 
 		int total = this.getBaseBeanSessionMapper().findTotal((String) paramMap.get(SqlConstant.PROVIDER_COUNT_SQL), paramMap);
-		PageResultHandle<M> page = new PageResultHandle<>();
+		PageInfo<M> page = new PageInfo<>();
 		page.setTotal(total);
 		
 		if (total == 0) {

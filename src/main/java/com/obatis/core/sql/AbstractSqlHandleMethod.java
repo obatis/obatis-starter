@@ -897,7 +897,7 @@ public abstract class AbstractSqlHandleMethod {
 			sql.GROUP_BY(groups.toArray(new String[groups.size()]));
 			countSql.GROUP_BY(groups.toArray(new String[groups.size()]));
 		}
-		
+
 		if (!orders.isEmpty()) {
 			sql.ORDER_BY(orders.toArray(new String[orders.size()]));
 		}
