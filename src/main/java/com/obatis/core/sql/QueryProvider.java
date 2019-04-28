@@ -39,7 +39,6 @@ public class QueryProvider {
 	private int pageNumber = RequestConstant.DEFAULT_PAGE;
 	private int pageSize = RequestConstant.DEFAULT_ROWS;
 	private PageEnum isPage = PageEnum.IS_PAGE_FALSE;
-	private boolean resetIndexPage = false;
 
 	private List<Object[]> fields;
 	private List<Object[]> filters;
@@ -82,14 +81,6 @@ public class QueryProvider {
 		if (!ValidateTool.isEmpty(sort)) {
 			this.addOrder(sort, ORDER_TYPE_MAP.get(pageParam.getOrder()));
 		}
-	}
-
-	public boolean isResetIndexPage() {
-		return resetIndexPage;
-	}
-
-	public void setResetIndexPage(boolean resetIndexPage) {
-		this.resetIndexPage = resetIndexPage;
 	}
 
 	public List<Object[]> getFields() {
@@ -361,7 +352,7 @@ public class QueryProvider {
 	private void addFilter(String filterName, FilterEnum filterType, Object value, String joinType) {
 		if (ValidateTool.isEmpty(filterName)) {
 			throw new HandleException("error: filter field is null");
-		} else if (FilterEnum.FILTER_ISNULL.equals(filterType) && FilterEnum.FILTER_ISNOTNULL.equals(filterType) && null == value) {
+		} else if (FilterEnum.IS_NULL.equals(filterType) && FilterEnum.IS_NOT_NULL.equals(filterType) && null == value) {
 			throw new HandleException("error: field is null");
 		}
 		if (this.filters == null) {
@@ -377,7 +368,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void addFilterLike(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.FILTER_LIKE, value);
+		this.andFilter(filterName, FilterEnum.LIKE, value);
 	}
 
 	/**
@@ -386,7 +377,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void orFilterLike(String filterName, Object value) {
-		this.orFilter(filterName, FilterEnum.FILTER_LIKE, value);
+		this.orFilter(filterName, FilterEnum.LIKE, value);
 	}
 
 	/**
@@ -395,7 +386,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void addFilterLeftLike(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.FILTER_LEFT_LIKE, value);
+		this.andFilter(filterName, FilterEnum.LEFT_LIKE, value);
 	}
 
 	/**
@@ -404,7 +395,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void orFilterLeftLike(String filterName, Object value) {
-		this.orFilter(filterName, FilterEnum.FILTER_LEFT_LIKE, value);
+		this.orFilter(filterName, FilterEnum.LEFT_LIKE, value);
 	}
 
 	/**
@@ -413,7 +404,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void addFilterRightLike(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.FILTER_RIGHT_LIKE, value);
+		this.andFilter(filterName, FilterEnum.RIGHT_LIKE, value);
 	}
 
 	/**
@@ -422,7 +413,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void orFilterRightLike(String filterName, Object value) {
-		this.orFilter(filterName, FilterEnum.FILTER_RIGHT_LIKE, value);
+		this.orFilter(filterName, FilterEnum.RIGHT_LIKE, value);
 	}
 
 	/**
@@ -431,7 +422,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void addFilterEquals(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.FILTER_EQUAL, value);
+		this.andFilter(filterName, FilterEnum.EQUAL, value);
 	}
 
 	/**
@@ -440,7 +431,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void orFilterEquals(String filterName, Object value) {
-		this.orFilter(filterName, FilterEnum.FILTER_EQUAL, value);
+		this.orFilter(filterName, FilterEnum.EQUAL, value);
 	}
 
 	/**
@@ -449,7 +440,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void addFilterGreateThan(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.FILTER_GREATETHAN, value);
+		this.andFilter(filterName, FilterEnum.GREATE_THAN, value);
 	}
 
 	/**
@@ -458,7 +449,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void orFilterGreateThan(String filterName, Object value) {
-		this.orFilter(filterName, FilterEnum.FILTER_GREATETHAN, value);
+		this.orFilter(filterName, FilterEnum.GREATE_THAN, value);
 	}
 
 	/**
@@ -467,7 +458,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void addFilterGreateEqual(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.FILTER_GREATEEQUAL, value);
+		this.andFilter(filterName, FilterEnum.GREATE_EQUAL, value);
 	}
 
 	/**
@@ -476,7 +467,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void orFilterGreateEqual(String filterName, Object value) {
-		this.orFilter(filterName, FilterEnum.FILTER_GREATEEQUAL, value);
+		this.orFilter(filterName, FilterEnum.GREATE_EQUAL, value);
 	}
 
 	/**
@@ -484,7 +475,7 @@ public class QueryProvider {
 	 * @param filterName
 	 */
 	public void addFilterGreateEqualZero(String filterName) {
-		this.andFilter(filterName, FilterEnum.FILTER_GREATEEQUAL, 0);
+		this.andFilter(filterName, FilterEnum.GREATE_EQUAL, 0);
 	}
 
 	/**
@@ -492,7 +483,7 @@ public class QueryProvider {
 	 * @param filterName
 	 */
 	public void orFilterGreateEqualZero(String filterName) {
-		this.orFilter(filterName, FilterEnum.FILTER_GREATEEQUAL, 0);
+		this.orFilter(filterName, FilterEnum.GREATE_EQUAL, 0);
 	}
 
 	/**
@@ -501,7 +492,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void addFilterLessThan(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.FILTER_LESSTHAN, value);
+		this.andFilter(filterName, FilterEnum.LESS_THAN, value);
 	}
 
 	/**
@@ -510,7 +501,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void orFilterLessThan(String filterName, Object value) {
-		this.orFilter(filterName, FilterEnum.FILTER_LESSTHAN, value);
+		this.orFilter(filterName, FilterEnum.LESS_THAN, value);
 	}
 
 	/**
@@ -519,7 +510,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void addFilterLessEqual(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.FILTER_LESSEQUAL, value);
+		this.andFilter(filterName, FilterEnum.LESS_EQUAL, value);
 	}
 
 	/**
@@ -528,7 +519,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void orFilterLessEqual(String filterName, Object value) {
-		this.orFilter(filterName, FilterEnum.FILTER_LESSEQUAL, value);
+		this.orFilter(filterName, FilterEnum.LESS_EQUAL, value);
 	}
 
 	/**
@@ -537,7 +528,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void addFilterNotEqual(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.FILTER_NOTEQUAL, value);
+		this.andFilter(filterName, FilterEnum.NOT_EQUAL, value);
 	}
 
 	/**
@@ -546,7 +537,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void orFilterNotEqual(String filterName, Object value) {
-		this.orFilter(filterName, FilterEnum.FILTER_NOTEQUAL, value);
+		this.orFilter(filterName, FilterEnum.NOT_EQUAL, value);
 	}
 
 	/**
@@ -555,7 +546,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void addFilterIn(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.FILTER_IN, value);
+		this.andFilter(filterName, FilterEnum.IN, value);
 	}
 
 	/**
@@ -564,7 +555,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void orFilterIn(String filterName, Object value) {
-		this.orFilter(filterName, FilterEnum.FILTER_IN, value);
+		this.orFilter(filterName, FilterEnum.IN, value);
 	}
 
 	/**
@@ -573,7 +564,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void addFilterNotIn(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.FILTER_NOTIN, value);
+		this.andFilter(filterName, FilterEnum.NOT_IN, value);
 	}
 
 	/**
@@ -582,7 +573,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void orFilterNotIn(String filterName, Object value) {
-		this.orFilter(filterName, FilterEnum.FILTER_NOTIN, value);
+		this.orFilter(filterName, FilterEnum.NOT_IN, value);
 	}
 
 	/**
@@ -590,7 +581,7 @@ public class QueryProvider {
 	 * @param filterName
 	 */
 	public void addFilterIsNull(String filterName) {
-		this.andFilter(filterName, FilterEnum.FILTER_ISNULL, null);
+		this.andFilter(filterName, FilterEnum.IS_NULL, null);
 	}
 
 	/**
@@ -598,7 +589,7 @@ public class QueryProvider {
 	 * @param filterName
 	 */
 	public void orFilterIsNull(String filterName) {
-		this.orFilter(filterName, FilterEnum.FILTER_ISNULL, null);
+		this.orFilter(filterName, FilterEnum.IS_NULL, null);
 	}
 
 	/**
@@ -606,7 +597,7 @@ public class QueryProvider {
 	 * @param filterName
 	 */
 	public void addFilterIsNotNull(String filterName) {
-		this.andFilter(filterName, FilterEnum.FILTER_ISNOTNULL, null);
+		this.andFilter(filterName, FilterEnum.IS_NOT_NULL, null);
 	}
 
 	/**
@@ -614,7 +605,7 @@ public class QueryProvider {
 	 * @param filterName
 	 */
 	public void orFilterIsNotNull(String filterName) {
-		this.orFilter(filterName, FilterEnum.FILTER_ISNOTNULL, null);
+		this.orFilter(filterName, FilterEnum.IS_NOT_NULL, null);
 	}
 
 	/**
@@ -623,7 +614,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void addFilterUpGreateThanZero(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.FILTER_UPGREATETHAN, value);
+		this.andFilter(filterName, FilterEnum.UP_GREATE_THAN, value);
 	}
 
 	/**
@@ -632,7 +623,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void orFilterUpGreateThanZero(String filterName, Object value) {
-		this.orFilter(filterName, FilterEnum.FILTER_UPGREATETHAN, value);
+		this.orFilter(filterName, FilterEnum.UP_GREATE_THAN, value);
 	}
 
 	/**
@@ -641,7 +632,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void addFilterUpGreateEqualZero(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.FILTER_UPGREATEEQUAL, value);
+		this.andFilter(filterName, FilterEnum.UP_GREATE_EQUAL, value);
 	}
 
 	/**
@@ -650,7 +641,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void orFilterUpGreateEqualZero(String filterName, Object value) {
-		this.orFilter(filterName, FilterEnum.FILTER_UPGREATEEQUAL, value);
+		this.orFilter(filterName, FilterEnum.UP_GREATE_EQUAL, value);
 	}
 
 	/**
@@ -659,7 +650,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void addFilterReduceGreateThanZero(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.FILTER_REDUCEGREATETHAN, value);
+		this.andFilter(filterName, FilterEnum.REDUCE_GREATE_THAN, value);
 	}
 
 	/**
@@ -668,7 +659,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void orFilterReduceGreateThanZero(String filterName, Object value) {
-		this.orFilter(filterName, FilterEnum.FILTER_REDUCEGREATETHAN, value);
+		this.orFilter(filterName, FilterEnum.REDUCE_GREATE_THAN, value);
 	}
 
 	/**
@@ -677,7 +668,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void addFilterReduceGreateEqualZero(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.FILTER_REDUCEGREATEEQUAL, value);
+		this.andFilter(filterName, FilterEnum.REDUCE_GREATE_EQUAL, value);
 	}
 
 	/**
@@ -686,7 +677,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	public void orFilterReduceGreateEqualZero(String filterName, Object value) {
-		this.orFilter(filterName, FilterEnum.FILTER_REDUCEGREATEEQUAL, value);
+		this.orFilter(filterName, FilterEnum.REDUCE_GREATE_EQUAL, value);
 	}
 
 	/**

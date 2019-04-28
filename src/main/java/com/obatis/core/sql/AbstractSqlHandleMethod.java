@@ -187,50 +187,50 @@ public abstract class AbstractSqlHandleMethod {
 			String expression = "#{request." + SqlConstant.PROVIDER_FILTER + "." + key + "}";
 			Object vue = obj[2];
 			switch (filterType) {
-			case FILTER_LIKE:
+			case LIKE:
 				sql = tableAliasNamePrefix + field + getFilterType(filterType);
 				sql += getLikeSql(expression);
 				value.put(key, vue);
 				break;
-			case FILTER_LEFT_LIKE:
+			case LEFT_LIKE:
 				sql = tableAliasNamePrefix + field + getFilterType(filterType);
 				sql += getLeftLikeSql(expression);
 				value.put(key, vue);
 				break;
-			case FILTER_RIGHT_LIKE:
+			case RIGHT_LIKE:
 				sql = tableAliasNamePrefix + field + getFilterType(filterType);
 				sql += getRightLikeSql(expression);
 				value.put(key, vue);
 				break;
-			case FILTER_IN:
-			case FILTER_NOTIN:
+			case IN:
+			case NOT_IN:
 				sql = tableAliasNamePrefix + field + getFilterType(filterType);
 				sql += "(" + modifyInFilter(vue, key, value) + ")";
 				break;
-			case FILTER_UPGREATETHAN:
+			case UP_GREATE_THAN:
 				sql = getAgFunction(tableAliasNamePrefix, field) + " + " + expression + ">0";
 				value.put(key, vue);
 				break;
-			case FILTER_UPGREATEEQUAL:
+			case UP_GREATE_EQUAL:
 				sql = getAgFunction(tableAliasNamePrefix, field) + " + " + expression + ">=0";
 				value.put(key, vue);
 				break;
-			case FILTER_REDUCEGREATETHAN:
+			case REDUCE_GREATE_THAN:
 				sql = getAgFunction(tableAliasNamePrefix, field) + " - " + expression + ">0";
 				value.put(key, vue);
 				break;
-			case FILTER_REDUCEGREATEEQUAL:
+			case REDUCE_GREATE_EQUAL:
 				sql = getAgFunction(tableAliasNamePrefix, field) + " - " + expression + ">=0";
 				value.put(key, vue);
 				break;
-			case FILTER_ISNULL:
-			case FILTER_ISNOTNULL:
+			case IS_NULL:
+			case IS_NOT_NULL:
 				sql = getAgFunction(tableAliasNamePrefix, field) + getFilterType(filterType);
 				break;
-			case FILTER_GREATETHAN:
-			case FILTER_GREATEEQUAL:
-			case FILTER_LESSTHAN:
-			case FILTER_LESSEQUAL:
+			case GREATE_THAN:
+			case GREATE_EQUAL:
+			case LESS_THAN:
+			case LESS_EQUAL:
 				sql = getAgFunction(tableAliasNamePrefix, field) + getFilterType(filterType);
 				sql += expression;
 				value.put(key, vue);
@@ -417,7 +417,7 @@ public abstract class AbstractSqlHandleMethod {
 		}
 
 		if (PageEnum.IS_PAGE_TRUE == queryProvider.getIsPage()) {
-			return appendPageSql(sql.toString(), queryProvider.getPageNumber(), queryProvider.getPageSize(), false);
+			return appendPageSql(sql.toString(), queryProvider.getPageNumber(), queryProvider.getPageSize());
 		}
 
 		return sql.toString();
@@ -807,43 +807,43 @@ public abstract class AbstractSqlHandleMethod {
 
 		String filterType = null;
 		switch (type) {
-		case FILTER_LIKE:
+		case LIKE:
 			filterType = " like ";
 			break;
-		case FILTER_LEFT_LIKE:
+		case LEFT_LIKE:
 			filterType = " like ";
 			break;
-		case FILTER_RIGHT_LIKE:
+		case RIGHT_LIKE:
 			filterType = " like ";
 			break;
-		case FILTER_EQUAL:
+		case EQUAL:
 			filterType =  " = ";
 			break;
-		case FILTER_GREATETHAN:
+		case GREATE_THAN:
 			filterType = " > ";
 			break;
-		case FILTER_GREATEEQUAL:
+		case GREATE_EQUAL:
 			filterType = " >= ";
 			break;
-		case FILTER_LESSTHAN:
+		case LESS_THAN:
 			filterType = " < ";
 			break;
-		case FILTER_LESSEQUAL:
+		case LESS_EQUAL:
 			filterType = " <= ";
 			break;
-		case FILTER_NOTEQUAL:
+		case NOT_EQUAL:
 			filterType = " <> ";
 			break;
-		case FILTER_IN:
+		case IN:
 			filterType = " in ";
 			break;
-		case FILTER_NOTIN:
+		case NOT_IN:
 			filterType = " not in ";
 			break;
-		case FILTER_ISNULL:
+		case IS_NULL:
 			filterType = " is null ";
 			break;
-		case FILTER_ISNOTNULL:
+		case IS_NOT_NULL:
 			filterType = " is not null ";
 			break;
 		default:
@@ -941,13 +941,12 @@ public abstract class AbstractSqlHandleMethod {
 	/**
 	 * 增加分页
 	 * @author HuangLongPu
-	 * @param sql        原sql
+	 * @param sql            原sql
 	 * @param pageNumber     页码
-	 * @param pageSize   当前页数量
-	 * @param reset      是否重置页码
+	 * @param pageSize       当前页数量
 	 * @return String
 	 */
-	abstract protected String appendPageSql(String sql, int pageNumber, int pageSize, boolean reset);
+	abstract protected String appendPageSql(String sql, int pageNumber, int pageSize);
 
 	/**
 	 * 得到分页信息

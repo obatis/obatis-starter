@@ -61,7 +61,7 @@ public class SqlProvider<T> {
 	public String pageSql(String sql, @Param("request") Map<String, Object> providers) {
 		QueryProvider queryProvider = (QueryProvider) providers.get(SqlConstant.PROVIDER_OBJ);
 		if (PageEnum.IS_PAGE_TRUE.equals(queryProvider.getIsPage())) {
-			return SqlHandleProvider.appendPageSql(sql, queryProvider.getPageNumber(), queryProvider.getPageSize(), queryProvider.isResetIndexPage());
+			return SqlHandleProvider.appendPageSql(sql, queryProvider.getPageNumber(), queryProvider.getPageSize());
 		}
 		return sql;
 	}

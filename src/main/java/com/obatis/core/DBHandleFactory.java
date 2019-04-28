@@ -135,7 +135,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param list
 	 * @return
 	 */
-	public int insertBatch(List<T> list) throws HandleException {
+	public int batchInsert(List<T> list) throws HandleException {
 		return this.getBaseBeanSessionMapper().insertBatch(list, getTableName(), entityCls);
 	}
 
@@ -161,7 +161,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 * @throws HandleException
 	 */
-	public int updateBatch(List<QueryProvider> list) throws HandleException {
+	public int batchUpdate(List<QueryProvider> list) throws HandleException {
 		
 		if(list == null || list.isEmpty()) {
 			throw new HandleException("error: batchUpdate QueryProvider is empty");
@@ -382,42 +382,42 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 需传入的条件值。
 	 * @param sql     sql语句中的条件，用 "?" 号代替，防止SQL注入
-	 * @param list    需传入的条件值，按顺序存放
+	 * @param params    需传入的条件值，按顺序存放
 	 * @return
 	 */
-	public T findBySql(String sql, List<Object> list) {
-		return this.getBaseBeanSessionMapper().findBySql(sql, list);
+	public T findBySql(String sql, List<Object> params) {
+		return this.getBaseBeanSessionMapper().findBySql(sql, params);
 	}
 
 	/**
 	 * 返回Object 类型，比如int、decimal、String等。
 	 * @param sql
-	 * @param list
+	 * @param params
 	 * @return
 	 */
-	public Object findObjectBySql(String sql, List<Object> list) {
-		return this.getBaseBeanSessionMapper().findObjectBySql(sql, list);
+	public Object findObjectBySql(String sql, List<Object> params) {
+		return this.getBaseBeanSessionMapper().findObjectBySql(sql, params);
 	}
 
 	/**
 	 * 获取总条数，针对count 等SQL语句。
 	 * @param sql
-	 * @param list
+	 * @param params
 	 * @return
 	 */
-	public int findTotal(String sql, List<Object> list) {
-		return this.getBaseBeanSessionMapper().findTotalByParam(sql, list);
+	public int findTotal(String sql, List<Object> params) {
+		return this.getBaseBeanSessionMapper().findTotalByParam(sql, params);
 	}
 
 	/**
 	 * 传入SQL，返回预设类型对象。返回类型为预设的class类型，需强制转换一次。
 	 * @param sql          sql语句中的条件，用 "?" 号代替，防止SQL注入
-	 * @param list         需传入的条件值，按顺序存放
+	 * @param params       需传入的条件值，按顺序存放
 	 * @param resultCls    返回类型
 	 * @return
 	 */
-	public <M> M findBySql(String sql, List<Object> list, Class<M> resultCls) {
-		return this.getBaseResultSessionMapper(resultCls).findBySqlR(sql, list);
+	public <M> M findBySql(String sql, List<Object> params, Class<M> resultCls) {
+		return this.getBaseResultSessionMapper(resultCls).findBySqlR(sql, params);
 	}
 
 	/**
@@ -433,32 +433,32 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 根据传入的SQL语句，返回符合条件的list集合的Map格式记录。
 	 * @param sql   sql语句中的条件，用 "?" 号代替，防止SQL注入
-	 * @param list  需传入的条件值，按顺序存放
+	 * @param params  需传入的条件值，按顺序存放
 	 * @return
 	 */
-	public List<T> listBySql(String sql, List<Object> list) {
-		return this.getBaseBeanSessionMapper().listBySql(sql, list);
+	public List<T> listBySql(String sql, List<Object> params) {
+		return this.getBaseBeanSessionMapper().listBySql(sql, params);
 	}
 
 	/**
 	 * 传入SQL，返回预设类型集合。返回类型为预设的class类型，需强制转换一次。
 	 * @param sql          sql语句中的条件，用 "?" 号代替，防止SQL注入
-	 * @param param        需传入的条件值，按顺序存放
+	 * @param params        需传入的条件值，按顺序存放
 	 * @param resultCls    返回bean类型
 	 * @return
 	 */
-	public <M> List<M> listBySql(String sql, List<Object> param, Class<M> resultCls) {
-		return this.getBaseResultSessionMapper(resultCls).listBySqlR(sql, param);
+	public <M> List<M> listBySql(String sql, List<Object> params, Class<M> resultCls) {
+		return this.getBaseResultSessionMapper(resultCls).listBySqlR(sql, params);
 	}
 
 	/**
 	 * 根据传入的SQL语句，返回符合条件的list集合的Map格式记录。
 	 * @param sql     sql语句中的条件，用 "?" 号代替，防止SQL注入
-	 * @param param   需传入的条件值，按顺序存放
+	 * @param params   需传入的条件值，按顺序存放
 	 * @return
 	 */
-	public List<Map<String, Object>> listMapBySql(String sql, List<Object> param) {
-		return this.getBaseBeanSessionMapper().listMapBySql(sql, param);
+	public List<Map<String, Object>> listMapBySql(String sql, List<Object> params) {
+		return this.getBaseBeanSessionMapper().listMapBySql(sql, params);
 	}
 
 
@@ -467,23 +467,22 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * 分页查询，同时返回分页数据和总条数。
 	 * @param sql           主体查询语句
 	 * @param totalSql      总条数查询语句
-	 * @param list          条件值
+	 * @param params          条件值
 	 * @param pageNumber    页码
 	 * @param pageSize      每行显示条数
 	 * @return
 	 */
-	public PageResultHandle<T> page(String sql, String totalSql, List<Object> list, int pageNumber, int pageSize) {
+	public PageResultHandle<T> page(String sql, String totalSql, List<Object> params, int pageNumber, int pageSize) {
 
-		int total = this.findTotal(totalSql, list);
+		int total = this.findTotal(totalSql, params);
 		PageResultHandle<T> page = new PageResultHandle<>();
 		page.setTotal(total);
 		if (total == 0) {
 			// 当没有数据的时候，直接不进行数据查询
 			return page;
 		}
-		boolean reset = this.getPageInfo(total, pageNumber, pageSize);
-		sql = SqlHandleProvider.appendPageSql(sql, pageNumber, pageSize, reset);
-		page.setList(this.getBaseBeanSessionMapper().listBySql(sql, list));
+		sql = SqlHandleProvider.appendPageSql(sql, pageNumber, pageSize);
+		page.setList(this.getBaseBeanSessionMapper().listBySql(sql, params));
 		return page;
 	}
 
@@ -492,23 +491,22 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * 分页查询，同时返回分页数据和总条数。
 	 * @param sql           主体查询语句
 	 * @param totalSql      总条数查询语句
-	 * @param list          条件值
+	 * @param params          条件值
 	 * @param pageNumber    页码
 	 * @param pageSize      每行显示条数
 	 * @param resultCls     resultCls 返回 预定义的 resultCls Bean 泛型数据类型
 	 * @return
 	 */
-	public <M> PageResultHandle<M> page(String sql, String totalSql, List<Object> list, int pageNumber, int pageSize, Class<M> resultCls) {
-		int total = this.findTotal(totalSql, list);
+	public <M> PageResultHandle<M> page(String sql, String totalSql, List<Object> params, int pageNumber, int pageSize, Class<M> resultCls) {
+		int total = this.findTotal(totalSql, params);
 		PageResultHandle<M> page = new PageResultHandle<>();
 		page.setTotal(total);
 		if (total == 0) {
 			// 当没有数据的时候，直接不进行数据查询
 			return page;
 		}
-		boolean reset = this.getPageInfo(total, pageNumber, pageSize);
-		sql = SqlHandleProvider.appendPageSql(sql, pageNumber, pageSize, reset);
-		page.setList(this.getBaseResultSessionMapper(resultCls).listBySqlR(sql, list));
+		sql = SqlHandleProvider.appendPageSql(sql, pageNumber, pageSize);
+		page.setList(this.getBaseResultSessionMapper(resultCls).listBySqlR(sql, params));
 		return page;
 	}
 
@@ -517,22 +515,21 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * 分页查询，同时返回分页数据和总条数，返回 Map 数据。
 	 * @param sql           主体查询语句
 	 * @param totalSql      总条数查询语句
-	 * @param list          条件值
+	 * @param params          条件值
 	 * @param pageNumber    页面
 	 * @param pageSize      每行显示条数
 	 * @return
 	 */
-	public PageResultHandle<Map<String, Object>> pageResultMap(String sql, String totalSql, List<Object> list, int pageNumber, int pageSize) {
-		int total = this.findTotal(totalSql, list);
+	public PageResultHandle<Map<String, Object>> pageResultMap(String sql, String totalSql, List<Object> params, int pageNumber, int pageSize) {
+		int total = this.findTotal(totalSql, params);
 		PageResultHandle<Map<String, Object>> page = new PageResultHandle<>();
 		page.setTotal(total);
 		if (total == 0) {
 			// 当没有数据的时候，直接不进行数据查询
 			return page;
 		}
-		boolean reset = this.getPageInfo(total, pageNumber, pageSize);
-		sql = SqlHandleProvider.appendPageSql(sql, pageNumber, pageSize, reset);
-		page.setList(this.getBaseBeanSessionMapper().listMapBySql(sql, list));
+		sql = SqlHandleProvider.appendPageSql(sql, pageNumber, pageSize);
+		page.setList(this.getBaseBeanSessionMapper().listMapBySql(sql, params));
 		return page;
 	}
 
@@ -559,12 +556,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 		}
 
 		String querySql = (String) providerMap.get(SqlConstant.PROVIDER_QUERY_SQL);
-		// 说明页面超出真实数据，为了保证前端的兼容效果，重置到第一页
-		boolean resetIndexPage = getPageInfo(total, queryProvider.getPageNumber(), queryProvider.getPageSize());
-		if (resetIndexPage) {
-			queryProvider.setResetIndexPage(true);
-		}
-
 		providerMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		page.setList(this.getBaseBeanSessionMapper().page(querySql, providerMap));
 		return page;
@@ -594,28 +585,9 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 		}
 
 		String querySql = (String) paramMap.get(SqlConstant.PROVIDER_QUERY_SQL);
-
-		// 说明页面超出真实数据，为了保证前端的兼容效果，重置到第一页
-		boolean resetIndexPage = getPageInfo(total, queryProvider.getPageNumber(), queryProvider.getPageSize());
-		if (resetIndexPage) {
-			queryProvider.setResetIndexPage(true);
-		}
-
 		paramMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		page.setList(this.getBaseResultSessionMapper(resultCls).pageR(querySql, paramMap));
 		return page;
-	}
-
-	/**
-	 * 获取分页信息
-	 * @param total
-	 * @param pageNumber
-	 * @param pageSize
-	 * @return
-	 */
-	private boolean getPageInfo(int total, int pageNumber, int pageSize) {
-		int index = (pageNumber - 1) * pageSize;
-		return total > 0 && index > total;
 	}
 
 	private long getPages(long total, int pageSize) {

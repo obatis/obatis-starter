@@ -7,71 +7,71 @@ package com.obatis.core.constant.type;
 public enum FilterEnum {
 
 	/**
-	 * 表示全模糊查询，like
+	 * 模糊查询，like ==> '%?%'
 	 */
-	FILTER_LIKE,
+	LIKE,
 	/**
-	 * 表示等于，=
+	 * 左模糊查询，like ==> '%?'
 	 */
-	FILTER_EQUAL,
+	LEFT_LIKE,
 	/**
-	 * 表示大于，>
+	 * 右模糊查询，like ==> '?%'
 	 */
-	FILTER_GREATETHAN,
+	RIGHT_LIKE,
 	/**
-	 * 表示大于等于，>=
+	 * 等于，=
 	 */
-	FILTER_GREATEEQUAL,
+	EQUAL,
 	/**
-	 * 表示小于，<
+	 * 大于，>
 	 */
-	FILTER_LESSTHAN,
+	GREATE_THAN,
 	/**
-	 * 表示小于等于，<=
+	 * 大于等于，>=
 	 */
-	FILTER_LESSEQUAL,
+	GREATE_EQUAL,
 	/**
-	 * 表示不等于，<>
+	 * 小于，<
 	 */
-	FILTER_NOTEQUAL,
+	LESS_THAN,
 	/**
-	 * 表示属于，"in"查询，in
+	 * 小于等于，<=
 	 */
-	FILTER_IN,
+	LESS_EQUAL,
 	/**
-	 * 表示不属于，"not in"查询，not in
+	 * 不等于，<>
 	 */
-	FILTER_NOTIN,
+	NOT_EQUAL,
 	/**
-	 * 表示为空值(null)，is null
+	 * "in" 查询，in
 	 */
-	FILTER_ISNULL,
+	IN,
 	/**
-	 * 表示不为空值(null)，is not null
+	 * "not in" 查询，not in
 	 */
-	FILTER_ISNOTNULL,
+	NOT_IN,
 	/**
-	 * 表示增加设定值后大于条件判断，比如count + 10 > 0
+	 * 空值(null)，is null
 	 */
-	FILTER_UPGREATETHAN,
+	IS_NULL,
 	/**
-	 * 表示增加设定值后大于等于条件判断，比如count + 10 >= 0
+	 * 不为空值(null)，is not null
 	 */
-	FILTER_UPGREATEEQUAL,
+	IS_NOT_NULL,
 	/**
-	 * 表示减少设定值后小于条件判断，比如count - 10 > 0
+	 * 表达式 "加" 运算大于条件判断，比如 total + 10 > 0
 	 */
-	FILTER_REDUCEGREATETHAN,
+	UP_GREATE_THAN,
 	/**
-	 * 表示减少设定值后小于等于条件判断，比如count - 10 >= 0
+	 * 表达式 "加" 运算大于等于条件判断，比如 total + 10 >= 0
 	 */
-	FILTER_REDUCEGREATEEQUAL,
+	UP_GREATE_EQUAL,
 	/**
-	 * 表示左模糊查询，like
+	 * 表达式 "减" 运算小于条件判断，比如 total - 10 > 0
 	 */
-	FILTER_LEFT_LIKE,
+	REDUCE_GREATE_THAN,
 	/**
-	 * 表示右模糊查询，like
+	 * 表达式 "减" 运算小于等于条件判断，比如 total - 10 >= 0
 	 */
-	FILTER_RIGHT_LIKE
+	REDUCE_GREATE_EQUAL
 }

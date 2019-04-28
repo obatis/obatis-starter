@@ -24,7 +24,7 @@ public @interface QueryFilter {
 	 * 表示查询条件，默认为等于，具体值参考QueryParam类中"FILTER_"开头的常量
 	 * @return
 	 */
-	FilterEnum type() default FilterEnum.FILTER_EQUAL;
+	FilterEnum type() default FilterEnum.EQUAL;
 	
 	/**
 	 * 是否可以空，默认不能为空，如果属性为空加有注解直接过滤
@@ -36,5 +36,5 @@ public @interface QueryFilter {
 	 * 表示时间区间
 	 * @return
 	 */
-	DateHandleEnum datetype() default DateHandleEnum.NOT_HANDLE;
+	DateHandleEnum datetype() default DateHandleEnum.DEFAULT;
 }

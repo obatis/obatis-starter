@@ -143,10 +143,9 @@ public class SqlHandleProvider<T> {
 	 * @param sql
 	 * @param pageNumber
 	 * @param pageSize
-	 * @param reset
 	 * @return
 	 */
-	public static String appendPageSql(String sql, int pageNumber, int pageSize, boolean reset) {
-		return sqlHandleMethod.appendPageSql(sql, pageNumber, pageSize, reset);
+	public static String appendPageSql(String sql, int pageNumber, int pageSize) {
+		return sqlHandleMethod.appendPageSql(sql, pageNumber, pageSize);
 	}
 }

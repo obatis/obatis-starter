@@ -28,13 +28,8 @@ public class MysqlCommonMethod extends AbstractSqlHandleMethod {
 	}
 
 	@Override
-	protected String appendPageSql(String sql, int pageNumber, int pageSize, boolean reset) {
-		if (reset) {
-			sql += " limit 0," + pageSize;
-		} else {
-			sql += " limit " + getPageLimit(pageNumber, pageSize) + "," + pageSize;
-		}
-		return sql;
+	protected String appendPageSql(String sql, int pageNumber, int pageSize) {
+		return " limit " + getPageLimit(pageNumber, pageSize) + "," + pageSize;
 	}
 
 	@Override

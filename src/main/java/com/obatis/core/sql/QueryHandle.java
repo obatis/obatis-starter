@@ -51,9 +51,9 @@ public class QueryHandle {
 			
 			DateHandleEnum dateType = filter.datetype();
 			if(value instanceof Date) {
-				if(DateHandleEnum.BEGIN.equals(dateType)) {
+				if(DateHandleEnum.BEGIN_HANDLE.equals(dateType)) {
 					value = DateCommonConvert.formatBeginDateTime((Date) value);
-				} else if (DateHandleEnum.END.equals(dateType)) {
+				} else if (DateHandleEnum.END_HANDLE.equals(dateType)) {
 					value = DateCommonConvert.formatEndDateTime((Date) value);
 				}
 			}
@@ -61,49 +61,49 @@ public class QueryHandle {
 			
 			FilterEnum type = filter.type();
 			switch (type) {
-			case FILTER_EQUAL:
+			case EQUAL:
 				queryProvider.addFilterEquals(fieldName, value);
 				break;
-			case FILTER_GREATETHAN:
+			case GREATE_THAN:
 				queryProvider.addFilterGreateThan(fieldName, value);
 				break;
-			case FILTER_GREATEEQUAL:
+			case GREATE_EQUAL:
 				queryProvider.addFilterGreateEqual(fieldName, value);
 				break;
-			case FILTER_LESSTHAN:
+			case LESS_THAN:
 				queryProvider.addFilterLeftLike(fieldName, value);
 				break;
-			case FILTER_LESSEQUAL:
+			case LESS_EQUAL:
 				queryProvider.addFilterLessEqual(fieldName, value);
 				break;
-			case FILTER_NOTEQUAL:
+			case NOT_EQUAL:
 				queryProvider.addFilterNotEqual(fieldName, value);
 				break;
-			case FILTER_IN:
+			case IN:
 				queryProvider.addFilterIn(fieldName, value);
 				break;
-			case FILTER_NOTIN:
+			case NOT_IN:
 				queryProvider.addFilterNotIn(fieldName, value);
 				break;
-			case FILTER_ISNULL:
+			case IS_NULL:
 				queryProvider.addFilterIsNull(fieldName);
 				break;
-			case FILTER_ISNOTNULL:
+			case IS_NOT_NULL:
 				queryProvider.addFilterIsNotNull(fieldName);
 				break;
-			case FILTER_UPGREATETHAN:
+			case UP_GREATE_THAN:
 				queryProvider.addFilterUpGreateThanZero(fieldName, value);
 				break;
-			case FILTER_REDUCEGREATETHAN:
+			case REDUCE_GREATE_THAN:
 				queryProvider.addFilterReduceGreateThanZero(fieldName, value);
 				break;
-			case FILTER_REDUCEGREATEEQUAL:
+			case REDUCE_GREATE_EQUAL:
 				queryProvider.addFilterReduceGreateEqualZero(fieldName, value);
 				break;
-			case FILTER_LEFT_LIKE:
+			case LEFT_LIKE:
 				queryProvider.addFilterLeftLike(fieldName, value);
 				break;
-			case FILTER_RIGHT_LIKE:
+			case RIGHT_LIKE:
 				queryProvider.addFilterRightLike(fieldName, value);
 				break;
 			default:
