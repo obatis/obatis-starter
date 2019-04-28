@@ -3,7 +3,6 @@ package com.obatis.core.sql;
 import com.obatis.core.CommonField;
 import com.obatis.core.constant.SqlConstant;
 import com.obatis.core.constant.type.FilterEnum;
-import com.obatis.core.constant.type.PageEnum;
 import com.obatis.core.constant.type.SqlHandleEnum;
 import com.obatis.core.exception.HandleException;
 import com.obatis.core.constant.CacheInfoConstant;
@@ -416,9 +415,9 @@ public abstract class AbstractSqlHandleMethod {
 			sql.ORDER_BY(orders.toArray(new String[orders.size()]));
 		}
 
-		if (PageEnum.IS_PAGE_TRUE == queryProvider.getIsPage()) {
-			return appendPageSql(sql.toString(), queryProvider.getPageNumber(), queryProvider.getPageSize());
-		}
+//		if (PageEnum.IS_PAGE_TRUE == queryProvider.getIsPage()) {
+//			return appendPageSql(sql.toString(), queryProvider.getPageNumber(), queryProvider.getPageSize());
+//		}
 
 		return sql.toString();
 	}
@@ -903,13 +902,13 @@ public abstract class AbstractSqlHandleMethod {
 			sql.ORDER_BY(orders.toArray(new String[orders.size()]));
 		}
 
-		if (PageEnum.IS_PAGE_TRUE.equals(queryProvider.getIsPage())) {
-			if (groups != null && !groups.isEmpty()) {
-				providers.put(SqlConstant.PROVIDER_COUNT_SQL, "select count(1) from (" + countSql.toString() + ") s");
-			} else {
-				providers.put(SqlConstant.PROVIDER_COUNT_SQL, countSql.toString());
-			}
-		}
+//		if (PageEnum.IS_PAGE_TRUE.equals(queryProvider.getIsPage())) {
+//			if (groups != null && !groups.isEmpty()) {
+//				providers.put(SqlConstant.PROVIDER_COUNT_SQL, "select count(1) from (" + countSql.toString() + ") s");
+//			} else {
+//				providers.put(SqlConstant.PROVIDER_COUNT_SQL, countSql.toString());
+//			}
+//		}
 
 		providers.put(SqlConstant.PROVIDER_QUERY_SQL, sql.toString());
 	}

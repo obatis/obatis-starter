@@ -2,7 +2,6 @@ package com.obatis.core;
 
 import com.obatis.config.response.result.PageResultHandle;
 import com.obatis.core.constant.SqlConstant;
-import com.obatis.core.constant.type.PageEnum;
 import com.obatis.core.exception.HandleException;
 import com.obatis.core.mapper.BaseBeanSessionMapper;
 import com.obatis.core.mapper.BaseResultSessionMapper;
@@ -200,7 +199,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 */
 	public T findById(BigInteger id) {
 		QueryProvider param = new QueryProvider();
-		param.addFilterEquals(CommonField.FIELD_ID, id);
+		param.equals(CommonField.FIELD_ID, id);
 		return this.find(param);
 	}
 
@@ -213,7 +212,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 */
 	public <M> M findById(BigInteger id, Class<M> resultCls) {
 		QueryProvider param = new QueryProvider();
-		param.addFilterEquals(CommonField.FIELD_ID, id);
+		param.equals(CommonField.FIELD_ID, id);
 		return this.find(param, resultCls);
 	}
 
@@ -225,7 +224,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public T findById(QueryProvider queryProvider, BigInteger id) {
-		queryProvider.addFilterEquals(CommonField.FIELD_ID, id);
+		queryProvider.equals(CommonField.FIELD_ID, id);
 		return this.find(queryProvider);
 	}
 
@@ -238,7 +237,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public <M> M findById(QueryProvider queryProvider, BigInteger id, Class<M> resultCls) {
-		queryProvider.addFilterEquals(CommonField.FIELD_ID, id);
+		queryProvider.equals(CommonField.FIELD_ID, id);
 		return this.find(queryProvider, resultCls);
 	}
 
@@ -542,7 +541,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 */
 	public PageResultHandle<T> page(QueryProvider queryProvider) {
 		Map<String, Object> providerMap = new HashMap<>();
-		queryProvider.setIsPage(PageEnum.IS_PAGE_TRUE);
 		providerMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		// 拼装SQL语句
 		SqlHandleProvider.getQueryPageSql(providerMap, this.getTableName());
@@ -570,7 +568,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 */
 	public <M> PageResultHandle<M> PageResultHandle(QueryProvider queryProvider, Class<M> resultCls) {
 		Map<String, Object> paramMap = new HashMap<>();
-		queryProvider.setIsPage(PageEnum.IS_PAGE_TRUE);
 		paramMap.put(SqlConstant.PROVIDER_OBJ, queryProvider);
 		// 拼装SQL语句
 		SqlHandleProvider.getQueryPageSql(paramMap, this.getTableName());

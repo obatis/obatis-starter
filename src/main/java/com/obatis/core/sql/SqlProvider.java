@@ -2,7 +2,6 @@ package com.obatis.core.sql;
 
 import com.obatis.core.exception.HandleException;
 import com.obatis.core.constant.SqlConstant;
-import com.obatis.core.constant.type.PageEnum;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigInteger;
@@ -60,9 +59,9 @@ public class SqlProvider<T> {
 	
 	public String pageSql(String sql, @Param("request") Map<String, Object> providers) {
 		QueryProvider queryProvider = (QueryProvider) providers.get(SqlConstant.PROVIDER_OBJ);
-		if (PageEnum.IS_PAGE_TRUE.equals(queryProvider.getIsPage())) {
-			return SqlHandleProvider.appendPageSql(sql, queryProvider.getPageNumber(), queryProvider.getPageSize());
-		}
+//		if (PageEnum.IS_PAGE_TRUE.equals(queryProvider.getIsPage())) {
+//			return SqlHandleProvider.appendPageSql(sql, queryProvider.getPageNumber(), queryProvider.getPageSize());
+//		}
 		return sql;
 	}
 }

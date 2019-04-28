@@ -62,49 +62,49 @@ public class QueryHandle {
 			FilterEnum type = filter.type();
 			switch (type) {
 			case EQUAL:
-				queryProvider.addFilterEquals(fieldName, value);
+				queryProvider.equals(fieldName, value);
 				break;
 			case GREATE_THAN:
-				queryProvider.addFilterGreateThan(fieldName, value);
+				queryProvider.greateThan(fieldName, value);
 				break;
 			case GREATE_EQUAL:
-				queryProvider.addFilterGreateEqual(fieldName, value);
+				queryProvider.greateEqual(fieldName, value);
 				break;
 			case LESS_THAN:
-				queryProvider.addFilterLeftLike(fieldName, value);
+				queryProvider.leftLike(fieldName, value);
 				break;
 			case LESS_EQUAL:
-				queryProvider.addFilterLessEqual(fieldName, value);
+				queryProvider.lessEqual(fieldName, value);
 				break;
 			case NOT_EQUAL:
-				queryProvider.addFilterNotEqual(fieldName, value);
+				queryProvider.notEqual(fieldName, value);
 				break;
 			case IN:
-				queryProvider.addFilterIn(fieldName, value);
+				queryProvider.in(fieldName, value);
 				break;
 			case NOT_IN:
-				queryProvider.addFilterNotIn(fieldName, value);
+				queryProvider.notIn(fieldName, value);
 				break;
 			case IS_NULL:
-				queryProvider.addFilterIsNull(fieldName);
+				queryProvider.isNull(fieldName);
 				break;
 			case IS_NOT_NULL:
-				queryProvider.addFilterIsNotNull(fieldName);
+				queryProvider.isNotNull(fieldName);
 				break;
 			case UP_GREATE_THAN:
-				queryProvider.addFilterUpGreateThanZero(fieldName, value);
+				queryProvider.upGreateThanZero(fieldName, value);
 				break;
 			case REDUCE_GREATE_THAN:
-				queryProvider.addFilterReduceGreateThanZero(fieldName, value);
+				queryProvider.reduceGreateThanZero(fieldName, value);
 				break;
 			case REDUCE_GREATE_EQUAL:
-				queryProvider.addFilterReduceGreateEqualZero(fieldName, value);
+				queryProvider.reduceGreateEqualZero(fieldName, value);
 				break;
 			case LEFT_LIKE:
-				queryProvider.addFilterLeftLike(fieldName, value);
+				queryProvider.leftLike(fieldName, value);
 				break;
 			case RIGHT_LIKE:
-				queryProvider.addFilterRightLike(fieldName, value);
+				queryProvider.rightLike(fieldName, value);
 				break;
 			default:
 				throw new HandleException("error: filter annotation invalid");
