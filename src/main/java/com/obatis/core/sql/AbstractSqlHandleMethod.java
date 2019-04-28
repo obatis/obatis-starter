@@ -903,11 +903,11 @@ public abstract class AbstractSqlHandleMethod {
 		}
 
 //		if (PageEnum.IS_PAGE_TRUE.equals(queryProvider.getIsPage())) {
-//			if (groups != null && !groups.isEmpty()) {
-//				providers.put(SqlConstant.PROVIDER_COUNT_SQL, "select count(1) from (" + countSql.toString() + ") s");
-//			} else {
-//				providers.put(SqlConstant.PROVIDER_COUNT_SQL, countSql.toString());
-//			}
+			if (groups != null && !groups.isEmpty()) {
+				providers.put(SqlConstant.PROVIDER_COUNT_SQL, "select count(1) from (" + countSql.toString() + ") s");
+			} else {
+				providers.put(SqlConstant.PROVIDER_COUNT_SQL, countSql.toString());
+			}
 //		}
 
 		providers.put(SqlConstant.PROVIDER_QUERY_SQL, sql.toString());
