@@ -16,7 +16,6 @@ public class SqlConstant {
 	public static final String PROVIDER_OBJ = "provider_obj";
 	public static final String PROVIDER_FIELD = "provider_fields";
 	public static final String PROVIDER_FILTER = "provider_filters";
-	public static final String PROVIDER_ORDER = "provider_orders";
 
 	/**
 	 * 统计计数的 sql

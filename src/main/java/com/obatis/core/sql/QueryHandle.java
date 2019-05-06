@@ -31,12 +31,12 @@ public class QueryHandle {
 				continue;
 			}
 			
-			QueryFilter filter = field.getAnnotation(QueryFilter.class);
-			if (filter == null) {
+			QueryFilter queryFilter = field.getAnnotation(QueryFilter.class);
+			if (queryFilter == null) {
 				continue;
 			}
 			
-			String fieldName = !ValidateTool.isEmpty(filter.name()) ? filter.name() : field.getName();
+			String fieldName = !ValidateTool.isEmpty(queryFilter.name()) ? queryFilter.name() : field.getName();
 			field.setAccessible(true);
 			Object value = null;
 			try {
@@ -45,22 +45,31 @@ public class QueryHandle {
 				e.printStackTrace();
 			}
 			
-			if(!filter.isnull() && ValidateTool.isEmpty(value)) {
+			if(!queryFilter.isnull() && ValidateTool.isEmpty(value)) {
 				continue;
 			}
 			
-			DateHandleEnum dateType = filter.datetype();
+			DateHandleEnum dateHandle = queryFilter.datetype();
 			if(value instanceof Date) {
-				if(DateHandleEnum.BEGIN_HANDLE.equals(dateType)) {
+				if(DateHandleEnum.BEGIN_HANDLE.equals(dateHandle)) {
 					value = DateCommonConvert.formatBeginDateTime((Date) value);
-				} else if (DateHandleEnum.END_HANDLE.equals(dateType)) {
+				} else if (DateHandleEnum.END_HANDLE.equals(dateHandle)) {
 					value = DateCommonConvert.formatEndDateTime((Date) value);
 				}
 			}
 			
 			
-			FilterEnum type = filter.type();
-			switch (type) {
+			FilterEnum filterType = queryFilter.type();
+			switch (filterType) {
+			case LIKE:
+				queryProvider.like(fieldName, value);
+				break;
+			case LEFT_LIKE:
+				queryProvider.leftLike(fieldName, value);
+				break;
+			case RIGHT_LIKE:
+				queryProvider.rightLike(fieldName, value);
+				break;
 			case EQUAL:
 				queryProvider.equals(fieldName, value);
 				break;
@@ -71,7 +80,7 @@ public class QueryHandle {
 				queryProvider.greateEqual(fieldName, value);
 				break;
 			case LESS_THAN:
-				queryProvider.leftLike(fieldName, value);
+				queryProvider.lessThan(fieldName, value);
 				break;
 			case LESS_EQUAL:
 				queryProvider.lessEqual(fieldName, value);
@@ -94,17 +103,14 @@ public class QueryHandle {
 			case UP_GREATE_THAN:
 				queryProvider.upGreateThanZero(fieldName, value);
 				break;
+				case UP_GREATE_EQUAL:
+				queryProvider.upGreateEqualZero(fieldName, value);
+				break;
 			case REDUCE_GREATE_THAN:
 				queryProvider.reduceGreateThanZero(fieldName, value);
 				break;
 			case REDUCE_GREATE_EQUAL:
 				queryProvider.reduceGreateEqualZero(fieldName, value);
-				break;
-			case LEFT_LIKE:
-				queryProvider.leftLike(fieldName, value);
-				break;
-			case RIGHT_LIKE:
-				queryProvider.rightLike(fieldName, value);
 				break;
 			default:
 				throw new HandleException("error: filter annotation invalid");

@@ -20,7 +20,7 @@ public class BeanCacheConvert {
 	private BeanCacheConvert() {
 	}
 	
-	public static final void initEntityCache(Class<?> cls) {
+	public static final void loadEntityCache(Class<?> cls) {
 		Map<String, String> columnMap = new HashMap<>();
 		Map<String, String> fieldMap = new HashMap<>();
 		
