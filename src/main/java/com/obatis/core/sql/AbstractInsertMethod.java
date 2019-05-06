@@ -19,7 +19,7 @@ import java.util.Map;
 
 public abstract class AbstractInsertMethod {
 
-	protected String getInsertSql(Object object, Class<?> clsName, String tableName) throws HandleException {
+	protected String handleInsertSql(Object object, Class<?> clsName, String tableName) throws HandleException {
 
         SQL sql = new SQL();
         sql.INSERT_INTO(tableName);

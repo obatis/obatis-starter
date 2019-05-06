@@ -28,7 +28,7 @@ public class SqlHandleProvider<T> {
 	 * @throws HandleException
 	 */
 	public static String getInsertSql(Object obj, Class<?> cls, String tableName) throws HandleException {
-		return insertMethod.getInsertSql(obj, cls, tableName);
+		return insertMethod.handleInsertSql(obj, cls, tableName);
 	}
 
 	/**

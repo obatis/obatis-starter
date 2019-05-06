@@ -52,6 +52,11 @@
             <name>黄龙普</name>
             <email>huanglongpu@126.com</email>
         </developer>
+        <developer>
+            <id>ChenShunMu</id>
+            <name>陈舜木</name>
+            <email>2099028187@qq.com</email>
+        </developer>
     </developers>
 
     <build>
