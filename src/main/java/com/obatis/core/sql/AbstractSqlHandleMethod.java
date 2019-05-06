@@ -869,9 +869,9 @@ public abstract class AbstractSqlHandleMethod {
 		String table = tableName + " " + tableAliasName + getLeftJoinTable(tableAliasName, queryProvider.getLeftJoinProviders());
 		sql.FROM(table);
 		// 分页的语句
-		SQL countSql = new SQL();
-		countSql.SELECT("count(1)");
-		countSql.FROM(table);
+		SQL totalSql = new SQL();
+		totalSql.SELECT("count(1)");
+		totalSql.FROM(table);
 
 		// 构造 group by 语句
 		List<String> groups = new ArrayList<>();
@@ -889,26 +889,24 @@ public abstract class AbstractSqlHandleMethod {
 				// 放入值到map
 				providers.put(SqlConstant.PROVIDER_FILTER, value);
 				sql.WHERE(filterSql);
-				countSql.WHERE(filterSql);
+				totalSql.WHERE(filterSql);
 			}
 		}
 
 		if (!groups.isEmpty()) {
 			sql.GROUP_BY(groups.toArray(new String[groups.size()]));
-			countSql.GROUP_BY(groups.toArray(new String[groups.size()]));
+			totalSql.GROUP_BY(groups.toArray(new String[groups.size()]));
 		}
 
 		if (!orders.isEmpty()) {
 			sql.ORDER_BY(orders.toArray(new String[orders.size()]));
 		}
 
-//		if (PageEnum.IS_PAGE_TRUE.equals(queryProvider.getIsPage())) {
-			if (groups != null && !groups.isEmpty()) {
-				providers.put(SqlConstant.PROVIDER_COUNT_SQL, "select count(1) from (" + countSql.toString() + ") s");
-			} else {
-				providers.put(SqlConstant.PROVIDER_COUNT_SQL, countSql.toString());
-			}
-//		}
+		if (groups != null && !groups.isEmpty()) {
+			providers.put(SqlConstant.PROVIDER_COUNT_SQL, "select count(1) from (" + totalSql.toString() + ") s");
+		} else {
+			providers.put(SqlConstant.PROVIDER_COUNT_SQL, totalSql.toString());
+		}
 
 		providers.put(SqlConstant.PROVIDER_QUERY_SQL, sql.toString());
 	}
