@@ -2,6 +2,7 @@ package com.obatis.core;
 
 import com.obatis.core.annotation.Column;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Date;
 
@@ -9,8 +10,9 @@ import java.util.Date;
  * 公共基础实体，所有定义的实体都需要继承此类
  * @author HuangLongPu
  */
-public class CommonModel {
+public class CommonModel implements Serializable {
 
+	private static final long serialVersionUID = -3683453180317600090L;
 	/**
 	 * ID 主键，唯一性标识
 	 */
