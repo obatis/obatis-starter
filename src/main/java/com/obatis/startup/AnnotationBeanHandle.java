@@ -1,5 +1,6 @@
 package com.obatis.startup;
 
+import com.obatis.config.SystemConstant;
 import com.obatis.core.annotation.Table;
 import com.obatis.core.convert.BeanCacheConvert;
 import org.reflections.Reflections;
