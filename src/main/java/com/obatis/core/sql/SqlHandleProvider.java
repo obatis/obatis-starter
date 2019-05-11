@@ -1,6 +1,8 @@
 package com.obatis.core.sql;
 
 import com.obatis.core.exception.HandleException;
+import com.obatis.core.sql.mysql.HandleInsertBatchMethod;
+import com.obatis.core.sql.mysql.MysqlCommonMethod;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -12,8 +14,8 @@ import java.util.Map;
  */
 public class SqlHandleProvider<T> {
 
-	protected static AbstractSqlHandleMethod sqlHandleMethod;
-	protected static AbstractInsertMethod insertMethod;
+	protected static AbstractSqlHandleMethod sqlHandleMethod = new MysqlCommonMethod();
+	protected static AbstractInsertMethod insertMethod = new HandleInsertBatchMethod();
 
 	private SqlHandleProvider() {
 
