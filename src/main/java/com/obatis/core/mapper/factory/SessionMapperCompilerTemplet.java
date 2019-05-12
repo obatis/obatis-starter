@@ -22,9 +22,9 @@ public class SessionMapperCompilerTemplet {
      * @throws ClassNotFoundException
      */
     public static Class<?> compilerMapper(String canonicalName, Class<?> mapperCls) throws URISyntaxException, ClassNotFoundException {
-        String packageName = canonicalName.substring(0, canonicalName.lastIndexOf(".")).replace(".model", ".mapper");
+        String packageName = canonicalName.substring(0, canonicalName.lastIndexOf("."));
         String entityName = canonicalName.substring(canonicalName.lastIndexOf(".") + 1);
-        String javaName = entityName.replace("Model", "Mapper");
+        String javaName = entityName + "Mapper";
         String javaSource = "package " + packageName + ";"
                 + "import " + canonicalName + ";"
                 + "public interface " + javaName + " extends " + mapperCls.getCanonicalName() + "<" + entityName + "> "
