@@ -700,7 +700,7 @@ public class QueryProvider {
 	 * @param paramFieldName   表示left join 后紧跟表的关联字段。
 	 * @param queryProvider    被left join的封装对象。
 	 */
-	public void leftJoinProvider(String fieldName, String paramFieldName, QueryProvider queryProvider) {
+	public void setleftJoin(String fieldName, String paramFieldName, QueryProvider queryProvider) {
 		if (fieldName == null) {
 			throw new HandleException("error: left join fieldName is null");
 		}
@@ -729,7 +729,7 @@ public class QueryProvider {
 	 * @param paramFieldName    表示left join 后紧跟表的关联字段。
 	 * @param queryProvider             被left join的封装对象。
 	 */
-	public void leftJoinProvider(String[] fieldName, String[] paramFieldName, QueryProvider queryProvider) {
+	public void setleftJoin(String[] fieldName, String[] paramFieldName, QueryProvider queryProvider) {
 		int fieldLength = 0;
 		if (fieldName == null || (fieldLength = fieldName.length) == 0) {
 			throw new HandleException("error: left join fieldName is null");
