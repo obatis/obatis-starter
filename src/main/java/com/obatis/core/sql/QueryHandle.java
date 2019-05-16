@@ -161,7 +161,7 @@ public class QueryHandle {
 				/**
 				 * 常规类型操作
 				 */
-				queryProvider.add(fieldName, value);
+				queryProvider.set(fieldName, value);
 				break;
 			case HANDLE_UP:
 				/**

@@ -116,13 +116,19 @@ public class QueryProvider {
 		this.joinTableName = joinTableName;
 	}
 
+	public void set(String...columns) {
+		for (String fieldName : columns) {
+			set(fieldName);
+		}
+	}
+
 	/**
 	 * 添加字段方法，接收一个参数，此方法主要用于查询 传入的值表示为要查询的字段名称
 	 * @param fieldName
 	 * @throws HandleException
 	 */
-	public void add(String fieldName) throws HandleException {
-		this.add(fieldName, null);
+	public void set(String fieldName) throws HandleException {
+		this.set(fieldName, null);
 	}
 
 	/**
@@ -133,7 +139,7 @@ public class QueryProvider {
 	 * @param value
 	 * @throws HandleException
 	 */
-	public void add(String fieldName, Object value) throws HandleException {
+	public void set(String fieldName, Object value) throws HandleException {
 		this.addValue(fieldName, SqlHandleEnum.HANDLE_DEFAULT, value);
 	}
 
@@ -821,7 +827,7 @@ public class QueryProvider {
 		
 		List<String[]> result = BeanCacheConvert.getResultFields(cls);
 		for (String[] field : result) {
-			this.add(field[0], field[1]);
+			this.set(field[0], field[1]);
 		}
 	}
 
