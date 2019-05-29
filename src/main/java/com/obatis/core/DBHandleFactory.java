@@ -566,7 +566,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param resultCls      返回 预定义的 resultCls Bean 泛型数据类型
 	 * @return 
 	 */
-	public <M> PageInfo<M> PageResultHandle(QueryProvider provider, Class<M> resultCls) {
+	public <M> PageInfo<M> page(QueryProvider provider, Class<M> resultCls) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
 		// 拼装SQL语句
