@@ -73,11 +73,11 @@ public class QueryHandle {
 			case EQUAL:
 				queryProvider.equals(fieldName, value);
 				break;
-			case GREATE_THAN:
-				queryProvider.greateThan(fieldName, value);
+			case GREATER_THAN:
+				queryProvider.greaterThan(fieldName, value);
 				break;
-			case GREATE_EQUAL:
-				queryProvider.greateEqual(fieldName, value);
+			case GREATER_EQUAL:
+				queryProvider.greaterEqual(fieldName, value);
 				break;
 			case LESS_THAN:
 				queryProvider.lessThan(fieldName, value);
@@ -100,17 +100,17 @@ public class QueryHandle {
 			case IS_NOT_NULL:
 				queryProvider.isNotNull(fieldName);
 				break;
-			case UP_GREATE_THAN:
-				queryProvider.upGreateThanZero(fieldName, value);
+			case UP_GREATER_THAN:
+				queryProvider.upGreaterThanZero(fieldName, value);
 				break;
-				case UP_GREATE_EQUAL:
-				queryProvider.upGreateEqualZero(fieldName, value);
+				case UP_GREATER_EQUAL:
+				queryProvider.upGreaterEqualZero(fieldName, value);
 				break;
-			case REDUCE_GREATE_THAN:
-				queryProvider.reduceGreateThanZero(fieldName, value);
+			case REDUCE_GREATER_THAN:
+				queryProvider.reduceGreaterThanZero(fieldName, value);
 				break;
-			case REDUCE_GREATE_EQUAL:
-				queryProvider.reduceGreateEqualZero(fieldName, value);
+			case REDUCE_GREATER_EQUAL:
+				queryProvider.reduceGreaterEqualZero(fieldName, value);
 				break;
 			default:
 				throw new HandleException("error: filter annotation invalid");

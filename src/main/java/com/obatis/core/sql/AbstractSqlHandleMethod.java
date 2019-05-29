@@ -206,19 +206,19 @@ public abstract class AbstractSqlHandleMethod {
 				sql = tableAliasNamePrefix + field + getFilterType(filterType);
 				sql += "(" + modifyInFilter(vue, key, value) + ")";
 				break;
-			case UP_GREATE_THAN:
+			case UP_GREATER_THAN:
 				sql = getAgFunction(tableAliasNamePrefix, field) + " + " + expression + ">0";
 				value.put(key, vue);
 				break;
-			case UP_GREATE_EQUAL:
+			case UP_GREATER_EQUAL:
 				sql = getAgFunction(tableAliasNamePrefix, field) + " + " + expression + ">=0";
 				value.put(key, vue);
 				break;
-			case REDUCE_GREATE_THAN:
+			case REDUCE_GREATER_THAN:
 				sql = getAgFunction(tableAliasNamePrefix, field) + " - " + expression + ">0";
 				value.put(key, vue);
 				break;
-			case REDUCE_GREATE_EQUAL:
+			case REDUCE_GREATER_EQUAL:
 				sql = getAgFunction(tableAliasNamePrefix, field) + " - " + expression + ">=0";
 				value.put(key, vue);
 				break;
@@ -226,8 +226,8 @@ public abstract class AbstractSqlHandleMethod {
 			case IS_NOT_NULL:
 				sql = getAgFunction(tableAliasNamePrefix, field) + getFilterType(filterType);
 				break;
-			case GREATE_THAN:
-			case GREATE_EQUAL:
+			case GREATER_THAN:
+			case GREATER_EQUAL:
 			case LESS_THAN:
 			case LESS_EQUAL:
 				sql = getAgFunction(tableAliasNamePrefix, field) + getFilterType(filterType);
@@ -818,10 +818,10 @@ public abstract class AbstractSqlHandleMethod {
 		case EQUAL:
 			filterType =  " = ";
 			break;
-		case GREATE_THAN:
+		case GREATER_THAN:
 			filterType = " > ";
 			break;
-		case GREATE_EQUAL:
+		case GREATER_EQUAL:
 			filterType = " >= ";
 			break;
 		case LESS_THAN:

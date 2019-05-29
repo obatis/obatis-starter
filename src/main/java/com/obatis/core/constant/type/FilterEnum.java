@@ -25,11 +25,11 @@ public enum FilterEnum {
 	/**
 	 * 大于，>
 	 */
-	GREATE_THAN,
+	GREATER_THAN,
 	/**
 	 * 大于等于，>=
 	 */
-	GREATE_EQUAL,
+	GREATER_EQUAL,
 	/**
 	 * 小于，<
 	 */
@@ -61,17 +61,17 @@ public enum FilterEnum {
 	/**
 	 * 表达式 "加" 运算大于条件判断，比如 total + 10 > 0
 	 */
-	UP_GREATE_THAN,
+	UP_GREATER_THAN,
 	/**
 	 * 表达式 "加" 运算大于等于条件判断，比如 total + 10 >= 0
 	 */
-	UP_GREATE_EQUAL,
+	UP_GREATER_EQUAL,
 	/**
 	 * 表达式 "减" 运算小于条件判断，比如 total - 10 > 0
 	 */
-	REDUCE_GREATE_THAN,
+	REDUCE_GREATER_THAN,
 	/**
 	 * 表达式 "减" 运算小于等于条件判断，比如 total - 10 >= 0
 	 */
-	REDUCE_GREATE_EQUAL
+	REDUCE_GREATER_EQUAL
 }

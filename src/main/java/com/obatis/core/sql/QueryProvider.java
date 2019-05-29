@@ -444,8 +444,8 @@ public class QueryProvider {
 	 * @param filterName
 	 * @param value
 	 */
-	public void greateThan(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.GREATE_THAN, value);
+	public void greaterThan(String filterName, Object value) {
+		this.andFilter(filterName, FilterEnum.GREATER_THAN, value);
 	}
 
 	/**
@@ -453,8 +453,8 @@ public class QueryProvider {
 	 * @param filterName
 	 * @param value
 	 */
-	public void orGreateThan(String filterName, Object value) {
-		this.or(filterName, FilterEnum.GREATE_THAN, value);
+	public void orGreaterThan(String filterName, Object value) {
+		this.or(filterName, FilterEnum.GREATER_THAN, value);
 	}
 
 	/**
@@ -462,8 +462,8 @@ public class QueryProvider {
 	 * @param filterName
 	 * @param value
 	 */
-	public void greateEqual(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.GREATE_EQUAL, value);
+	public void greaterEqual(String filterName, Object value) {
+		this.andFilter(filterName, FilterEnum.GREATER_EQUAL, value);
 	}
 
 	/**
@@ -471,24 +471,24 @@ public class QueryProvider {
 	 * @param filterName
 	 * @param value
 	 */
-	public void orGreateEqual(String filterName, Object value) {
-		this.or(filterName, FilterEnum.GREATE_EQUAL, value);
+	public void orGreaterEqual(String filterName, Object value) {
+		this.or(filterName, FilterEnum.GREATER_EQUAL, value);
 	}
 
 	/**
 	 * 增加 and 大于等于0的条件表达式，传入字段名称即可
 	 * @param filterName
 	 */
-	public void greateEqualZero(String filterName) {
-		this.andFilter(filterName, FilterEnum.GREATE_EQUAL, 0);
+	public void greaterEqualZero(String filterName) {
+		this.andFilter(filterName, FilterEnum.GREATER_EQUAL, 0);
 	}
 
 	/**
 	 * 增加 or 大于等于0的条件表达式，传入字段名称即可
 	 * @param filterName
 	 */
-	public void orGreateEqualZero(String filterName) {
-		this.or(filterName, FilterEnum.GREATE_EQUAL, 0);
+	public void orGreaterEqualZero(String filterName) {
+		this.or(filterName, FilterEnum.GREATER_EQUAL, 0);
 	}
 
 	/**
@@ -618,8 +618,8 @@ public class QueryProvider {
 	 * @param filterName
 	 * @param value
 	 */
-	public void upGreateThanZero(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.UP_GREATE_THAN, value);
+	public void upGreaterThanZero(String filterName, Object value) {
+		this.andFilter(filterName, FilterEnum.UP_GREATER_THAN, value);
 	}
 
 	/**
@@ -627,8 +627,8 @@ public class QueryProvider {
 	 * @param filterName
 	 * @param value
 	 */
-	public void orUpGreateThanZero(String filterName, Object value) {
-		this.or(filterName, FilterEnum.UP_GREATE_THAN, value);
+	public void orUpGreaterThanZero(String filterName, Object value) {
+		this.or(filterName, FilterEnum.UP_GREATER_THAN, value);
 	}
 
 	/**
@@ -636,8 +636,8 @@ public class QueryProvider {
 	 * @param filterName
 	 * @param value
 	 */
-	public void upGreateEqualZero(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.UP_GREATE_EQUAL, value);
+	public void upGreaterEqualZero(String filterName, Object value) {
+		this.andFilter(filterName, FilterEnum.UP_GREATER_EQUAL, value);
 	}
 
 	/**
@@ -645,8 +645,8 @@ public class QueryProvider {
 	 * @param filterName
 	 * @param value
 	 */
-	public void orUpGreateEqualZero(String filterName, Object value) {
-		this.or(filterName, FilterEnum.UP_GREATE_EQUAL, value);
+	public void orUpGreaterEqualZero(String filterName, Object value) {
+		this.or(filterName, FilterEnum.UP_GREATER_EQUAL, value);
 	}
 
 	/**
@@ -654,8 +654,8 @@ public class QueryProvider {
 	 * @param filterName
 	 * @param value
 	 */
-	public void reduceGreateThanZero(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.REDUCE_GREATE_THAN, value);
+	public void reduceGreaterThanZero(String filterName, Object value) {
+		this.andFilter(filterName, FilterEnum.REDUCE_GREATER_THAN, value);
 	}
 
 	/**
@@ -663,8 +663,8 @@ public class QueryProvider {
 	 * @param filterName
 	 * @param value
 	 */
-	public void orReduceGreateThanZero(String filterName, Object value) {
-		this.or(filterName, FilterEnum.REDUCE_GREATE_THAN, value);
+	public void orReduceGreaterThanZero(String filterName, Object value) {
+		this.or(filterName, FilterEnum.REDUCE_GREATER_THAN, value);
 	}
 
 	/**
@@ -672,8 +672,8 @@ public class QueryProvider {
 	 * @param filterName
 	 * @param value
 	 */
-	public void reduceGreateEqualZero(String filterName, Object value) {
-		this.andFilter(filterName, FilterEnum.REDUCE_GREATE_EQUAL, value);
+	public void reduceGreaterEqualZero(String filterName, Object value) {
+		this.andFilter(filterName, FilterEnum.REDUCE_GREATER_EQUAL, value);
 	}
 
 	/**
@@ -681,8 +681,8 @@ public class QueryProvider {
 	 * @param filterName
 	 * @param value
 	 */
-	public void orReduceGreateEqualZero(String filterName, Object value) {
-		this.or(filterName, FilterEnum.REDUCE_GREATE_EQUAL, value);
+	public void orReduceGreaterEqualZero(String filterName, Object value) {
+		this.or(filterName, FilterEnum.REDUCE_GREATER_EQUAL, value);
 	}
 
 	/**
