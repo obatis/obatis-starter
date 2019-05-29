@@ -143,6 +143,15 @@ public class QueryProvider {
 		this.addValue(fieldName, SqlHandleEnum.HANDLE_DEFAULT, value);
 	}
 
+	public void select(String[] columns) throws HandleException {
+		for (String column : columns) {
+			if(ValidateTool.isEmpty(column)) {
+				throw new HandleException("error: column is null");
+			}
+			this.set(column);
+		}
+	}
+
 	/**
 	 * 实现累加，比如money = money + 20类似的SQL语句; fieldName 表示要操作的字段名称,value 表示要操作的值
 	 * @param fieldName
