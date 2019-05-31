@@ -13,8 +13,6 @@ import com.obatis.core.sql.SqlHandleProvider;
 import com.obatis.core.constant.CacheInfoConstant;
 import com.obatis.validate.ValidateTool;
 import org.apache.ibatis.session.SqlSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 import java.lang.reflect.ParameterizedType;
@@ -30,8 +28,6 @@ import java.util.Map;
  * @param <T>
  */
 public abstract class DBHandleFactory<T extends CommonModel> {
-
-	private Logger log = LoggerFactory.getLogger(DBHandleFactory.class);
 
 	private Class<T> entityCls;
 	private String tableName;
@@ -74,16 +70,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 		if (resultMapperMap.containsKey(resultCls.getCanonicalName())) {
 			return resultMapperMap.get(resultCls.getCanonicalName());
 		}
-
-//		try {
-//			if(!(resultCls.newInstance() instanceof ResultInfoOutput)) {
-//				throw new HandleException("error: resultCls is not instanceof ResultInfoOutput");
-//			}
-//		} catch (Exception e) {
-//			log.warn(" >>>>> error: resultCls newInstance fail");
-//			throw new HandleException("error: resultCls newInstance fail");
-//		}
-
 
 		BaseResultSessionMapper<M> resultMapper = (BaseResultSessionMapper<M>) ResultSessionMapperFactory.getSessionMapper(sqlSession, resultCls.getCanonicalName());
 		resultMapperMap.put(resultCls.getCanonicalName(), resultMapper);
@@ -266,24 +252,57 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 		return this.getBaseResultSessionMapper(resultCls).find(providerMap, this.getTableName());
 	}
 
+	/**
+	 * 主要针对有多条记录符合查询条件时，获取第一条数据(排序方式自行决定)
+	 * @param provider
+	 * @return
+	 */
 	public T findOne(QueryProvider provider) {
-
-		return null;
+		provider.setPageSize(1);
+		Map<String, Object> providerMap = new HashMap<>();
+		providerMap.put(SqlConstant.PROVIDER_OBJ, provider);
+		return this.getBaseBeanSessionMapper().findOne(providerMap, this.getTableName());
 	}
 
-	public <M> M findOne(QueryProvider provider, Class<M> resultCls) {
-
-		return null;
+	/**
+	 * 主要针对有多条记录符合查询条件时，获取第一条数据(排序方式自行决定)
+	 * @param provider
+	 * @param resultCls
+	 * @param <M>
+	 * @return
+	 */
+	public <M extends ResultInfoOutput> M findOne(QueryProvider provider, Class<M> resultCls) {
+		provider.setPageSize(1);
+		Map<String, Object> providerMap = new HashMap<>();
+		providerMap.put(SqlConstant.PROVIDER_OBJ, provider);
+		return this.getBaseResultSessionMapper(resultCls).findOne(providerMap, this.getTableName());
 	}
 
-	public List<T> findTop(QueryProvider provider, int top) {
-
-		return null;
+	/**
+	 * 主要针对有多条记录符合查询条件时，获取自定义排在前面的数据(排序方式自行决定)
+	 * @param provider
+	 * @param top
+	 * @return
+	 */
+	public List<T> listTop(QueryProvider provider, int top) {
+		provider.setPageSize(top);
+		Map<String, Object> providerMap = new HashMap<>();
+		providerMap.put(SqlConstant.PROVIDER_OBJ, provider);
+		return this.getBaseBeanSessionMapper().listTop(providerMap, top, this.getTableName());
 	}
 
-	public <M> List<M> findTop(QueryProvider provider, int top, Class<M> resultCls) {
-
-		return null;
+	/**
+	 * 主要针对有多条记录符合查询条件时，获取自定义排在前面的数据(排序方式自行决定)
+	 * @param provider
+	 * @param top
+	 * @param resultCls
+	 * @param <M>
+	 * @return
+	 */
+	public <M extends ResultInfoOutput> List<M> listTop(QueryProvider provider, int top, Class<M> resultCls) {
+		Map<String, Object> providerMap = new HashMap<>();
+		providerMap.put(SqlConstant.PROVIDER_OBJ, provider);
+		return this.getBaseResultSessionMapper(resultCls).listTop(providerMap, top, this.getTableName());
 	}
 	
 	/**

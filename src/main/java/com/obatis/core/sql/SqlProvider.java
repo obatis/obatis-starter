@@ -43,6 +43,14 @@ public class SqlProvider<T> {
 	public String find(@Param("request") Map<String, Object> providers, String tableName) throws HandleException {
 		return SqlHandleProvider.getSelectSql(providers, tableName);
 	}
+
+	public String findOne(@Param("request") Map<String, Object> providers, String tableName) throws HandleException {
+		return SqlHandleProvider.getSelectTopSql(providers, 1, tableName);
+	}
+
+	public String listTop(@Param("request") Map<String, Object> providers, int top, String tableName) throws HandleException {
+		return SqlHandleProvider.getSelectTopSql(providers, top, tableName);
+	}
 	
 	public String validate(@Param("request") Map<String, Object> providers, String tableName) throws HandleException {
 		return SqlHandleProvider.getValidateSql(providers, tableName);

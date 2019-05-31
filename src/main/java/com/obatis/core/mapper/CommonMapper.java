@@ -12,6 +12,12 @@ public interface CommonMapper<R> {
     @SelectProvider(type = SqlProvider.class, method = "find")
     R find(@Param("request") Map<String, Object> param, String tableName);
 
+    @SelectProvider(type = SqlProvider.class, method = "findOne")
+    R findOne(@Param("request") Map<String, Object> param, String tableName);
+
+    @SelectProvider(type = SqlProvider.class, method = "listTop")
+    List<R> listTop(@Param("request") Map<String, Object> param, int top, String tableName);
+
     @SelectProvider(type = SqlProvider.class, method = "find")
     List<R> list(@Param("request") Map<String, Object> param, String tableName);
 

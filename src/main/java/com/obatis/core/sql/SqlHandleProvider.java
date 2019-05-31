@@ -110,6 +110,10 @@ public class SqlHandleProvider<T> {
 		return sqlHandleMethod.getSelectSql(providers, tableName);
 	}
 
+	public static String getSelectTopSql(Map<String, Object> providers, int top, String tableName) throws HandleException {
+		return sqlHandleMethod.getSelectSql(providers, tableName) + " limit " + top;
+	}
+
 	/**
 	 * 获取校验的 sql 语句，原理为根据查询条件，得到count计数的值，映射 sql 为 select count(*) from tableName where filterName = ?
 	 * @param providers
