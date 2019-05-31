@@ -20,11 +20,11 @@ public class CacheInfoConstant {
 	 */
 	public static final Map<String, String> TABLE_CACHE = new HashMap<>();
 	/**
-	 * 存放实体中通过 @Column 注解的属性
+	 * 存放实体中通过 @Column 注解的属性，key 为实体属性，value为数据库字段
 	 */
 	public static final Map<String, Map<String, String>> COLUMN_CACHE = new HashMap<>();
 	/**
-	 * 存放实体属性
+	 * 存放表与实体的映射属性， key为数据库字段，value为实体属性
 	 */
 	public static final Map<String, Map<String, String>> FIELD_CACHE = new HashMap<>();
 	/**

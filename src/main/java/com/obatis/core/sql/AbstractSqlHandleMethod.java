@@ -207,30 +207,30 @@ public abstract class AbstractSqlHandleMethod {
 				sql += "(" + modifyInFilter(vue, key, value) + ")";
 				break;
 			case UP_GREATER_THAN:
-				sql = getAgFunction(tableAliasNamePrefix, field) + " + " + expression + ">0";
+				sql = getAgFunction(tableAliasNamePrefix, field, fieldMap, columnMap) + " + " + expression + ">0";
 				value.put(key, vue);
 				break;
 			case UP_GREATER_EQUAL:
-				sql = getAgFunction(tableAliasNamePrefix, field) + " + " + expression + ">=0";
+				sql = getAgFunction(tableAliasNamePrefix, field, fieldMap, columnMap) + " + " + expression + ">=0";
 				value.put(key, vue);
 				break;
 			case REDUCE_GREATER_THAN:
-				sql = getAgFunction(tableAliasNamePrefix, field) + " - " + expression + ">0";
+				sql = getAgFunction(tableAliasNamePrefix, field, fieldMap, columnMap) + " - " + expression + ">0";
 				value.put(key, vue);
 				break;
 			case REDUCE_GREATER_EQUAL:
-				sql = getAgFunction(tableAliasNamePrefix, field) + " - " + expression + ">=0";
+				sql = getAgFunction(tableAliasNamePrefix, field, fieldMap, columnMap) + " - " + expression + ">=0";
 				value.put(key, vue);
 				break;
 			case IS_NULL:
 			case IS_NOT_NULL:
-				sql = getAgFunction(tableAliasNamePrefix, field) + getFilterType(filterType);
+				sql = getAgFunction(tableAliasNamePrefix, field, fieldMap, columnMap) + getFilterType(filterType);
 				break;
 			case GREATER_THAN:
 			case GREATER_EQUAL:
 			case LESS_THAN:
 			case LESS_EQUAL:
-				sql = getAgFunction(tableAliasNamePrefix, field) + getFilterType(filterType);
+				sql = getAgFunction(tableAliasNamePrefix, field, fieldMap, columnMap) + getFilterType(filterType);
 				sql += expression;
 				value.put(key, vue);
 				break;
@@ -551,7 +551,7 @@ public abstract class AbstractSqlHandleMethod {
              * 表示未查询全部字段，sql 语句例如：select * from demo ************
              * 为提升查询效率，不建议 sql 查询所有字段，打印一条日志进行提醒开发人员
              */
-            log.warn("*********** WARN : no suggest use sql >>>>>>>>>  select * from XXXXXX ********");
+//            log.warn("*********** WARN : no suggest use sql >>>>>>>>>  select * from XXXXXX ********");
 			for (Map.Entry<String, String> entry : columnMap.entrySet()) {
 				String name = entry.getValue();
 				String key = entry.getKey();
@@ -688,23 +688,23 @@ public abstract class AbstractSqlHandleMethod {
 				}
 				break;
 			case HANDLE_SUM:
-				columnName = "sum(" + getAgFunction(tableAliasName, fieldTemp) + ")";
+				columnName = "sum(" + getAgFunction(tableAliasName, fieldTemp, fieldMap, columnMap) + ")";
 				column.add(columnName + fieldAsTemp);
 				break;
 			case HANDLE_MAX:
-				columnName = "max(" + getAgFunction(tableAliasName, fieldTemp) + ")";
+				columnName = "max(" + getAgFunction(tableAliasName, fieldTemp, fieldMap, columnMap) + ")";
 				column.add(columnName + fieldAsTemp);
 				break;
 			case HANDLE_MIN:
-				columnName = "min(" + getAgFunction(tableAliasName, fieldTemp) + ")";
+				columnName = "min(" + getAgFunction(tableAliasName, fieldTemp, fieldMap, columnMap) + ")";
 				column.add(columnName + fieldAsTemp);
 				break;
 			case HANDLE_AVG:
-				columnName = "avg(" + getAgFunction(tableAliasName, fieldTemp) + ")";
+				columnName = "avg(" + getAgFunction(tableAliasName, fieldTemp, fieldMap, columnMap) + ")";
 				column.add(columnName + fieldAsTemp);
 				break;
 			case HANDLE_EXP:
-				columnName = getAgFunction(tableAliasName, fieldTemp);
+				columnName = getAgFunction(tableAliasName, fieldTemp, fieldMap, columnMap);
 				column.add(columnName + fieldAsTemp);
 				break;
 			default:
@@ -726,15 +726,15 @@ public abstract class AbstractSqlHandleMethod {
 	 * @param fieldName
 	 * @return
 	 */
-	private String getAgFunction(String tableAliasName, String fieldName) {
+	private String getAgFunction(String tableAliasName, String fieldName, Map<String, String> fieldMap, Map<String, String> columnMap) {
 		boolean replaceFlag = false;
 		String fieldNameTemp = fieldName;
 		if (fieldName.contains("+")) {
 			fieldName = fieldName.replace("+", "}+{");
 			fieldNameTemp = fieldNameTemp.replace("+", ",");
-			if (!replaceFlag) {
+//			if (!replaceFlag) {
 				replaceFlag = true;
-			}
+//			}
 		}
 		if (fieldName.contains("-")) {
 			fieldName = fieldName.replace("-", "}-{");
@@ -773,26 +773,47 @@ public abstract class AbstractSqlHandleMethod {
 		}
 
 		if (replaceFlag) {
-			fieldName = fieldName.replaceAll(" ", "");
-			fieldNameTemp = fieldNameTemp.replaceAll(" ", "");
+//			fieldName = fieldName.replaceAll(" ", "");
+//			fieldNameTemp = fieldNameTemp.replaceAll(" ", "");
 			fieldName = "{" + fieldName + "}";
 			String[] fieldNameTempArr = fieldNameTemp.split(",");
 			Map<String, String> fieldNameTempMap = new HashMap<>();
+			Map<String, String> cacheFieldNameTempMap = new HashMap<>();
 			for (String name : fieldNameTempArr) {
 				if (ValidateTool.isEmpty(name)) {
 					continue;
 				}
-				fieldNameTempMap.put(name, name);
+				fieldNameTempMap.put(name.replace(" ", ""), name.replace(" ", ""));
+				cacheFieldNameTempMap.put(name.replace(" ", ""), name);
 			}
 
 			for (Map.Entry<String, String> map : fieldNameTempMap.entrySet()) {
 				String field = map.getValue();
-				fieldName = fieldName.replace("{" + field + "}", tableAliasName + field);
+				String tempField = field.toLowerCase();
+
+				if(fieldMap.containsKey(field)) {
+					fieldName = fieldName.replace("{" + field + "}", tableAliasName + field);
+				} else if (columnMap.containsKey(field)) {
+					fieldName = fieldName.replace("{" + field + "}", tableAliasName + fieldMap.get(field));
+				} else {
+					fieldName = fieldName.replace("{" + field + "}", cacheFieldNameTempMap.get(map.getKey()));
+				}
+
+//				fieldName = fieldName.replace("{" + field + "}", tableAliasName + field);
 			}
 
 			return fieldName.replaceAll("[{}]", "");
 		} else {
-			return tableAliasName + fieldName;
+			String tempFieldName = fieldName.replace(" ", "");
+			if(fieldMap.containsKey(tempFieldName)) {
+				return tableAliasName + tempFieldName;
+			} else if (columnMap.containsKey(tempFieldName)) {
+				return tableAliasName + fieldMap.get(tempFieldName);
+			} else {
+				return fieldName;
+//				fieldName = fieldName.replace("{" + field + "}", cacheFieldNameTempMap.get(map.getKey()));
+			}
+//			return tableAliasName + fieldName;
 		}
 	}
 
