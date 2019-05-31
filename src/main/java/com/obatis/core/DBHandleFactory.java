@@ -258,7 +258,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public T findOne(QueryProvider provider) {
-		provider.setPageSize(1);
 		Map<String, Object> providerMap = new HashMap<>();
 		providerMap.put(SqlConstant.PROVIDER_OBJ, provider);
 		return this.getBaseBeanSessionMapper().findOne(providerMap, this.getTableName());
@@ -272,7 +271,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public <M extends ResultInfoOutput> M findOne(QueryProvider provider, Class<M> resultCls) {
-		provider.setPageSize(1);
 		Map<String, Object> providerMap = new HashMap<>();
 		providerMap.put(SqlConstant.PROVIDER_OBJ, provider);
 		return this.getBaseResultSessionMapper(resultCls).findOne(providerMap, this.getTableName());
@@ -284,8 +282,10 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param top
 	 * @return
 	 */
-	public List<T> listTop(QueryProvider provider, int top) {
-		provider.setPageSize(top);
+	public List<T> listTop(QueryProvider provider, int top) throws HandleException {
+		if(top == 0) {
+			throw new HandleException("error: top must be greater than 0");
+		}
 		Map<String, Object> providerMap = new HashMap<>();
 		providerMap.put(SqlConstant.PROVIDER_OBJ, provider);
 		return this.getBaseBeanSessionMapper().listTop(providerMap, top, this.getTableName());
@@ -300,6 +300,9 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public <M extends ResultInfoOutput> List<M> listTop(QueryProvider provider, int top, Class<M> resultCls) {
+		if(top == 0) {
+			throw new HandleException("error: top must be greater than 0");
+		}
 		Map<String, Object> providerMap = new HashMap<>();
 		providerMap.put(SqlConstant.PROVIDER_OBJ, provider);
 		return this.getBaseResultSessionMapper(resultCls).listTop(providerMap, top, this.getTableName());
