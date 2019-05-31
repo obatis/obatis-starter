@@ -65,7 +65,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 * @throws HandleException
 	 */
-	private <M> BaseResultSessionMapper<M> getBaseResultSessionMapper(Class<M> resultCls) throws HandleException {
+	private <M extends ResultInfoOutput> BaseResultSessionMapper<M> getBaseResultSessionMapper(Class<M> resultCls) throws HandleException {
 		if (resultCls == null) {
 			throw new HandleException("error: resultCls is null");
 		}
@@ -75,14 +75,14 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 			return resultMapperMap.get(resultCls.getCanonicalName());
 		}
 
-		try {
-			if(!(resultCls.newInstance() instanceof ResultInfoOutput)) {
-				throw new HandleException("error: resultCls is not instanceof ResultInfoOutput");
-			}
-		} catch (Exception e) {
-			log.warn(" >>>>> error: resultCls newInstance fail");
-			throw new HandleException("error: resultCls newInstance fail");
-		}
+//		try {
+//			if(!(resultCls.newInstance() instanceof ResultInfoOutput)) {
+//				throw new HandleException("error: resultCls is not instanceof ResultInfoOutput");
+//			}
+//		} catch (Exception e) {
+//			log.warn(" >>>>> error: resultCls newInstance fail");
+//			throw new HandleException("error: resultCls newInstance fail");
+//		}
 
 
 		BaseResultSessionMapper<M> resultMapper = (BaseResultSessionMapper<M>) ResultSessionMapperFactory.getSessionMapper(sqlSession, resultCls.getCanonicalName());
@@ -210,7 +210,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param resultCls
 	 * @return
 	 */
-	public <M> M findById(BigInteger id, Class<M> resultCls) {
+	public <M extends ResultInfoOutput> M findById(BigInteger id, Class<M> resultCls) {
 		QueryProvider param = new QueryProvider();
 		param.equals(CommonField.FIELD_ID, id);
 		return this.find(param, resultCls);
@@ -236,7 +236,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param resultCls
 	 * @return
 	 */
-	public <M> M findById(QueryProvider provider, BigInteger id, Class<M> resultCls) {
+	public <M extends ResultInfoOutput> M findById(QueryProvider provider, BigInteger id, Class<M> resultCls) {
 		provider.equals(CommonField.FIELD_ID, id);
 		return this.find(provider, resultCls);
 	}
@@ -260,10 +260,30 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param resultCls
 	 * @return
 	 */
-	public <M> M find(QueryProvider provider, Class<M> resultCls) {
+	public <M extends ResultInfoOutput> M find(QueryProvider provider, Class<M> resultCls) {
 		Map<String, Object> providerMap = new HashMap<>();
 		providerMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseResultSessionMapper(resultCls).findR(providerMap, this.getTableName());
+		return this.getBaseResultSessionMapper(resultCls).find(providerMap, this.getTableName());
+	}
+
+	public T findOne(QueryProvider provider) {
+
+		return null;
+	}
+
+	public <M> M findOne(QueryProvider provider, Class<M> resultCls) {
+
+		return null;
+	}
+
+	public List<T> findTop(QueryProvider provider, int top) {
+
+		return null;
+	}
+
+	public <M> List<M> findTop(QueryProvider provider, int top, Class<M> resultCls) {
+
+		return null;
 	}
 	
 	/**
@@ -307,10 +327,10 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param provider
 	 * @return
 	 */
-	public <M> List<M> list(QueryProvider provider, Class<M> resultCls) {
+	public <M extends ResultInfoOutput> List<M> list(QueryProvider provider, Class<M> resultCls) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseResultSessionMapper(resultCls).listR(paramMap, this.getTableName());
+		return this.getBaseResultSessionMapper(resultCls).list(paramMap, this.getTableName());
 	}
 
 	/**
@@ -415,8 +435,8 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param resultCls    返回类型
 	 * @return
 	 */
-	public <M> M findBySql(String sql, List<Object> params, Class<M> resultCls) {
-		return this.getBaseResultSessionMapper(resultCls).findBySqlR(sql, params);
+	public <M extends ResultInfoOutput> M findBySql(String sql, List<Object> params, Class<M> resultCls) {
+		return this.getBaseResultSessionMapper(resultCls).findBySql(sql, params);
 	}
 
 	/**
@@ -446,8 +466,8 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param resultCls    返回bean类型
 	 * @return
 	 */
-	public <M> List<M> listBySql(String sql, List<Object> params, Class<M> resultCls) {
-		return this.getBaseResultSessionMapper(resultCls).listBySqlR(sql, params);
+	public <M extends ResultInfoOutput> List<M> listBySql(String sql, List<Object> params, Class<M> resultCls) {
+		return this.getBaseResultSessionMapper(resultCls).listBySql(sql, params);
 	}
 
 	/**
@@ -496,7 +516,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param resultCls     resultCls 返回 预定义的 resultCls Bean 泛型数据类型
 	 * @return
 	 */
-	public <M> PageInfo<M> page(String sql, String totalSql, List<Object> params, int pageNumber, int pageSize, Class<M> resultCls) {
+	public <M extends ResultInfoOutput> PageInfo<M> page(String sql, String totalSql, List<Object> params, int pageNumber, int pageSize, Class<M> resultCls) {
 		int total = this.findTotal(totalSql, params);
 		PageInfo<M> page = new PageInfo<>();
 		page.setTotal(total);
@@ -505,7 +525,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 			return page;
 		}
 		sql = SqlHandleProvider.appendPageSql(sql, pageNumber, pageSize);
-		page.setList(this.getBaseResultSessionMapper(resultCls).listBySqlR(sql, params));
+		page.setList(this.getBaseResultSessionMapper(resultCls).listBySql(sql, params));
 		return page;
 	}
 
@@ -566,7 +586,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param resultCls      返回 预定义的 resultCls Bean 泛型数据类型
 	 * @return 
 	 */
-	public <M> PageInfo<M> page(QueryProvider provider, Class<M> resultCls) {
+	public <M extends ResultInfoOutput> PageInfo<M> page(QueryProvider provider, Class<M> resultCls) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
 		// 拼装SQL语句
@@ -583,7 +603,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 		String querySql = (String) paramMap.get(SqlConstant.PROVIDER_QUERY_SQL);
 		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		page.setList(this.getBaseResultSessionMapper(resultCls).pageR(querySql, paramMap));
+		page.setList(this.getBaseResultSessionMapper(resultCls).page(querySql, paramMap));
 		return page;
 	}
 

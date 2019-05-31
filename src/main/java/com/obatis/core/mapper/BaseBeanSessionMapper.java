@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * mapper的顶层父类，每一个实体对应的map都需要继承，提供类常规的对数据库的操作
  */
-public interface BaseBeanSessionMapper<T extends CommonModel> {
+public interface BaseBeanSessionMapper<T extends CommonModel> extends CommonMapper<T> {
 	
 	@InsertProvider(type = SqlProvider.class, method = "insert")
 	int insert(@Param("request") T t, String tableName, Class<T> cls);
@@ -30,10 +30,7 @@ public interface BaseBeanSessionMapper<T extends CommonModel> {
 	
 	@DeleteProvider(type = SqlProvider.class, method = "delete")
 	int delete(@Param("request") Map<String, Object> param, String tableName);
-	
-	@SelectProvider(type = SqlProvider.class, method = "find")
-	T find(@Param("request") Map<String, Object> param, String tableName);
-	
+
 	@SelectProvider(type = SqlProvider.class, method = "validate")
 	int validate(@Param("request") Map<String, Object> param, String tableName);
 	
@@ -45,31 +42,16 @@ public interface BaseBeanSessionMapper<T extends CommonModel> {
 	
 	@SelectProvider(type = SqlProvider.class, method = "replaceSql")
 	Object findObjectBySql(String sql, @Param("request") List<Object> list);
-	
-	@SelectProvider(type = SqlProvider.class, method = "replaceSql")
-	T findBySql(String sql, @Param("request") List<Object> list);
-	
+
 	@SelectProvider(type = SqlProvider.class, method = "replaceSql")
 	Map<String, Object> findMapBySql(String sql, @Param("request") List<Object> list);
-	
-	@SelectProvider(type = SqlProvider.class, method = "find")
-	List<T> list(@Param("request") Map<String, Object> params, String tableName);
-	
+
 	@SelectProvider(type = SqlProvider.class, method = "find")
 	List<Map<String, Object>> query(@Param("request") Map<String, Object> params, String tableName);
-	
-	@SelectProvider(type = SqlProvider.class, method = "replaceSql")
-	List<T> listBySql(String sql, @Param("request") List<Object> list);
-	
-	@SelectProvider(type = SqlProvider.class, method = "replaceSql")
-	List<Map<String, Object>> listMapBySql(String sql, @Param("request") List<Object> list);
-	
+
 	@SelectProvider(type = SqlProvider.class, method = "returnParamSql")
 	int findTotal(String sql, @Param("request") Map<String, Object> params);
 	
 	@SelectProvider(type = SqlProvider.class, method = "replaceSql")
 	int findTotalByParam(String sql, @Param("request") List<Object> params);
-	
-	@SelectProvider(type = SqlProvider.class, method = "pageSql")
-	List<T> page(String sql, @Param("request") Map<String, Object> params);
 }
