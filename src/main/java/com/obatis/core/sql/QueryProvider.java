@@ -9,6 +9,7 @@ import com.obatis.core.constant.type.SqlHandleEnum;
 import com.obatis.core.exception.HandleException;
 import com.obatis.core.result.ResultInfoOutput;
 import com.obatis.core.convert.BeanCacheConvert;
+import com.obatis.core.sql.mysql.HandleOrderMethod;
 import com.obatis.validate.ValidateTool;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class QueryProvider {
 	protected static final String JOIN_AND_EXPRESS = " and ";
 	protected static final String JOIN_OR_EXPRESS = " or ";
 
-	protected static AbstractOrder abstractOrder;
+	protected static AbstractOrder abstractOrder = new HandleOrderMethod();
 
 	private static final Map<Integer, OrderEnum> ORDER_TYPE_MAP = new HashMap<>();
 

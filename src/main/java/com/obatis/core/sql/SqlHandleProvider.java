@@ -12,7 +12,7 @@ import java.util.Map;
  * sql 语句构建代理类，作用于分发代理构建，针对特殊的sql 语句，根据数据库加载信息选择数据库类型
  * @author HuangLongPu
  */
-public class SqlHandleProvider<T> {
+public class SqlHandleProvider {
 
 	protected static AbstractSqlHandleMethod sqlHandleMethod = new MysqlCommonMethod();
 	protected static AbstractInsertMethod insertMethod = new HandleInsertBatchMethod();
