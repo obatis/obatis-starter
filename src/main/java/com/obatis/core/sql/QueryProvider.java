@@ -808,7 +808,7 @@ public class QueryProvider {
 	 */
 	public void setFilters(Object obj) {
 		if (!(obj instanceof RequestParam)) {
-			throw new HandleException("error: the filter is not instanceof RequestQueryParam");
+			throw new HandleException("error: the filter is not instanceof RequestParam");
 		}
 		QueryHandle.getFilters(obj, this);
 	}
@@ -819,7 +819,7 @@ public class QueryProvider {
 	 */
 	public void setUpdate(Object obj) {
 		if (!(obj instanceof RequestParam)) {
-			throw new HandleException("error: the update is not instanceof RequestQueryParam");
+			throw new HandleException("error: the update is not instanceof RequestParam");
 		}
 		QueryHandle.getUpdateField(obj, this);
 	}
