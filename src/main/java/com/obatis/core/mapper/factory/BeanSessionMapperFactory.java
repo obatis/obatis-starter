@@ -9,21 +9,31 @@ public class BeanSessionMapperFactory {
 	
 	private BeanSessionMapperFactory() {}
 
-	public static BaseBeanSessionMapper<?> getSessionMapper(SqlSession sqlSession, String canonicalName) {
+	public static BaseBeanSessionMapper<?> getSessionMapper(String canonicalName) throws HandleException {
 		
 		if(CacheInfoConstant.BEAN_SESSION_MAPPER.containsKey(canonicalName)) {
 			return CacheInfoConstant.BEAN_SESSION_MAPPER.get(canonicalName);
 		}
-		
-		return compileMapper(sqlSession, canonicalName);
+
+		throw new HandleException("error: sessionMapper is null");
 	}
+
+
 	
-	private static synchronized BaseBeanSessionMapper<?> compileMapper(SqlSession sqlSession, String canonicalName) {
+	public static synchronized void compileMapper(SqlSession sqlSession, String canonicalName) {
 		
 		if(CacheInfoConstant.BEAN_SESSION_MAPPER.containsKey(canonicalName)) {
-			return CacheInfoConstant.BEAN_SESSION_MAPPER.get(canonicalName);
+			return;
 		}
-		
+		compileMapperHandle(sqlSession, canonicalName);
+	}
+
+	private static synchronized void compileMapperHandle(SqlSession sqlSession, String canonicalName) {
+
+		if(CacheInfoConstant.BEAN_SESSION_MAPPER.containsKey(canonicalName)) {
+			return;
+		}
+
 		Class<?> mapperCls = null;
 		try {
 			mapperCls = SessionMapperCompilerTemplet.compilerMapper(canonicalName, BaseBeanSessionMapper.class);
@@ -31,7 +41,7 @@ public class BeanSessionMapperFactory {
 			e.printStackTrace();
 			throw new HandleException("error: compilerMapper is fail");
 		}
-		
+
 		if(mapperCls == null) {
 			throw new HandleException("error: compilerMapper is fail");
 		}
@@ -42,6 +52,5 @@ public class BeanSessionMapperFactory {
 			throw new HandleException("error: compilerMapper is fail");
 		}
 		CacheInfoConstant.BEAN_SESSION_MAPPER.put(canonicalName, mapper);
-		return mapper; 
 	}
 }

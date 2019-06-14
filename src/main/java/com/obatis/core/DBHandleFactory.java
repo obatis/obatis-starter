@@ -33,8 +33,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	private String tableName;
 	private String canonicalName;
 	private BaseBeanSessionMapper<T> baseBeanSessionMapper;
-	@Resource
-	private SqlSession sqlSession;
+
 
 	/**
 	 * 获取泛型注入类的 sessionMapper
@@ -49,7 +48,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 		if (baseBeanSessionMapper != null) {
 			return baseBeanSessionMapper;
 		}
-		baseBeanSessionMapper = (BaseBeanSessionMapper<T>) BeanSessionMapperFactory.getSessionMapper(sqlSession, canonicalName);
+		baseBeanSessionMapper = (BaseBeanSessionMapper<T>) BeanSessionMapperFactory.getSessionMapper(canonicalName);
 		return baseBeanSessionMapper;
 	}
 
@@ -71,7 +70,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 			return resultMapperMap.get(resultCls.getCanonicalName());
 		}
 
-		BaseResultSessionMapper<M> resultMapper = (BaseResultSessionMapper<M>) ResultSessionMapperFactory.getSessionMapper(sqlSession, resultCls.getCanonicalName());
+		BaseResultSessionMapper<M> resultMapper = (BaseResultSessionMapper<M>) ResultSessionMapperFactory.getSessionMapper(resultCls.getCanonicalName());
 		resultMapperMap.put(resultCls.getCanonicalName(), resultMapper);
 		return resultMapper;
 	}
