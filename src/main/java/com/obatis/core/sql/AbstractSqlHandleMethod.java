@@ -147,6 +147,21 @@ public abstract class AbstractSqlHandleMethod {
 	}
 
 	/**
+	 * 拼接查询条件，主要针对left join连表
+	 * @param tableAliasName
+	 * @param filters
+	 * @param value
+	 * @param index
+	 * @param columnMap
+	 * @param fieldMap
+	 * @return
+	 * @throws HandleException
+	 */
+	private String getFilterSql(String tableAliasName, List<Object[]> filters, Map<String, Object> value, String index, Map<String, String> columnMap, Map<String, String> fieldMap) throws HandleException {
+		return getFilterSql(null, null, null, tableAliasName, filters, null, value, index, columnMap, fieldMap, DEFAULT_FIND);
+	}
+
+	/**
 	 * 根据传入的filter，获取条件filter的数组
 	 * @author HuangLongPu
 	 * @param leftJoinProviders
@@ -387,7 +402,8 @@ public abstract class AbstractSqlHandleMethod {
 		String tableAliasName = TableNameConvert.getTableAsName(tableName);
 		SQL sql = new SQL();
 		sql.SELECT(getSelectFieldColumns(queryProvider, tableAliasName, columnMap, fieldMap));
-		sql.FROM(tableName + " " + tableAliasName + getLeftJoinTable(tableAliasName, queryProvider.getLeftJoinProviders()));
+		Map<String, Object> value = new HashMap<>();
+		sql.FROM(tableName + " " + tableAliasName + getLeftJoinTable(tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT));
 
 		// 构建 group by 语句
 		List<String> groups = new ArrayList<>();
@@ -397,9 +413,8 @@ public abstract class AbstractSqlHandleMethod {
 
 		List<Object[]> filters = queryProvider.getFilters();
 		if ((filters != null && !filters.isEmpty()) || (queryProvider.getLeftJoinProviders() != null && !queryProvider.getLeftJoinProviders().isEmpty())) {
-			Map<String, Object> value = new HashMap<>();
 			String filterSql = getFilterSql(queryProvider.getLeftJoinProviders(), groups, orders, tableAliasName, filters, queryProvider.getOrProviders(), value,
-					INDEX_DEFAULT, columnMap, fieldMap, DEFAULT_FIND);
+					INDEX_DEFAULT + "_1", columnMap, fieldMap, DEFAULT_FIND);
 			if (!ValidateTool.isEmpty(filterSql)) {
 				// 放入值到map
 				param.put(SqlConstant.PROVIDER_FILTER, value);
@@ -430,7 +445,8 @@ public abstract class AbstractSqlHandleMethod {
 		String tableAliasName = TableNameConvert.getTableAsName(tableName);
 		SQL sql = new SQL();
 		sql.SELECT("count(1)");
-		sql.FROM(tableName + " " + tableAliasName + getLeftJoinTable(tableAliasName, queryProvider.getLeftJoinProviders()));
+		Map<String, Object> value = new HashMap<>();
+		sql.FROM(tableName + " " + tableAliasName + getLeftJoinTable(tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT));
 
 		// 处理 group by 语句
 		List<String> groups = new ArrayList<>();
@@ -438,9 +454,9 @@ public abstract class AbstractSqlHandleMethod {
 
 		List<Object[]> filters = queryProvider.getFilters();
 		if ((filters != null && !filters.isEmpty()) || (queryProvider.getLeftJoinProviders() != null && !queryProvider.getLeftJoinProviders().isEmpty())) {
-			Map<String, Object> value = new HashMap<>();
+
 			String filterSql = getFilterSql(queryProvider.getLeftJoinProviders(), groups, null, tableAliasName, filters, queryProvider.getOrProviders(), value,
-					INDEX_DEFAULT, columnMap, fieldMap, DEFAULT_FIND);
+					INDEX_DEFAULT + "_0", columnMap, fieldMap, DEFAULT_FIND);
 			if (!ValidateTool.isEmpty(filterSql)) {
 				// 放入值到map
 				param.put(SqlConstant.PROVIDER_FILTER, value);
@@ -485,7 +501,7 @@ public abstract class AbstractSqlHandleMethod {
 		}
 	}
 
-	private String getLeftJoinTable(String tableAliasName, List<Object[]> leftJoinProviders) {
+	private String getLeftJoinTable(String tableAliasName, List<Object[]> leftJoinProviders, Map<String, Object> value, String index) {
 
 		if (leftJoinProviders == null || leftJoinProviders.isEmpty()) {
 			return "";
@@ -519,9 +535,19 @@ public abstract class AbstractSqlHandleMethod {
 				}
 			}
 
+			List<Object[]> onFilters = childParam.getOnFilters();
+			if(onFilters != null && !onFilters.isEmpty()) {
+				Map<String, String> childColumnMap = CacheInfoConstant.COLUMN_CACHE.get(connectTableName);
+				Map<String, String> childFieldMap = CacheInfoConstant.FIELD_CACHE.get(connectTableName);
+				String onFilterSql = this.getFilterSql(connectTableAliasName, onFilters, value, index, childColumnMap, childFieldMap);
+				if(!ValidateTool.isEmpty(onFilterSql)) {
+					sql.append(" and " + onFilterSql);
+				}
+			}
+
 			List<Object[]> paramLeftJoinProviders = childParam.getLeftJoinProviders();
 			if (paramLeftJoinProviders != null && paramLeftJoinProviders.size() > 0) {
-				sql.append(getLeftJoinTable(connectTableAliasName, paramLeftJoinProviders));
+				sql.append(getLeftJoinTable(connectTableAliasName, paramLeftJoinProviders, value, index));
 			}
 		}
 
@@ -887,7 +913,8 @@ public abstract class AbstractSqlHandleMethod {
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 		String tableAliasName = TableNameConvert.getTableAsName(tableName);
 		sql.SELECT(getSelectFieldColumns(queryProvider, tableAliasName, columnMap, fieldMap));
-		String table = tableName + " " + tableAliasName + getLeftJoinTable(tableAliasName, queryProvider.getLeftJoinProviders());
+		Map<String, Object> value = new HashMap<>();
+		String table = tableName + " " + tableAliasName + getLeftJoinTable(tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT);
 		sql.FROM(table);
 		// 分页的语句
 		SQL totalSql = new SQL();
@@ -903,9 +930,9 @@ public abstract class AbstractSqlHandleMethod {
 
 		List<Object[]> filters = queryProvider.getFilters();
 		if ((filters != null && !filters.isEmpty()) || (queryProvider.getLeftJoinProviders() != null && !queryProvider.getLeftJoinProviders().isEmpty())) {
-			Map<String, Object> value = new HashMap<>();
+
 			String filterSql = getFilterSql(queryProvider.getLeftJoinProviders(), groups, orders, tableAliasName, filters, queryProvider.getOrProviders(), value,
-					INDEX_DEFAULT, columnMap, fieldMap, DEFAULT_FIND);
+					INDEX_DEFAULT + "_0", columnMap, fieldMap, DEFAULT_FIND);
 			if (!ValidateTool.isEmpty(filterSql)) {
 				// 放入值到map
 				providers.put(SqlConstant.PROVIDER_FILTER, value);
