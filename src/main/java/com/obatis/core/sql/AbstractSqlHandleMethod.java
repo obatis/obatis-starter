@@ -399,7 +399,8 @@ public abstract class AbstractSqlHandleMethod {
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 
-		String tableAliasName = TableNameConvert.getTableAsName(tableName);
+		int tableAliasNameIndex = 0;
+		String tableAliasName = "t" + tableAliasNameIndex;
 		SQL sql = new SQL();
 		sql.SELECT(getSelectFieldColumns(queryProvider, tableAliasName, columnMap, fieldMap));
 		Map<String, Object> value = new HashMap<>();
@@ -637,27 +638,33 @@ public abstract class AbstractSqlHandleMethod {
 			List<Object[]> fields = null;
 			if ((fields = queryProvider.getFields()) != null && !fields.isEmpty()) {
 				getSelectColumn(tableAliasName, column, queryProvider.getFields(), fieldMap, columnMap, queryProvider.getNotFields());
-			} else {
-				Map<String, String> notFields = queryProvider.getNotFields();
-				/**
-				 * 表示未查询全部字段，sql 语句例如：select * from demo ************
-				 * 为提升查询效率，不建议 sql 查询所有字段，打印一条日志进行提醒开发人员
-				 */
-				log.warn("*********** WARN : no suggest use sql >>>>>>>>>  select * from XXXXXX ********");
-				for (Map.Entry<String, String> entry : columnMap.entrySet()) {
-					String name = entry.getValue();
-					String key = entry.getKey();
-					if (notFields != null && (notFields.containsKey(name) || notFields.containsKey(key))) {
-						continue;
-					}
-					String columnName = tableAliasName + "." + name;
-					if (name.equals(key)) {
-						column.add(columnName);
-					} else {
-						column.add(columnName + " as " + key);
-					}
-				}
 			}
+
+			/**
+			 * 针对left join查询，不查询所有字段，字段必须指定
+			 * HuangLongPu 于 2019年07月02日修复
+			 */
+//			else {
+//				Map<String, String> notFields = queryProvider.getNotFields();
+//				/**
+//				 * 表示未查询全部字段，sql 语句例如：select * from demo ************
+//				 * 为提升查询效率，不建议 sql 查询所有字段，打印一条日志进行提醒开发人员
+//				 */
+//				log.warn("*********** WARN : no suggest use sql >>>>>>>>>  select * from XXXXXX ********");
+//				for (Map.Entry<String, String> entry : columnMap.entrySet()) {
+//					String name = entry.getValue();
+//					String key = entry.getKey();
+//					if (notFields != null && (notFields.containsKey(name) || notFields.containsKey(key))) {
+//						continue;
+//					}
+//					String columnName = tableAliasName + "." + name;
+//					if (name.equals(key)) {
+//						column.add(columnName);
+//					} else {
+//						column.add(columnName + " as " + key);
+//					}
+//				}
+//			}
 			
 
 			List<Object[]> childLeftJoinProviders = queryProvider.getLeftJoinProviders();

@@ -32,7 +32,6 @@ public class AnnotationBeanHandle {
 		Set<Class<?>> classList = reflections.getTypesAnnotatedWith(Table.class);
 		for (Class<?> cls : classList) {
 			BeanCacheConvert.loadEntityCache(cls);
-
 			BeanSessionMapperFactory.compileMapper(sqlSession, cls.getCanonicalName());
 		}
 
