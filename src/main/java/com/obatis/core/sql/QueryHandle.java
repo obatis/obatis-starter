@@ -185,5 +185,5 @@ public class QueryHandle {
 			getUpdateField(object, supClas, queryProvider);
 		}
 	}
-	
+
 }

@@ -154,4 +154,5 @@ public class SqlHandleProvider {
 	public static String appendPageSql(String sql, int pageNumber, int pageSize) {
 		return sqlHandleMethod.appendPageSql(sql, pageNumber, pageSize);
 	}
+
 }

@@ -399,8 +399,7 @@ public abstract class AbstractSqlHandleMethod {
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 
-		int tableAliasNameIndex = 0;
-		String tableAliasName = "t" + tableAliasNameIndex;
+		String tableAliasName = "t0";
 		SQL sql = new SQL();
 		sql.SELECT(getSelectFieldColumns(queryProvider, tableAliasName, columnMap, fieldMap));
 		Map<String, Object> value = new HashMap<>();
