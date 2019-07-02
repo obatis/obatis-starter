@@ -5,6 +5,7 @@ import com.obatis.core.sql.AbstractSqlHandleMethod;
 
 /**
  * @author HuangLongPu
+ * 具体 mysql 方法实现
  */
 public class MysqlCommonMethod extends AbstractSqlHandleMethod {
 
