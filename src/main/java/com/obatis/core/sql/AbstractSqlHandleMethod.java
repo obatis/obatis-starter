@@ -1,15 +1,13 @@
 package com.obatis.core.sql;
 
 import com.obatis.core.CommonField;
+import com.obatis.core.constant.CacheInfoConstant;
 import com.obatis.core.constant.SqlConstant;
 import com.obatis.core.constant.type.FilterEnum;
 import com.obatis.core.constant.type.SqlHandleEnum;
 import com.obatis.core.exception.HandleException;
-import com.obatis.core.constant.CacheInfoConstant;
 import com.obatis.validate.ValidateTool;
 import org.apache.ibatis.jdbc.SQL;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Array;
 import java.math.BigInteger;
@@ -414,10 +412,13 @@ public abstract class AbstractSqlHandleMethod {
 			String filterSql = getFilterSql(queryProvider.getLeftJoinProviders(), groups, orders, tableAliasName, filters, queryProvider.getOrProviders(), value,
 					INDEX_DEFAULT + "_tl", columnMap, fieldMap, DEFAULT_FIND);
 			if (!ValidateTool.isEmpty(filterSql)) {
-				// 放入值到map
-				param.put(SqlConstant.PROVIDER_FILTER, value);
 				sql.WHERE(filterSql);
 			}
+		}
+
+		if(!value.isEmpty()) {
+			// 放入值到map
+			param.put(SqlConstant.PROVIDER_FILTER, value);
 		}
 
 		if (!groups.isEmpty()) {
@@ -455,11 +456,15 @@ public abstract class AbstractSqlHandleMethod {
 			String filterSql = getFilterSql(queryProvider.getLeftJoinProviders(), groups, null, tableAliasName, filters, queryProvider.getOrProviders(), value,
 					INDEX_DEFAULT + "_tl", columnMap, fieldMap, DEFAULT_FIND);
 			if (!ValidateTool.isEmpty(filterSql)) {
-				// 放入值到map
-				param.put(SqlConstant.PROVIDER_FILTER, value);
 				sql.WHERE(filterSql);
 			}
 		}
+
+		if(!value.isEmpty()) {
+			// 放入值到map
+			param.put(SqlConstant.PROVIDER_FILTER, value);
+		}
+
 		if (!groups.isEmpty()) {
 			sql.GROUP_BY(groups.toArray(new String[groups.size()]));
 		}
@@ -938,11 +943,14 @@ public abstract class AbstractSqlHandleMethod {
 			String filterSql = getFilterSql(queryProvider.getLeftJoinProviders(), groups, orders, tableAliasName, filters, queryProvider.getOrProviders(), value,
 					INDEX_DEFAULT + "_t", columnMap, fieldMap, DEFAULT_FIND);
 			if (!ValidateTool.isEmpty(filterSql)) {
-				// 放入值到map
-				providers.put(SqlConstant.PROVIDER_FILTER, value);
 				sql.WHERE(filterSql);
 				totalSql.WHERE(filterSql);
 			}
+		}
+
+		if(!value.isEmpty()) {
+			// 放入值到map
+			providers.put(SqlConstant.PROVIDER_FILTER, value);
 		}
 
 		if (!groups.isEmpty()) {
