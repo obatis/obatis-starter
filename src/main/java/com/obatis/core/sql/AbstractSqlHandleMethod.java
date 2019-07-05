@@ -431,7 +431,6 @@ public abstract class AbstractSqlHandleMethod {
 //		if (PageEnum.IS_PAGE_TRUE == queryProvider.getIsPage()) {
 //			return appendPageSql(sql.toString(), queryProvider.getPageNumber(), queryProvider.getPageSize());
 //		}
-		System.out.println(sql.toString());
 		return sql.toString();
 	}
 
