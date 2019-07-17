@@ -23,6 +23,10 @@ public enum FilterEnum {
 	 */
 	EQUAL,
 	/**
+	 * 等于，= 针对字段
+	 */
+	EQUAL_FIELD,
+	/**
 	 * 大于，>
 	 */
 	GREATER_THAN,

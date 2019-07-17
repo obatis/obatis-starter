@@ -404,6 +404,12 @@ public class QueryProvider {
 		this.addFilter(filterName, filterType, value, JOIN_OR_EXPRESS);
 	}
 
+	/**
+	 * 设置连接查询 on 拼接的 or 条件
+	 * @param filterName
+	 * @param filterType
+	 * @param value
+	 */
 	private void onOr(String filterName, FilterEnum filterType, Object value) {
 		this.addOnFilter(filterName, filterType, value, JOIN_OR_EXPRESS);
 	}
@@ -417,6 +423,11 @@ public class QueryProvider {
 		this.andFilter(filterName, FilterEnum.LIKE, value);
 	}
 
+	/**
+	 * 增加连接查询 on 连接的 like 模糊查询
+	 * @param filterName
+	 * @param value
+	 */
 	public void onLike(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.LIKE, value);
 	}
@@ -430,6 +441,11 @@ public class QueryProvider {
 		this.or(filterName, FilterEnum.LIKE, value);
 	}
 
+	/**
+	 * 增加连接查询on 连接的 or 关系的模糊查询 like
+	 * @param filterName
+	 * @param value
+	 */
 	public void onOrLike(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.LIKE, value);
 	}
@@ -443,6 +459,11 @@ public class QueryProvider {
 		this.andFilter(filterName, FilterEnum.LEFT_LIKE, value);
 	}
 
+	/**
+	 * 增加连接查询 and查询条件的左模糊查询 like
+	 * @param filterName
+	 * @param value
+	 */
 	public void onLeftLike(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.LEFT_LIKE, value);
 	}
@@ -456,6 +477,11 @@ public class QueryProvider {
 		this.or(filterName, FilterEnum.LEFT_LIKE, value);
 	}
 
+	/**
+	 * 增加连接查询 or 查询条件左模糊查询， like
+	 * @param filterName
+	 * @param value
+	 */
 	public void onOrLeftLike(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.LEFT_LIKE, value);
 	}
@@ -469,6 +495,11 @@ public class QueryProvider {
 		this.andFilter(filterName, FilterEnum.RIGHT_LIKE, value);
 	}
 
+	/**
+	 * 增加连接查询 and 查询条件的右模糊查询，like
+	 * @param filterName
+	 * @param value
+	 */
 	public void onRightLike(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.RIGHT_LIKE, value);
 	}
@@ -482,6 +513,11 @@ public class QueryProvider {
 		this.or(filterName, FilterEnum.RIGHT_LIKE, value);
 	}
 
+	/**
+	 * 增加连接查询 or查询条件的右模糊查询， like
+	 * @param filterName
+	 * @param value
+	 */
 	public void onOrRightLike(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.RIGHT_LIKE, value);
 	}
@@ -495,8 +531,31 @@ public class QueryProvider {
 		this.andFilter(filterName, FilterEnum.EQUAL, value);
 	}
 
+	/**
+	 * 增加 and 关系的字段值相等的查询条件，例如 a = b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void equalsField(String filterName, String fieldName) {
+		this.andFilter(filterName, FilterEnum.EQUAL_FIELD, fieldName);
+	}
+
+	/**
+	 * 增加连接查询且为and关系查询条件
+	 * @param filterName
+	 * @param value
+	 */
 	public void onEquals(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.EQUAL, value);
+	}
+
+	/**
+	 * 增加连接查询且为and关系的字段值相等的查询条件，例如 a = b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void onEqualsField(String filterName, String fieldName) {
+		this.andOnFilter(filterName, FilterEnum.EQUAL_FIELD, fieldName);
 	}
 
 	/**
@@ -508,8 +567,31 @@ public class QueryProvider {
 		this.or(filterName, FilterEnum.EQUAL, value);
 	}
 
+	/**
+	 * 增加 or 关系的字段值相等的查询条件，例如 a = b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void orEqualsField(String filterName, String fieldName) {
+		this.or(filterName, FilterEnum.EQUAL_FIELD, fieldName);
+	}
+
+	/**
+	 * 增加连接查询 or 关系的查询条件，等于查询，=
+	 * @param filterName
+	 * @param value
+	 */
 	public void onOrEquals(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.EQUAL, value);
+	}
+
+	/**
+	 * 增加连接查询 or 关系的字段值相等的查询条件，例如 a = b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void onOrEqualsField(String filterName, String fieldName) {
+		this.onOr(filterName, FilterEnum.EQUAL, fieldName);
 	}
 
 	/**
@@ -534,6 +616,11 @@ public class QueryProvider {
 		this.or(filterName, FilterEnum.GREATER_THAN, value);
 	}
 
+	/**
+	 * 增加连接查询 or 查询条件，大于查询，>
+	 * @param filterName
+	 * @param value
+	 */
 	public void onOrGreaterThan(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.GREATER_THAN, value);
 	}
@@ -547,6 +634,11 @@ public class QueryProvider {
 		this.andFilter(filterName, FilterEnum.GREATER_EQUAL, value);
 	}
 
+	/**
+	 * 增加连接查询 and 查询条件，大于等于查询，>=
+	 * @param filterName
+	 * @param value
+	 */
 	public void onGreaterEqual(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.GREATER_EQUAL, value);
 	}
@@ -560,6 +652,11 @@ public class QueryProvider {
 		this.or(filterName, FilterEnum.GREATER_EQUAL, value);
 	}
 
+	/**
+	 * 增加连接查询 or 查询条件，大于等于查询，>=
+	 * @param filterName
+	 * @param value
+	 */
 	public void onOrGreaterEqual(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.GREATER_EQUAL, value);
 	}
@@ -572,6 +669,10 @@ public class QueryProvider {
 		this.andFilter(filterName, FilterEnum.GREATER_EQUAL, 0);
 	}
 
+	/**
+	 * 增加连接查询 and 大于等于0的条件表达式，传入字段名称即可
+	 * @param filterName
+	 */
 	public void onGreaterEqualZero(String filterName) {
 		this.andOnFilter(filterName, FilterEnum.GREATER_EQUAL, 0);
 	}
@@ -584,6 +685,10 @@ public class QueryProvider {
 		this.or(filterName, FilterEnum.GREATER_EQUAL, 0);
 	}
 
+	/**
+	 * 增加连接查询 or 大于等于0的条件表达式，传入字段名称即可
+	 * @param filterName
+	 */
 	public void onOrGreaterEqualZero(String filterName) {
 		this.onOr(filterName, FilterEnum.GREATER_EQUAL, 0);
 	}
@@ -597,6 +702,11 @@ public class QueryProvider {
 		this.andFilter(filterName, FilterEnum.LESS_THAN, value);
 	}
 
+	/**
+	 * 增加连接查询 and 查询条件，小于查询，<
+	 * @param filterName
+	 * @param value
+	 */
 	public void onLessThan(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.LESS_THAN, value);
 	}
@@ -610,6 +720,11 @@ public class QueryProvider {
 		this.or(filterName, FilterEnum.LESS_THAN, value);
 	}
 
+	/**
+	 * 增加连接查询 or 查询条件，小于查询，<
+	 * @param filterName
+	 * @param value
+	 */
 	public void onOrLessThan(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.LESS_THAN, value);
 	}
@@ -623,6 +738,11 @@ public class QueryProvider {
 		this.andFilter(filterName, FilterEnum.LESS_EQUAL, value);
 	}
 
+	/**
+	 * 增加连接查询 and 查询条件，小于等于查询，<=
+	 * @param filterName
+	 * @param value
+	 */
 	public void onLessEqual(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.LESS_EQUAL, value);
 	}
@@ -636,6 +756,11 @@ public class QueryProvider {
 		this.or(filterName, FilterEnum.LESS_EQUAL, value);
 	}
 
+	/**
+	 * 增加连接查询 or 查询条件，小于等于查询，<=
+	 * @param filterName
+	 * @param value
+	 */
 	public void onOrLessEqual(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.LESS_EQUAL, value);
 	}
@@ -649,6 +774,11 @@ public class QueryProvider {
 		this.andFilter(filterName, FilterEnum.NOT_EQUAL, value);
 	}
 
+	/**
+	 * 增加连接查询 and 查询，不等于查询，<>
+	 * @param filterName
+	 * @param value
+	 */
 	public void onNotEqual(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.NOT_EQUAL, value);
 	}
@@ -662,6 +792,11 @@ public class QueryProvider {
 		this.or(filterName, FilterEnum.NOT_EQUAL, value);
 	}
 
+	/**
+	 * 增加连接查询 or 查询，不等于查询，<>
+	 * @param filterName
+	 * @param value
+	 */
 	public void onOrNotEqual(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.NOT_EQUAL, value);
 	}
@@ -675,6 +810,11 @@ public class QueryProvider {
 		this.andFilter(filterName, FilterEnum.IN, value);
 	}
 
+	/**
+	 * 增加连接查询 and 查询条件，属于查询，in
+	 * @param filterName
+	 * @param value
+	 */
 	public void onIn(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.IN, value);
 	}
@@ -688,6 +828,11 @@ public class QueryProvider {
 		this.or(filterName, FilterEnum.IN, value);
 	}
 
+	/**
+	 * 增加连接查询 or 查询条件，属于查询，in
+	 * @param filterName
+	 * @param value
+	 */
 	public void onOrIn(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.IN, value);
 	}
@@ -701,6 +846,11 @@ public class QueryProvider {
 		this.andFilter(filterName, FilterEnum.NOT_IN, value);
 	}
 
+	/**
+	 * 增加连接查询 and 查询条件，不属于查询，not in
+	 * @param filterName
+	 * @param value
+	 */
 	public void onNotIn(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.NOT_IN, value);
 	}
@@ -714,6 +864,11 @@ public class QueryProvider {
 		this.or(filterName, FilterEnum.NOT_IN, value);
 	}
 
+	/**
+	 * 增加连接查询 or 查询条件，不属于查询，not in
+	 * @param filterName
+	 * @param value
+	 */
 	public void onOrNotIn(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.NOT_IN, value);
 	}
@@ -726,6 +881,10 @@ public class QueryProvider {
 		this.andFilter(filterName, FilterEnum.IS_NULL, null);
 	}
 
+	/**
+	 * 增加连接查询 and 查询条件，表示null值查询，is null
+	 * @param filterName
+	 */
 	public void onIsNull(String filterName) {
 		this.andOnFilter(filterName, FilterEnum.IS_NULL, null);
 	}
@@ -738,6 +897,10 @@ public class QueryProvider {
 		this.or(filterName, FilterEnum.IS_NULL, null);
 	}
 
+	/**
+	 * 增加连接查询 or 查询条件，表示null值查询，is null
+	 * @param filterName
+	 */
 	public void onOrIsNull(String filterName) {
 		this.onOr(filterName, FilterEnum.IS_NULL, null);
 	}
@@ -750,6 +913,10 @@ public class QueryProvider {
 		this.andFilter(filterName, FilterEnum.IS_NOT_NULL, null);
 	}
 
+	/**
+	 * 增加连接查询 and 查询条件，表示null值查询，is not null
+	 * @param filterName
+	 */
 	public void onIsNotNull(String filterName) {
 		this.andOnFilter(filterName, FilterEnum.IS_NOT_NULL, null);
 	}
@@ -762,6 +929,10 @@ public class QueryProvider {
 		this.or(filterName, FilterEnum.IS_NOT_NULL, null);
 	}
 
+	/**
+	 * 增加连接查询 or 查询条件，表示null值查询，is not null
+	 * @param filterName
+	 */
 	public void onOrIsNotNull(String filterName) {
 		this.onOr(filterName, FilterEnum.IS_NOT_NULL, null);
 	}
@@ -775,6 +946,11 @@ public class QueryProvider {
 		this.andFilter(filterName, FilterEnum.UP_GREATER_THAN, value);
 	}
 
+	/**
+	 * 增加连接查询 and 设定值后大于条件判断，比如count + 10 > 0
+	 * @param filterName
+	 * @param value
+	 */
 	public void onUpGreaterThanZero(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.UP_GREATER_THAN, value);
 	}
@@ -788,6 +964,11 @@ public class QueryProvider {
 		this.or(filterName, FilterEnum.UP_GREATER_THAN, value);
 	}
 
+	/**
+	 * 增加连接查询 or 设定值后大于条件判断，比如count + 10 > 0
+	 * @param filterName
+	 * @param value
+	 */
 	public void onOrUpGreaterThanZero(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.UP_GREATER_THAN, value);
 	}
@@ -801,6 +982,11 @@ public class QueryProvider {
 		this.andFilter(filterName, FilterEnum.UP_GREATER_EQUAL, value);
 	}
 
+	/**
+	 * 增加连接查询 and 设定值后大于等于条件判断，比如count + 10 >= 0
+	 * @param filterName
+	 * @param value
+	 */
 	public void onUpGreaterEqualZero(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.UP_GREATER_EQUAL, value);
 	}
@@ -814,6 +1000,11 @@ public class QueryProvider {
 		this.or(filterName, FilterEnum.UP_GREATER_EQUAL, value);
 	}
 
+	/**
+	 * 增加连接查询 or 设定值后大于等于条件判断，比如count + 10 >= 0
+	 * @param filterName
+	 * @param value
+	 */
 	public void onOrUpGreaterEqualZero(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.UP_GREATER_EQUAL, value);
 	}
@@ -827,6 +1018,11 @@ public class QueryProvider {
 		this.andFilter(filterName, FilterEnum.REDUCE_GREATER_THAN, value);
 	}
 
+	/**
+	 * 增加连接查询 and 设定值后大于条件判断，比如count + 10 > 0
+	 * @param filterName
+	 * @param value
+	 */
 	public void onReduceGreaterThanZero(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.REDUCE_GREATER_THAN, value);
 	}
@@ -840,6 +1036,11 @@ public class QueryProvider {
 		this.or(filterName, FilterEnum.REDUCE_GREATER_THAN, value);
 	}
 
+	/**
+	 * 增加连接查询 or 设定值后大于条件判断，比如count + 10 > 0
+	 * @param filterName
+	 * @param value
+	 */
 	public void onOrReduceGreaterThanZero(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.REDUCE_GREATER_THAN, value);
 	}
@@ -853,6 +1054,11 @@ public class QueryProvider {
 		this.andFilter(filterName, FilterEnum.REDUCE_GREATER_EQUAL, value);
 	}
 
+	/**
+	 * 连接查询 减少 and 设定值后小于等于条件判断，比如count - 10 >= 0
+	 * @param filterName
+	 * @param value
+	 */
 	public void onReduceGreaterEqualZero(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.REDUCE_GREATER_EQUAL, value);
 	}
@@ -866,6 +1072,11 @@ public class QueryProvider {
 		this.or(filterName, FilterEnum.REDUCE_GREATER_EQUAL, value);
 	}
 
+	/**
+	 * 连接查询 减少 or 设定值后小于等于条件判断，比如count - 10 >= 0
+	 * @param filterName
+	 * @param value
+	 */
 	public void onOrReduceGreaterEqualZero(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.REDUCE_GREATER_EQUAL, value);
 	}
