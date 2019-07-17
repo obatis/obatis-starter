@@ -532,7 +532,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 关系的字段值相等的查询条件，例如 a = b，a和b均为数据库字段
+	 * 增加 and 字段比较查询，等于查询，=，例如 a = b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -591,7 +591,7 @@ public class QueryProvider {
 	 * @param fieldName
 	 */
 	public void onOrEqualsField(String filterName, String fieldName) {
-		this.onOr(filterName, FilterEnum.EQUAL, fieldName);
+		this.onOr(filterName, FilterEnum.EQUAL_FIELD, fieldName);
 	}
 
 	/**
@@ -603,8 +603,31 @@ public class QueryProvider {
 		this.andFilter(filterName, FilterEnum.GREATER_THAN, value);
 	}
 
+	/**
+	 * 增加 and 字段比较查询条件，大于查询，>，例如 a > b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void greaterThanField(String filterName, String fieldName) {
+		this.andFilter(filterName, FilterEnum.GREATER_THAN_FIELD, fieldName);
+	}
+
+	/**
+	 * 增加连接查询 and 查询条件，大于查询，>
+	 * @param filterName
+	 * @param value
+	 */
 	public void onGreaterThan(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.GREATER_THAN, value);
+	}
+
+	/**
+	 * 增加 and 查询条件，字段大于查询，>，例如 a > b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void onGreaterThanField(String filterName, String fieldName) {
+		this.andOnFilter(filterName, FilterEnum.GREATER_THAN_FIELD, fieldName);
 	}
 
 	/**
@@ -617,12 +640,30 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 or 字段比较查询条件，大于查询，>，例如 a > b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void orGreaterThanField(String filterName, String fieldName) {
+		this.or(filterName, FilterEnum.GREATER_THAN_FIELD, fieldName);
+	}
+
+	/**
 	 * 增加连接查询 or 查询条件，大于查询，>
 	 * @param filterName
 	 * @param value
 	 */
 	public void onOrGreaterThan(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.GREATER_THAN, value);
+	}
+
+	/**
+	 * 增加连接查询 or 关系字段大于查询条件，大于查询，>，例如 a > b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void onOrGreaterThanField(String filterName, String fieldName) {
+		this.onOr(filterName, FilterEnum.GREATER_THAN_FIELD, fieldName);
 	}
 
 	/**
@@ -635,12 +676,30 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 and 字段比较查询条件，大于等于查询，>=，例如 a >= b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void greaterEqualField(String filterName, String fieldName) {
+		this.andFilter(filterName, FilterEnum.GREATER_EQUAL_FIELD, fieldName);
+	}
+
+	/**
 	 * 增加连接查询 and 查询条件，大于等于查询，>=
 	 * @param filterName
 	 * @param value
 	 */
 	public void onGreaterEqual(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.GREATER_EQUAL, value);
+	}
+
+	/**
+	 * 增加连接查询 and 字段查询条件，大于等于查询，>=，例如 a >= b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void onGreaterEqualField(String filterName, String fieldName) {
+		this.andOnFilter(filterName, FilterEnum.GREATER_EQUAL_FIELD, fieldName);
 	}
 
 	/**
@@ -653,12 +712,30 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 or 字段比较查询条件，大于等于查询，>=，例如 a >= b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void orGreaterEqualField(String filterName, String fieldName) {
+		this.or(filterName, FilterEnum.GREATER_EQUAL_FIELD, fieldName);
+	}
+
+	/**
 	 * 增加连接查询 or 查询条件，大于等于查询，>=
 	 * @param filterName
 	 * @param value
 	 */
 	public void onOrGreaterEqual(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.GREATER_EQUAL, value);
+	}
+
+	/**
+	 * 增加连接查询 or 字段查询条件，大于等于查询，>=，例如 a >= b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void onOrGreaterEqualField(String filterName, String fieldName) {
+		this.onOr(filterName, FilterEnum.GREATER_EQUAL_FIELD, fieldName);
 	}
 
 	/**
@@ -703,12 +780,30 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 and 字段比较查询条件，小于查询，<，例如 a < b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void lessThanField(String filterName, String fieldName) {
+		this.andFilter(filterName, FilterEnum.LESS_THAN_FIELD, fieldName);
+	}
+
+	/**
 	 * 增加连接查询 and 查询条件，小于查询，<
 	 * @param filterName
 	 * @param value
 	 */
 	public void onLessThan(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.LESS_THAN, value);
+	}
+
+	/**
+	 * 增加连接查询 and 字段比较查询条件，小于查询，<，例如 a < b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void onLessThanField(String filterName, String fieldName) {
+		this.andOnFilter(filterName, FilterEnum.LESS_THAN_FIELD, fieldName);
 	}
 
 	/**
@@ -721,12 +816,30 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 or 字段比较查询条件，小于查询，<，例如 a < b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void orLessThanField(String filterName, String fieldName) {
+		this.or(filterName, FilterEnum.LESS_THAN_FIELD, fieldName);
+	}
+
+	/**
 	 * 增加连接查询 or 查询条件，小于查询，<
 	 * @param filterName
 	 * @param value
 	 */
 	public void onOrLessThan(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.LESS_THAN, value);
+	}
+
+	/**
+	 * 增加连接查询 or 字段比较查询条件，小于查询，<，例如 a < b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void onOrLessThanField(String filterName, String fieldName) {
+		this.onOr(filterName, FilterEnum.LESS_THAN_FIELD, fieldName);
 	}
 
 	/**
@@ -739,12 +852,30 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 and 字段比较查询条件，小于等于查询，<=，例如 a <= b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void lessEqualField(String filterName, String fieldName) {
+		this.andFilter(filterName, FilterEnum.LESS_EQUAL_FIELD, fieldName);
+	}
+
+	/**
 	 * 增加连接查询 and 查询条件，小于等于查询，<=
 	 * @param filterName
 	 * @param value
 	 */
 	public void onLessEqual(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.LESS_EQUAL, value);
+	}
+
+	/**
+	 * 增加连接查询 and 字段比较查询条件，小于等于查询，<=，例如 a <= b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void onLessEqualField(String filterName, String fieldName) {
+		this.andOnFilter(filterName, FilterEnum.LESS_EQUAL_FIELD, fieldName);
 	}
 
 	/**
@@ -757,12 +888,30 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 or 字段比较查询条件，小于等于查询，<=，例如 a <= b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void orLessEqualField(String filterName, String fieldName) {
+		this.or(filterName, FilterEnum.LESS_EQUAL_FIELD, fieldName);
+	}
+
+	/**
 	 * 增加连接查询 or 查询条件，小于等于查询，<=
 	 * @param filterName
 	 * @param value
 	 */
 	public void onOrLessEqual(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.LESS_EQUAL, value);
+	}
+
+	/**
+	 * 增加连接查询 or 字段比较查询条件，小于等于查询，<=，例如 a <= b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void onOrLessEqualField(String filterName, String fieldName) {
+		this.onOr(filterName, FilterEnum.LESS_EQUAL_FIELD, fieldName);
 	}
 
 	/**
@@ -775,12 +924,30 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 and 字段比较查询，不等于查询，<>，例如 a <> b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void notEqualField(String filterName, String fieldName) {
+		this.andFilter(filterName, FilterEnum.NOT_EQUAL_FIELD, fieldName);
+	}
+
+	/**
 	 * 增加连接查询 and 查询，不等于查询，<>
 	 * @param filterName
 	 * @param value
 	 */
 	public void onNotEqual(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.NOT_EQUAL, value);
+	}
+
+	/**
+	 * 增加连接查询 and 查询，不等于查询，<>,例如 a <> b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void onNotEqualField(String filterName, String fieldName) {
+		this.andOnFilter(filterName, FilterEnum.NOT_EQUAL_FIELD, fieldName);
 	}
 
 	/**
@@ -793,12 +960,30 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 or 字段比较查询，不等于查询，<>,例如 a <> b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void orNotEqualField(String filterName, String fieldName) {
+		this.or(filterName, FilterEnum.NOT_EQUAL_FIELD, fieldName);
+	}
+
+	/**
 	 * 增加连接查询 or 查询，不等于查询，<>
 	 * @param filterName
 	 * @param value
 	 */
 	public void onOrNotEqual(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.NOT_EQUAL, value);
+	}
+
+	/**
+	 * 增加连接查询 or 字段比较查询，不等于查询，<>,例如 a <> b，a和b均为数据库字段
+	 * @param filterName
+	 * @param fieldName
+	 */
+	public void onOrNotEqualField(String filterName, String fieldName) {
+		this.onOr(filterName, FilterEnum.NOT_EQUAL_FIELD, fieldName);
 	}
 
 	/**

@@ -185,15 +185,7 @@ public abstract class AbstractSqlHandleMethod {
 			Object[] obj = filters.get(i);
 			String key = SqlConstant.PROVIDER_FILTER + "_v" + index + "_" + i;
 			FilterEnum filterType = (FilterEnum) obj[1];
-			String filterName = obj[0].toString();
-			String column = columnMap.get(filterName);
-
-			String field;
-			if (!ValidateTool.isEmpty(column)) {
-				field = column;
-			} else {
-				field = filterName;
-			}
+			String field = getField(obj[0].toString(), columnMap);
 
 			String sql;
 			String expression = "#{request." + SqlConstant.PROVIDER_FILTER + "." + key + "}";
@@ -246,6 +238,15 @@ public abstract class AbstractSqlHandleMethod {
 				sql = getAgFunction(tableAliasNamePrefix, field, fieldMap, columnMap) + getFilterType(filterType);
 				sql += expression;
 				value.put(key, vue);
+				break;
+			case EQUAL_FIELD:
+			case GREATER_THAN_FIELD:
+			case GREATER_EQUAL_FIELD:
+			case LESS_THAN_FIELD:
+			case LESS_EQUAL_FIELD:
+			case NOT_EQUAL_FIELD:
+				sql = getAgFunction(tableAliasNamePrefix, field, fieldMap, columnMap) + getFilterType(filterType);
+				sql += getAgFunction(tableAliasNamePrefix, getField(value.toString(), columnMap), fieldMap, columnMap);
 				break;
 			default:
 				sql = tableAliasNamePrefix + field + getFilterType(filterType);
@@ -301,6 +302,17 @@ public abstract class AbstractSqlHandleMethod {
 		}
 
 		return filterSql.toString();
+	}
+
+	private String getField(String filterName, Map<String, String> columnMap) {
+		String column = columnMap.get(filterName);
+		String field;
+		if (!ValidateTool.isEmpty(column)) {
+			field = column;
+		} else {
+			field = filterName;
+		}
+		return field;
 	}
 
 	public String getReplaceSql(String sql, int index) {
@@ -475,13 +487,7 @@ public abstract class AbstractSqlHandleMethod {
 		List<String> queryGroup = queryProvider.getGroups();
 		if (queryGroup != null && !queryGroup.isEmpty()) {
 			for (String field : queryGroup) {
-				String column = columnMap.get(field);
-				String fieldName;
-				if (!ValidateTool.isEmpty(column)) {
-					fieldName = column;
-				} else {
-					fieldName = field;
-				}
+				String fieldName = getField(field, columnMap);
 				groups.add(tableAsName + "." + fieldName);
 			}
 		}
@@ -767,9 +773,7 @@ public abstract class AbstractSqlHandleMethod {
 		if (fieldName.contains("+")) {
 			fieldName = fieldName.replace("+", "}+{");
 			fieldNameTemp = fieldNameTemp.replace("+", ",");
-//			if (!replaceFlag) {
-				replaceFlag = true;
-//			}
+			replaceFlag = true;
 		}
 		if (fieldName.contains("-")) {
 			fieldName = fieldName.replace("-", "}-{");
@@ -808,8 +812,6 @@ public abstract class AbstractSqlHandleMethod {
 		}
 
 		if (replaceFlag) {
-//			fieldName = fieldName.replaceAll(" ", "");
-//			fieldNameTemp = fieldNameTemp.replaceAll(" ", "");
 			fieldName = "{" + fieldName + "}";
 			String[] fieldNameTempArr = fieldNameTemp.split(",");
 			Map<String, String> fieldNameTempMap = new HashMap<>();
@@ -833,8 +835,6 @@ public abstract class AbstractSqlHandleMethod {
 				} else {
 					fieldName = fieldName.replace("{" + field + "}", cacheFieldNameTempMap.get(map.getKey()));
 				}
-
-//				fieldName = fieldName.replace("{" + field + "}", tableAliasName + field);
 			}
 
 			return fieldName.replaceAll("[{}]", "");
@@ -846,9 +846,7 @@ public abstract class AbstractSqlHandleMethod {
 				return tableAliasName + fieldMap.get(tempFieldName);
 			} else {
 				return fieldName;
-//				fieldName = fieldName.replace("{" + field + "}", cacheFieldNameTempMap.get(map.getKey()));
 			}
-//			return tableAliasName + fieldName;
 		}
 	}
 
@@ -872,21 +870,27 @@ public abstract class AbstractSqlHandleMethod {
 			filterType = " like ";
 			break;
 		case EQUAL:
+		case EQUAL_FIELD:
 			filterType =  " = ";
 			break;
 		case GREATER_THAN:
+		case GREATER_THAN_FIELD:
 			filterType = " > ";
 			break;
 		case GREATER_EQUAL:
+		case GREATER_EQUAL_FIELD:
 			filterType = " >= ";
 			break;
 		case LESS_THAN:
+		case LESS_THAN_FIELD:
 			filterType = " < ";
 			break;
 		case LESS_EQUAL:
+		case LESS_EQUAL_FIELD:
 			filterType = " <= ";
 			break;
 		case NOT_EQUAL:
+		case NOT_EQUAL_FIELD:
 			filterType = " <> ";
 			break;
 		case IN:

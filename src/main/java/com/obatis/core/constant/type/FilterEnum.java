@@ -30,22 +30,42 @@ public enum FilterEnum {
 	 * 大于，>
 	 */
 	GREATER_THAN,
+    /**
+     * 大于，> 针对字段
+     */
+    GREATER_THAN_FIELD,
 	/**
 	 * 大于等于，>=
 	 */
 	GREATER_EQUAL,
+    /**
+     * 大于等于，>= 针对字段
+     */
+    GREATER_EQUAL_FIELD,
 	/**
 	 * 小于，<
 	 */
 	LESS_THAN,
+    /**
+     * 小于，< 针对字段
+     */
+    LESS_THAN_FIELD,
 	/**
 	 * 小于等于，<=
 	 */
 	LESS_EQUAL,
+    /**
+     * 小于等于，<= 针对字段
+     */
+    LESS_EQUAL_FIELD,
 	/**
 	 * 不等于，<>
 	 */
 	NOT_EQUAL,
+    /**
+     * 不等于，<> 针对字段
+     */
+    NOT_EQUAL_FIELD,
 	/**
 	 * "in" 查询，in
 	 */
