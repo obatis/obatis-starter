@@ -12,10 +12,7 @@ import com.obatis.core.convert.BeanCacheConvert;
 import com.obatis.core.sql.mysql.HandleOrderMethod;
 import com.obatis.validate.ValidateTool;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 数据库操作 sql 封装操作类，除使用直接拼装 sql 外，其余数据库操作全部使用这个类提供的属性进行操作
@@ -120,12 +117,6 @@ public class QueryProvider {
 			throw new HandleException("error: joinTableName is null");
 		}
 		this.joinTableName = joinTableName;
-	}
-
-	public void set(String...columns) {
-		for (String fieldName : columns) {
-			set(fieldName);
-		}
 	}
 
 	/**
@@ -996,11 +987,29 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 and 查询条件，属于查询，in >> 接收可变参数
+	 * @param filterName
+	 * @param value
+	 */
+	public void in(String filterName, Object...value) {
+		this.andFilter(filterName, FilterEnum.IN, value);
+	}
+
+	/**
 	 * 增加连接查询 and 查询条件，属于查询，in
 	 * @param filterName
 	 * @param value
 	 */
 	public void onIn(String filterName, Object value) {
+		this.andOnFilter(filterName, FilterEnum.IN, value);
+	}
+
+	/**
+	 * 增加连接查询 and 查询条件，属于查询，in >> 接收可变参数
+	 * @param filterName
+	 * @param value
+	 */
+	public void onIn(String filterName, Object...value) {
 		this.andOnFilter(filterName, FilterEnum.IN, value);
 	}
 
@@ -1014,11 +1023,29 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 or 查询条件，属于查询，in >> 接收可变参数
+	 * @param filterName
+	 * @param value
+	 */
+	public void orIn(String filterName, Object...value) {
+		this.or(filterName, FilterEnum.IN, value);
+	}
+
+	/**
 	 * 增加连接查询 or 查询条件，属于查询，in
 	 * @param filterName
 	 * @param value
 	 */
 	public void onOrIn(String filterName, Object value) {
+		this.onOr(filterName, FilterEnum.IN, value);
+	}
+
+	/**
+	 * 增加连接查询 or 查询条件，属于查询，in >> 接收可变参数
+	 * @param filterName
+	 * @param value
+	 */
+	public void onOrIn(String filterName, Object...value) {
 		this.onOr(filterName, FilterEnum.IN, value);
 	}
 
@@ -1032,11 +1059,29 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 and 查询条件，不属于查询，not in >> 接收可变参数
+	 * @param filterName
+	 * @param value
+	 */
+	public void notIn(String filterName, Object...value) {
+		this.andFilter(filterName, FilterEnum.NOT_IN, value);
+	}
+
+	/**
 	 * 增加连接查询 and 查询条件，不属于查询，not in
 	 * @param filterName
 	 * @param value
 	 */
 	public void onNotIn(String filterName, Object value) {
+		this.andOnFilter(filterName, FilterEnum.NOT_IN, value);
+	}
+
+	/**
+	 * 增加连接查询 and 查询条件，不属于查询，not in  >> 接收可变参数
+	 * @param filterName
+	 * @param value
+	 */
+	public void onNotIn(String filterName, Object...value) {
 		this.andOnFilter(filterName, FilterEnum.NOT_IN, value);
 	}
 
@@ -1050,11 +1095,29 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 or 查询条件，不属于查询，not in  >>  接收可变参数
+	 * @param filterName
+	 * @param value
+	 */
+	public void orNotIn(String filterName, Object...value) {
+		this.or(filterName, FilterEnum.NOT_IN, value);
+	}
+
+	/**
 	 * 增加连接查询 or 查询条件，不属于查询，not in
 	 * @param filterName
 	 * @param value
 	 */
 	public void onOrNotIn(String filterName, Object value) {
+		this.onOr(filterName, FilterEnum.NOT_IN, value);
+	}
+
+	/**
+	 * 增加连接查询 or 查询条件，不属于查询，not in  >>  接收可变参数
+	 * @param filterName
+	 * @param value
+	 */
+	public void onOrNotIn(String filterName, Object...value) {
 		this.onOr(filterName, FilterEnum.NOT_IN, value);
 	}
 
