@@ -173,10 +173,10 @@ public class QueryProvider {
 	}
 	
 	/**
-	 * count 统计函数 >> count(1)
+	 * count 统计函数 >> count(1)，默认别名为 count
 	 */
 	public void addCount() {
-		this.addCount("");
+		this.addCount("count");
 	}
 	
 	/**
@@ -189,14 +189,14 @@ public class QueryProvider {
 	}
 	
 	/**
-	 * distinct 去重函数 >> distinct 'fieldName'
+	 * distinct 去重函数 >> distinct 'fieldName'，默认别名为 'fieldName'
 	 * @param fieldName
 	 */
 	public void addCountDistinct(String fieldName) {
 		if(ValidateTool.isEmpty(fieldName)) {
 			throw new HandleException("error:field is null");
 		}
-		this.addCountDistinct(fieldName, "");
+		this.addCountDistinct(fieldName, fieldName);
 	}
 	
 	/**
@@ -212,11 +212,11 @@ public class QueryProvider {
 	}
 	
 	/**
-	 * sum 求和函数 >> sum('fieldName')
+	 * sum 求和函数 >> sum('fieldName')，默认别名为 'fieldName'
 	 * @param fieldName
 	 */
 	public void addSum(String fieldName) {
-		this.addSum(fieldName, null);
+		this.addSum(fieldName, fieldName);
 	}
 	
 	/**
@@ -229,11 +229,11 @@ public class QueryProvider {
 	}
 	
 	/**
-	 * min 最小值函数 >> min('fieldName')
+	 * min 最小值函数 >> min('fieldName')，默认别名为 'fieldName'
 	 * @param fieldName
 	 */
 	public void addMin(String fieldName) {
-		this.addMin(fieldName, null);
+		this.addMin(fieldName, fieldName);
 	}
 	
 	/**
@@ -246,7 +246,7 @@ public class QueryProvider {
 	}
 	
 	/**
-	 * max 最大值函数 >> max('fieldName')
+	 * max 最大值函数 >> max('fieldName')，默认别名为 'fieldName'
 	 * @param fieldName
 	 */
 	public void addMax(String fieldName) {
@@ -263,11 +263,11 @@ public class QueryProvider {
 	}
 	
 	/**
-	 * avg 平均值函数 >> avg('fieldName')
+	 * avg 平均值函数 >> avg('fieldName')，默认别名为 'fieldName'
 	 * @param fieldName    字段名
 	 */
 	public void addAvg(String fieldName) {
-		this.addAvg(fieldName, null);
+		this.addAvg(fieldName, fieldName);
 	}
 	
 	/**
