@@ -421,7 +421,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 需传入的条件值。
-	 * @param sql     sql语句中的条件，用 "?" 号代替，防止SQL注入
+	 * @param sql       sql语句中的条件，用 "?" 号代替，防止SQL注入
 	 * @param params    需传入的条件值，按顺序存放
 	 * @return
 	 */
@@ -472,7 +472,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 根据传入的SQL语句，返回符合条件的list集合的Map格式记录。
-	 * @param sql   sql语句中的条件，用 "?" 号代替，防止SQL注入
+	 * @param sql     sql语句中的条件，用 "?" 号代替，防止SQL注入
 	 * @param params  需传入的条件值，按顺序存放
 	 * @return
 	 */
@@ -483,7 +483,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 传入SQL，返回预设类型集合。返回类型为预设的class类型，需强制转换一次。
 	 * @param sql          sql语句中的条件，用 "?" 号代替，防止SQL注入
-	 * @param params        需传入的条件值，按顺序存放
+	 * @param params       需传入的条件值，按顺序存放
 	 * @param resultCls    返回bean类型
 	 * @return
 	 */
@@ -493,7 +493,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 根据传入的SQL语句，返回符合条件的list集合的Map格式记录。
-	 * @param sql     sql语句中的条件，用 "?" 号代替，防止SQL注入
+	 * @param sql      sql语句中的条件，用 "?" 号代替，防止SQL注入
 	 * @param params   需传入的条件值，按顺序存放
 	 * @return
 	 */
@@ -507,7 +507,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * 分页查询，同时返回分页数据和总条数。
 	 * @param sql           主体查询语句
 	 * @param totalSql      总条数查询语句
-	 * @param params          条件值
+	 * @param params        条件值
 	 * @param pageNumber    页码
 	 * @param pageSize      每行显示条数
 	 * @return
@@ -531,7 +531,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * 分页查询，同时返回分页数据和总条数。
 	 * @param sql           主体查询语句
 	 * @param totalSql      总条数查询语句
-	 * @param params          条件值
+	 * @param params        条件值
 	 * @param pageNumber    页码
 	 * @param pageSize      每行显示条数
 	 * @param resultCls     resultCls 返回 预定义的 resultCls Bean 泛型数据类型
@@ -555,7 +555,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * 分页查询，同时返回分页数据和总条数，返回 Map 数据。
 	 * @param sql           主体查询语句
 	 * @param totalSql      总条数查询语句
-	 * @param params          条件值
+	 * @param params        条件值
 	 * @param pageNumber    页面
 	 * @param pageSize      每行显示条数
 	 * @return
@@ -603,7 +603,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	/**
 	 * 主要实现于在前端查询时选中的页面超过总条数，非前端分页查询，不建议使用。
 	 * 分页查询，同时返回分页数据和总条数。
-	 * @param provider  封装的参数对象
+	 * @param provider       封装的参数对象
 	 * @param resultCls      返回 预定义的 resultCls Bean 泛型数据类型
 	 * @return 
 	 */
