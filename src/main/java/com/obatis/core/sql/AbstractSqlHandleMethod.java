@@ -826,12 +826,12 @@ public abstract class AbstractSqlHandleMethod {
 
 			for (Map.Entry<String, String> map : fieldNameTempMap.entrySet()) {
 				String field = map.getValue();
-				String tempField = field.toLowerCase();
+//				String tempField = field.toLowerCase();
 
 				if(fieldMap.containsKey(field)) {
 					fieldName = fieldName.replace("{" + field + "}", tableAliasName + field);
 				} else if (columnMap.containsKey(field)) {
-					fieldName = fieldName.replace("{" + field + "}", tableAliasName + fieldMap.get(field));
+					fieldName = fieldName.replace("{" + field + "}", tableAliasName + columnMap.get(field));
 				} else {
 					fieldName = fieldName.replace("{" + field + "}", cacheFieldNameTempMap.get(map.getKey()));
 				}
@@ -843,7 +843,7 @@ public abstract class AbstractSqlHandleMethod {
 			if(fieldMap.containsKey(tempFieldName)) {
 				return tableAliasName + tempFieldName;
 			} else if (columnMap.containsKey(tempFieldName)) {
-				return tableAliasName + fieldMap.get(tempFieldName);
+				return tableAliasName + columnMap.get(tempFieldName);
 			} else {
 				return fieldName;
 			}
