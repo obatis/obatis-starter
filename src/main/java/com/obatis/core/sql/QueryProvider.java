@@ -173,126 +173,294 @@ public class QueryProvider {
 	}
 	
 	/**
-	 * count 统计函数 >> count(1)，默认别名为 count
+	 * count 统计函数 >> count(1)，默认别名为 count。
+	 * 该方法已过期，由 selectCount 替代
 	 */
+	@Deprecated
 	public void addCount() {
-		this.addCount("count");
+		this.selectCount("count");
+	}
+
+	/**
+	 * count 统计函数 >> count(1)，默认别名为 count。
+	 */
+	public void selectCount() {
+		this.selectCount("count");
 	}
 	
 	/**
-	 * count 统计函数 >> count(1) as 'aliasName'
-	 * @author HuangLongPu
+	 * count 统计函数 >> count(1) as 'aliasName'。
+	 * 该方法已过期，由 selectCount 替代
 	 * @param aliasName
 	 */
+	@Deprecated
 	public void addCount(String  aliasName) {
+		this.addValue("", SqlHandleEnum.HANDLE_COUNT, aliasName);
+	}
+
+	/**
+	 * count 统计函数 >> count(1) as 'aliasName'。
+	 * @param aliasName
+	 */
+	public void selectCount(String  aliasName) {
 		this.addValue("", SqlHandleEnum.HANDLE_COUNT, aliasName);
 	}
 	
 	/**
-	 * distinct 去重函数 >> distinct 'fieldName'，默认别名为 'fieldName'
+	 * distinct 去重函数 >> distinct 'fieldName'，默认别名为 'fieldName'。
+	 * 方法已过期，由 selectCountDistinct 替代
 	 * @param fieldName
 	 */
+	@Deprecated
 	public void addCountDistinct(String fieldName) {
-		if(ValidateTool.isEmpty(fieldName)) {
-			throw new HandleException("error:field is null");
-		}
-		this.addCountDistinct(fieldName, fieldName);
+		this.selectCountDistinct(fieldName);
+	}
+
+	/**
+	 * count与distinct 去重函数联合使用 >> count distinct 'fieldName'，默认别名为 'fieldName'
+	 * @param fieldName
+	 */
+	public void selectCountDistinct(String fieldName) {
+		this.selectCountDistinct(fieldName, fieldName);
 	}
 	
 	/**
-	 * distinct 去重函数 >> distinct 'fieldName' as 'aliasName'
+	 * distinct 去重函数 >> distinct 'fieldName' as 'aliasName'。
+	 * 方法已过期，由 selectCountDistinct 替代
 	 * @param fieldName
 	 * @param aliasName
 	 */
+	@Deprecated
 	public void addCountDistinct(String fieldName, String aliasName) {
+		this.selectCountDistinct(fieldName, aliasName);
+	}
+
+	/**
+	 * count与distinct 去重函数联合使用 >> count distinct 'fieldName' as 'aliasName'
+	 * @param fieldName
+	 * @param aliasName
+	 */
+	public void selectCountDistinct(String fieldName, String aliasName) {
 		if(ValidateTool.isEmpty(fieldName)) {
 			throw new HandleException("error: field is null");
+		}
+		if(ValidateTool.isEmpty(aliasName)) {
+			aliasName = fieldName;
 		}
 		this.addValue(fieldName, SqlHandleEnum.HANDLE_COUNT, aliasName);
 	}
 	
 	/**
 	 * sum 求和函数 >> sum('fieldName')，默认别名为 'fieldName'
+	 * 方法已过期，由 selectSum 替代
 	 * @param fieldName
 	 */
+	@Deprecated
 	public void addSum(String fieldName) {
-		this.addSum(fieldName, fieldName);
+		this.selectSum(fieldName);
+	}
+
+	/**
+	 * sum 求和函数 >> sum('fieldName')，默认别名为 'fieldName'
+	 * @param fieldName
+	 */
+	public void selectSum(String fieldName) {
+		this.selectSum(fieldName, fieldName);
 	}
 	
+	/**
+	 * sum 求和函数 >> sum('fieldName') as 'aliasName'
+	 * 方法已过期，由 selectSum 替代
+	 * @param fieldName
+	 * @param aliasName
+	 */
+	@Deprecated
+	public void addSum(String fieldName, String  aliasName) {
+		this.selectSum(fieldName, aliasName);
+	}
+
 	/**
 	 * sum 求和函数 >> sum('fieldName') as 'aliasName'
 	 * @param fieldName
 	 * @param aliasName
 	 */
-	public void addSum(String fieldName, String  aliasName) {
+	public void selectSum(String fieldName, String  aliasName) {
 		this.addValue(fieldName, SqlHandleEnum.HANDLE_SUM, aliasName);
 	}
 	
 	/**
+	 * min 最小值函数 >> min('fieldName')，默认别名为 'fieldName'。
+	 * 方法已过期，由 selectMin 替代
+	 * @param fieldName
+	 */
+	@Deprecated
+	public void addMin(String fieldName) {
+		this.selectMin(fieldName);
+	}
+
+	/**
 	 * min 最小值函数 >> min('fieldName')，默认别名为 'fieldName'
 	 * @param fieldName
 	 */
-	public void addMin(String fieldName) {
-		this.addMin(fieldName, fieldName);
+	public void selectMin(String fieldName) {
+		this.selectMin(fieldName, fieldName);
 	}
 	
+	/**
+	 * min 最小值函数 >> min('fieldName') as 'aliasName'。
+	 * 方法已过期，由 selectMin 替代
+	 * @param fieldName
+	 * @param aliasName
+	 */
+	@Deprecated
+	public void addMin(String fieldName, String  aliasName) {
+		this.selectMin(fieldName, aliasName);
+	}
+
 	/**
 	 * min 最小值函数 >> min('fieldName') as 'aliasName'
 	 * @param fieldName
 	 * @param aliasName
 	 */
-	public void addMin(String fieldName, String  aliasName) {
+	public void selectMin(String fieldName, String  aliasName) {
+		if(ValidateTool.isEmpty(fieldName)) {
+			throw new HandleException("error: field is null");
+		}
+		if(ValidateTool.isEmpty(aliasName)) {
+			aliasName = fieldName;
+		}
 		this.addValue(fieldName, SqlHandleEnum.HANDLE_MIN, aliasName);
 	}
 	
 	/**
+	 * max 最大值函数 >> max('fieldName')，默认别名为 'fieldName'。
+	 * 方法已过期，由 selectMax 替代
+	 * @param fieldName
+	 */
+	@Deprecated
+	public void addMax(String fieldName) {
+		this.selectMax(fieldName);
+	}
+
+	/**
 	 * max 最大值函数 >> max('fieldName')，默认别名为 'fieldName'
 	 * @param fieldName
 	 */
-	public void addMax(String fieldName) {
-		this.addMax(fieldName, null);
+	public void selectMax(String fieldName) {
+		this.selectMax(fieldName, fieldName);
 	}
 	
 	/**
-	 * max 最大值函数 >> max('fieldName') as 'aliasName'
+	 * max 最大值函数 >> max('fieldName') as 'aliasName'。
+	 * 方法已过期，由 selectMax 替代
 	 * @param fieldName    字段名
 	 * @param aliasName    别名
 	 */
+	@Deprecated
 	public void addMax(String fieldName, String  aliasName) {
+		this.selectMax(fieldName, aliasName);
+	}
+
+	/**
+	 * max 最大值函数 >> max('fieldName') as 'aliasName'
+	 * @param fieldName
+	 * @param aliasName
+	 */
+	public void selectMax(String fieldName, String  aliasName) {
+		if(ValidateTool.isEmpty(fieldName)) {
+			throw new HandleException("error: field is null");
+		}
+		if(ValidateTool.isEmpty(aliasName)) {
+			aliasName = fieldName;
+		}
 		this.addValue(fieldName, SqlHandleEnum.HANDLE_MAX, aliasName);
 	}
 	
 	/**
-	 * avg 平均值函数 >> avg('fieldName')，默认别名为 'fieldName'
+	 * avg 平均值函数 >> avg('fieldName')，默认别名为 'fieldName'。
+	 * 方法已过期，由 selectAvg 替代
 	 * @param fieldName    字段名
 	 */
+	@Deprecated
 	public void addAvg(String fieldName) {
-		this.addAvg(fieldName, fieldName);
+		this.selectAvg(fieldName);
+	}
+
+	/**
+	 * avg 平均值函数 >> avg('fieldName')，默认别名为 'fieldName'
+	 * @param fieldName
+	 */
+	public void selectAvg(String fieldName) {
+		this.selectAvg(fieldName, fieldName);
 	}
 	
 	/**
-	 * avg 平均值函数 >> avg('fieldName') as 'aliasName'
+	 * avg 平均值函数 >> avg('fieldName') as 'aliasName'。
+	 * 方法已过期，由 selectAvg 替代
 	 * @param fieldName    字段名
 	 * @param aliasName    别名
 	 */
+	@Deprecated
 	public void addAvg(String fieldName, String  aliasName) {
+		this.selectAvg(fieldName, aliasName);
+	}
+
+	/**
+	 * avg 平均值函数 >> avg('fieldName') as 'aliasName'
+	 * @param fieldName
+	 * @param aliasName
+	 */
+	public void selectAvg(String fieldName, String  aliasName) {
+		if(ValidateTool.isEmpty(fieldName)) {
+			throw new HandleException("error: field is null");
+		}
+		if(ValidateTool.isEmpty(aliasName)) {
+			aliasName = fieldName;
+		}
 		this.addValue(fieldName, SqlHandleEnum.HANDLE_AVG, aliasName);
 	}
 	
 	/**
+	 * 表达式函数，非聚合函数时使用，如需聚合，直接使用提供的聚合函数方法即可，同等原理。
+	 * 方法已过期，由 selectExp 替代
+	 * @param fieldName
+	 */
+	@Deprecated
+	public void addExp(String fieldName) {
+		this.selectExp(fieldName);
+	}
+
+	/**
 	 * 表达式函数，非聚合函数时使用，如需聚合，直接使用提供的聚合函数方法即可，同等原理
 	 * @param fieldName
 	 */
-	public void addExp(String fieldName) {
-		this.addExp(fieldName, null);
+	public void selectExp(String fieldName) {
+		this.selectExp(fieldName, null);
 	}
 	
+	/**
+	 * 表达式函数，非聚合函数时使用，如需聚合，直接使用提供的聚合函数方法即可，同等原理。
+	 * 方法已过期，由 selectExp 替代
+	 * @param fieldName
+	 * @param aliasName
+	 */
+	@Deprecated
+	public void addExp(String fieldName, String  aliasName) {
+		this.selectExp(fieldName, aliasName);
+	}
+
 	/**
 	 * 表达式函数，非聚合函数时使用，如需聚合，直接使用提供的聚合函数方法即可，同等原理
 	 * @param fieldName
 	 * @param aliasName
 	 */
-	public void addExp(String fieldName, String  aliasName) {
+	public void selectExp(String fieldName, String  aliasName) {
+		if(ValidateTool.isEmpty(fieldName)) {
+			throw new HandleException("error: field is null");
+		}
+		if(ValidateTool.isEmpty(aliasName)) {
+			aliasName = "exp_value";
+		}
 		this.addValue(fieldName, SqlHandleEnum.HANDLE_EXP, aliasName);
 	}
 
