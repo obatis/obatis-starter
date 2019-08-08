@@ -23,6 +23,10 @@ public enum FilterEnum {
 	 */
 	EQUAL,
 	/**
+	 * 等于，= ，针对时间格式化使用
+	 */
+	EQUAL_DATE_FORMAT,
+	/**
 	 * 等于，= 针对字段
 	 */
 	EQUAL_FIELD,
@@ -30,14 +34,22 @@ public enum FilterEnum {
 	 * 大于，>
 	 */
 	GREATER_THAN,
+	/**
+	 * 大于，>， 针对时间格式化使用
+	 */
+	GREATER_THAN_DATE_FORMAT,
     /**
-     * 大于，> 针对字段
+     * 大于，>
      */
     GREATER_THAN_FIELD,
 	/**
 	 * 大于等于，>=
 	 */
 	GREATER_EQUAL,
+	/**
+	 * 大于等于，>=,针对时间格式化使用
+	 */
+	GREATER_EQUAL_DATE_FORMAT,
     /**
      * 大于等于，>= 针对字段
      */
@@ -46,6 +58,10 @@ public enum FilterEnum {
 	 * 小于，<
 	 */
 	LESS_THAN,
+	/**
+	 * 小于，<,针对时间格式化使用
+	 */
+	LESS_THAN_DATE_FORMAT,
     /**
      * 小于，< 针对字段
      */
@@ -54,6 +70,10 @@ public enum FilterEnum {
 	 * 小于等于，<=
 	 */
 	LESS_EQUAL,
+	/**
+	 * 小于等于，<= 针对时间格式化使用
+	 */
+	LESS_EQUAL_DATE_FORMAT,
     /**
      * 小于等于，<= 针对字段
      */
@@ -62,6 +82,10 @@ public enum FilterEnum {
 	 * 不等于，<>
 	 */
 	NOT_EQUAL,
+	/**
+	 * 不等于，<>, 针对时间格式化使用
+	 */
+	NOT_EQUAL_DATE_FORMAT,
     /**
      * 不等于，<> 针对字段
      */

@@ -248,6 +248,17 @@ public abstract class AbstractSqlHandleMethod {
 				sql = getAgFunction(tableAliasNamePrefix, field, fieldMap, columnMap) + getFilterType(filterType);
 				sql += getAgFunction(tableAliasNamePrefix, getField(value.toString(), columnMap), fieldMap, columnMap);
 				break;
+			case EQUAL_DATE_FORMAT:
+			case NOT_EQUAL_DATE_FORMAT:
+			case GREATER_THAN_DATE_FORMAT:
+			case GREATER_EQUAL_DATE_FORMAT:
+			case LESS_THAN_DATE_FORMAT:
+			case LESS_EQUAL_DATE_FORMAT:
+//				"DATE_FORMAT(" + tableAliasNamePrefix + field + ",'" + obj[4] + "')";
+				sql = "DATE_FORMAT(" + tableAliasNamePrefix + field + ",'" + obj[4] + "')" + getFilterType(filterType);
+				sql += expression;
+				value.put(key, vue);
+				break;
 			default:
 				sql = tableAliasNamePrefix + field + getFilterType(filterType);
 				sql += expression;
@@ -484,11 +495,23 @@ public abstract class AbstractSqlHandleMethod {
 	}
 
 	private void addGroupBy(List<String> groups, String tableAsName, Map<String, String> columnMap, QueryProvider queryProvider) {
-		List<String> queryGroup = queryProvider.getGroups();
+		List<Object[]> queryGroup = queryProvider.getGroups();
 		if (queryGroup != null && !queryGroup.isEmpty()) {
-			for (String field : queryGroup) {
-				String fieldName = getField(field, columnMap);
-				groups.add(tableAsName + "." + fieldName);
+			for (Object[] group : queryGroup) {
+				SqlHandleEnum handleEnum = (SqlHandleEnum) group[1];
+				String fieldName = getField(group[0].toString(), columnMap);
+				switch (handleEnum) {
+					case HANDLE_DEFAULT:
+						groups.add(tableAsName + "." + fieldName);
+						break;
+					case HANDLE_DATE_FORMAT:
+						groups.add("DATE_FORMAT(" + tableAsName + "." + fieldName + ",'" + group[2] + "')");
+						break;
+					default:
+						break;
+				}
+
+
 			}
 		}
 	}
@@ -748,6 +771,15 @@ public abstract class AbstractSqlHandleMethod {
 				columnName = getAgFunction(tableAliasName, fieldTemp, fieldMap, columnMap);
 				column.add(columnName + fieldAsTemp);
 				break;
+			case HANDLE_DATE_FORMAT:
+				if (!fieldMap.containsKey(fieldTemp) && !columnMap.containsKey(fieldTemp)) {
+					throw new HandleException("error: fieldName('" + fieldName + "')  is invalid");
+				} else {
+					columnName = tableAliasName + fieldTemp;
+					column.add(columnName + fieldAsTemp);
+					column.add("DATE_FORMAT(" + tableAliasName + fieldTemp + ",'" + obj[3] + "')");
+				}
+				break;
 			default:
 				if (!fieldMap.containsKey(fieldTemp) && !columnMap.containsKey(fieldTemp)) {
 					throw new HandleException("error: fieldName('" + fieldName + "')  is invalid");
@@ -870,26 +902,32 @@ public abstract class AbstractSqlHandleMethod {
 			filterType = " like ";
 			break;
 		case EQUAL:
+		case EQUAL_DATE_FORMAT:
 		case EQUAL_FIELD:
 			filterType =  " = ";
 			break;
 		case GREATER_THAN:
+		case GREATER_THAN_DATE_FORMAT:
 		case GREATER_THAN_FIELD:
 			filterType = " > ";
 			break;
 		case GREATER_EQUAL:
+		case GREATER_EQUAL_DATE_FORMAT:
 		case GREATER_EQUAL_FIELD:
 			filterType = " >= ";
 			break;
 		case LESS_THAN:
+		case LESS_THAN_DATE_FORMAT:
 		case LESS_THAN_FIELD:
 			filterType = " < ";
 			break;
 		case LESS_EQUAL:
+		case LESS_EQUAL_DATE_FORMAT:
 		case LESS_EQUAL_FIELD:
 			filterType = " <= ";
 			break;
 		case NOT_EQUAL:
+		case NOT_EQUAL_DATE_FORMAT:
 		case NOT_EQUAL_FIELD:
 			filterType = " <> ";
 			break;

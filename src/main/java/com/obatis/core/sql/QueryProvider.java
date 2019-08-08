@@ -3,6 +3,7 @@ package com.obatis.core.sql;
 import com.obatis.config.request.PageParam;
 import com.obatis.config.request.RequestConstant;
 import com.obatis.config.request.RequestParam;
+import com.obatis.convert.date.DateCommonConvert;
 import com.obatis.core.constant.type.FilterEnum;
 import com.obatis.core.constant.type.OrderEnum;
 import com.obatis.core.constant.type.SqlHandleEnum;
@@ -39,7 +40,7 @@ public class QueryProvider {
 	private List<Object[]> fields;
 	private List<Object[]> filters;
 	private List<String[]> orders;
-	private List<String> groups;
+	private List<Object[]> groups;
 	private List<QueryProvider> orProviders;
 	private Map<String, String> notFields;
 	private List<Object[]> leftJoinProviders;
@@ -84,7 +85,7 @@ public class QueryProvider {
 		return orders;
 	}
 
-	public List<String> getGroups() {
+	public List<Object[]> getGroups() {
 		return groups;
 	}
 
@@ -465,20 +466,58 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 针对日期进行 format 处理，fieldName 默认为别名
+	 * @param fieldName
+	 * @param pattern
+	 */
+	public void selectDateFormat(String fieldName, String pattern) {
+		this.selectDateFormat(fieldName, pattern, fieldName);
+	}
+
+	/**
+	 * 针对日期进行 format 处理
+	 * @param fieldName
+	 * @param pattern
+	 * @param aliasName
+	 */
+	public void selectDateFormat(String fieldName, String pattern, String aliasName) {
+		if(ValidateTool.isEmpty(fieldName)) {
+			throw new HandleException("error: field is null");
+		}
+		if(ValidateTool.isEmpty(pattern)) {
+			throw new HandleException("error: pattern is null");
+		}
+		if(ValidateTool.isEmpty(aliasName)) {
+			aliasName = "exp_value";
+		}
+		this.addValue(fieldName, SqlHandleEnum.HANDLE_DATE_FORMAT, aliasName, pattern);
+	}
+
+	/**
 	 * 设置表达式属性
 	 * @param fieldName
 	 * @param fieldType
 	 * @param value
 	 */
 	private void addValue(String fieldName, SqlHandleEnum fieldType, Object value) {
-		if (ValidateTool.isEmpty(fieldName) && !SqlHandleEnum.HANDLE_COUNT.equals(fieldType)) {
-			throw new HandleException("error: field is null");
-		}
+		this.addValue(fieldName, fieldType, value, null);
+	}
+
+	private void addValue(String fieldName, SqlHandleEnum fieldType, Object value, String pattern) {
+//		if (ValidateTool.isEmpty(fieldName) && !SqlHandleEnum.HANDLE_COUNT.equals(fieldType)) {
+//			throw new HandleException("error: field is null");
+//		}
 		if (this.fields == null) {
 			this.fields = new ArrayList<>();
 		}
-		Object[] obj = { fieldName, fieldType, value };
-		this.fields.add(obj);
+		if(ValidateTool.isEmpty(pattern)) {
+			Object[] obj = { fieldName, fieldType, value };
+			this.fields.add(obj);
+		} else {
+			Object[] obj = { fieldName, fieldType, value, pattern};
+			this.fields.add(obj);
+		}
+
 	}
 
 	/**
@@ -506,6 +545,10 @@ public class QueryProvider {
 		this.addFilter(filterName, filterType, value, JOIN_AND_EXPRESS);
 	}
 
+	private void andFilter(String filterName, FilterEnum filterType, Object value, String pattern) {
+		this.addFilter(filterName, filterType, value, JOIN_AND_EXPRESS, pattern);
+	}
+
 	/**
 	 * 体现为 left join on 的连接查询条件
 	 * 参数分别为字段名称，比如name。条件类型，比如=，具体的值参考QueryParam的FILTER开头的常量值
@@ -518,6 +561,17 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 体现为 left join on 的连接查询条件
+	 * 参数分别为字段名称，比如name。条件类型，比如=，具体的值参考QueryParam的FILTER开头的常量值
+	 * @param filterName
+	 * @param filterType
+	 * @param value
+	 */
+	private void andOnFilter(String filterName, FilterEnum filterType, Object value, String pattern) {
+		this.addOnFilter(filterName, filterType, value, JOIN_AND_EXPRESS);
+	}
+
+	/**
 	 * 设置条件
 	 * @param filterName
 	 * @param filterType
@@ -525,16 +579,25 @@ public class QueryProvider {
 	 * @param joinType
 	 */
 	private void addFilter(String filterName, FilterEnum filterType, Object value, String joinType) {
+		this.addFilter(filterName, filterType, value, joinType, null);
+	}
+
+	private void addFilter(String filterName, FilterEnum filterType, Object value, String joinType, String pattern) {
 		if (ValidateTool.isEmpty(filterName)) {
 			throw new HandleException("error: filter field is null");
-		} else if (FilterEnum.IS_NULL.equals(filterType) && FilterEnum.IS_NOT_NULL.equals(filterType) && null == value) {
-			throw new HandleException("error: field is null");
+		} else if (!FilterEnum.IS_NULL.equals(filterType) && !FilterEnum.IS_NOT_NULL.equals(filterType) && null == value) {
+			throw new HandleException("error: value is null");
 		}
 		if (this.filters == null) {
 			this.filters = new ArrayList<>();
 		}
-		Object[] obj = {filterName, filterType, value, joinType};
-		this.filters.add(obj);
+		if(ValidateTool.isEmpty(pattern)) {
+			Object[] obj = {filterName, filterType, value, joinType};
+			this.filters.add(obj);
+		} else {
+			Object[] obj = {filterName, filterType, value, joinType, pattern};
+			this.filters.add(obj);
+		}
 	}
 
 	/**
@@ -546,16 +609,25 @@ public class QueryProvider {
 	 * @param joinType
 	 */
 	private void addOnFilter(String filterName, FilterEnum filterType, Object value, String joinType) {
+		this.addOnFilter(filterName, filterType, value, joinType, null);
+	}
+
+	private void addOnFilter(String filterName, FilterEnum filterType, Object value, String joinType, String pattern) {
 		if (ValidateTool.isEmpty(filterName)) {
 			throw new HandleException("error: on filter field is null");
-		} else if (FilterEnum.IS_NULL.equals(filterType) && FilterEnum.IS_NOT_NULL.equals(filterType) && null == value) {
-			throw new HandleException("error: on field is null");
+		} else if (!FilterEnum.IS_NULL.equals(filterType) && !FilterEnum.IS_NOT_NULL.equals(filterType) && null == value) {
+			throw new HandleException("error: on filter value is null");
 		}
 		if (this.onFilters == null) {
 			this.onFilters = new ArrayList<>();
 		}
-		Object[] obj = {filterName, filterType, value, joinType};
-		this.onFilters.add(obj);
+		if(ValidateTool.isEmpty(pattern)) {
+			Object[] obj = {filterName, filterType, value, joinType};
+			this.filters.add(obj);
+		} else {
+			Object[] obj = {filterName, filterType, value, joinType, pattern};
+			this.filters.add(obj);
+		}
 	}
 
 	/**
@@ -569,6 +641,16 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 设置or 查询条件数据，针对时间格式化
+	 * @param filterName
+	 * @param filterType
+	 * @param value
+	 */
+	private void or(String filterName, FilterEnum filterType, Object value, String pattern) {
+		this.addFilter(filterName, filterType, value, JOIN_OR_EXPRESS, pattern);
+	}
+
+	/**
 	 * 设置连接查询 on 拼接的 or 条件
 	 * @param filterName
 	 * @param filterType
@@ -576,6 +658,10 @@ public class QueryProvider {
 	 */
 	private void onOr(String filterName, FilterEnum filterType, Object value) {
 		this.addOnFilter(filterName, filterType, value, JOIN_OR_EXPRESS);
+	}
+
+	private void onOr(String filterName, FilterEnum filterType, Object value, String pattern) {
+		this.addOnFilter(filterName, filterType, value, JOIN_OR_EXPRESS, pattern);
 	}
 
 	/**
@@ -696,6 +782,16 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 and 查询条件，等于查询，=，针对时间格式化使用
+	 * @param filterName
+	 * @param value
+	 * @param pattern
+	 */
+	public void equalsDateFormat(String filterName, Object value, String pattern) {
+		this.andFilter(filterName, FilterEnum.EQUAL_DATE_FORMAT, value, pattern);
+	}
+
+	/**
 	 * 增加 and 字段比较查询，等于查询，=，例如 a = b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
@@ -711,6 +807,15 @@ public class QueryProvider {
 	 */
 	public void onEquals(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.EQUAL, value);
+	}
+
+	/**
+	 * 增加连接查询且为and关系查询条件，针对时间格式化使用
+	 * @param filterName
+	 * @param value
+	 */
+	public void onEqualsDateFormat(String filterName, Object value, String pattern) {
+		this.andOnFilter(filterName, FilterEnum.EQUAL_DATE_FORMAT, value, pattern);
 	}
 
 	/**
@@ -732,6 +837,15 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 or 查询条件，等于查询，= ， 针对时间格式化
+	 * @param filterName
+	 * @param value
+	 */
+	public void orEqualsDateFormat(String filterName, Object value, String pattern) {
+		this.or(filterName, FilterEnum.EQUAL_DATE_FORMAT, value, pattern);
+	}
+
+	/**
 	 * 增加 or 关系的字段值相等的查询条件，例如 a = b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
@@ -747,6 +861,15 @@ public class QueryProvider {
 	 */
 	public void onOrEquals(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.EQUAL, value);
+	}
+
+	/**
+	 * 增加连接查询 or 关系的查询条件，等于查询，=，针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 */
+	public void onOrEqualsDateFormat(String filterName, Object value, String pattern) {
+		this.onOr(filterName, FilterEnum.EQUAL_DATE_FORMAT, value, pattern);
 	}
 
 	/**
@@ -768,6 +891,15 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 and 查询条件，大于查询，>， 针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 */
+	public void greaterThanDateFormat(String filterName, Object value, String pattern) {
+		this.andFilter(filterName, FilterEnum.GREATER_THAN_DATE_FORMAT, value, pattern);
+	}
+
+	/**
 	 * 增加 and 字段比较查询条件，大于查询，>，例如 a > b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
@@ -783,6 +915,15 @@ public class QueryProvider {
 	 */
 	public void onGreaterThan(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.GREATER_THAN, value);
+	}
+
+	/**
+	 * 增加连接查询 and 查询条件，大于查询，>，针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 */
+	public void onGreaterThanDateFormat(String filterName, Object value, String pattern) {
+		this.andOnFilter(filterName, FilterEnum.GREATER_THAN_DATE_FORMAT, value, pattern);
 	}
 
 	/**
@@ -804,6 +945,15 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 or 查询条件，大于查询，>，针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 */
+	public void orGreaterThanDateFormat(String filterName, Object value, String pattern) {
+		this.or(filterName, FilterEnum.GREATER_THAN_DATE_FORMAT, value, pattern);
+	}
+
+	/**
 	 * 增加 or 字段比较查询条件，大于查询，>，例如 a > b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
@@ -819,6 +969,15 @@ public class QueryProvider {
 	 */
 	public void onOrGreaterThan(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.GREATER_THAN, value);
+	}
+
+	/**
+	 * 增加连接查询 or 查询条件，大于查询，>，针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 */
+	public void onOrGreaterThanDateFormat(String filterName, Object value, String pattern) {
+		this.onOr(filterName, FilterEnum.GREATER_THAN_DATE_FORMAT, value, pattern);
 	}
 
 	/**
@@ -840,6 +999,15 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 and 查询条件，大于等于查询，>=，针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 */
+	public void greaterEqualDateFormat(String filterName, Object value, String pattern) {
+		this.andFilter(filterName, FilterEnum.GREATER_EQUAL_DATE_FORMAT, value);
+	}
+
+	/**
 	 * 增加 and 字段比较查询条件，大于等于查询，>=，例如 a >= b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
@@ -855,6 +1023,15 @@ public class QueryProvider {
 	 */
 	public void onGreaterEqual(String filterName, Object value) {
 		this.andOnFilter(filterName, FilterEnum.GREATER_EQUAL, value);
+	}
+
+	/**
+	 * 增加连接查询 and 查询条件，大于等于查询，>=，针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 */
+	public void onGreaterEqualDateFormat(String filterName, Object value, String pattern) {
+		this.andOnFilter(filterName, FilterEnum.GREATER_EQUAL_DATE_FORMAT, value, pattern);
 	}
 
 	/**
@@ -876,6 +1053,15 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 or 查询条件，大于等于查询，>=,针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 */
+	public void orGreaterEqualDateFormat(String filterName, Object value, String pattern) {
+		this.or(filterName, FilterEnum.GREATER_EQUAL_DATE_FORMAT, value, pattern);
+	}
+
+	/**
 	 * 增加 or 字段比较查询条件，大于等于查询，>=，例如 a >= b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
@@ -891,6 +1077,15 @@ public class QueryProvider {
 	 */
 	public void onOrGreaterEqual(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.GREATER_EQUAL, value);
+	}
+
+	/**
+	 * 增加连接查询 or 查询条件，大于等于查询，>=，针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 */
+	public void onOrGreaterEqualDateFormat(String filterName, Object value, String pattern) {
+		this.onOr(filterName, FilterEnum.GREATER_EQUAL_DATE_FORMAT, value, pattern);
 	}
 
 	/**
@@ -911,11 +1106,23 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 and 大于等于0的条件表达式，传入字段名称即可,针对时间格式化查询条件
+	 * @param filterName
+	 */
+	public void greaterEqualZeroDateFormat(String filterName, String pattern) {
+		this.andFilter(filterName, FilterEnum.GREATER_EQUAL_DATE_FORMAT, 0, pattern);
+	}
+
+	/**
 	 * 增加连接查询 and 大于等于0的条件表达式，传入字段名称即可
 	 * @param filterName
 	 */
 	public void onGreaterEqualZero(String filterName) {
 		this.andOnFilter(filterName, FilterEnum.GREATER_EQUAL, 0);
+	}
+
+	public void onGreaterEqualZeroDateFormat(String filterName, String pattern) {
+		this.andOnFilter(filterName, FilterEnum.GREATER_EQUAL_DATE_FORMAT, 0, pattern);
 	}
 
 	/**
@@ -927,11 +1134,27 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 or 大于等于0的条件表达式, 针对时间格式化查询条件
+	 * @param filterName
+	 */
+	public void orGreaterEqualZeroDateFormat(String filterName, String pattern) {
+		this.or(filterName, FilterEnum.GREATER_EQUAL_DATE_FORMAT, 0, pattern);
+	}
+
+	/**
 	 * 增加连接查询 or 大于等于0的条件表达式，传入字段名称即可
 	 * @param filterName
 	 */
 	public void onOrGreaterEqualZero(String filterName) {
 		this.onOr(filterName, FilterEnum.GREATER_EQUAL, 0);
+	}
+
+	/**
+	 * 增加连接查询 or 大于等于0的条件表达式，传入字段名称即可,针对时间格式化查询条件
+	 * @param filterName
+	 */
+	public void onOrGreaterEqualZeroDateFormat(String filterName, String pattern) {
+		this.onOr(filterName, FilterEnum.GREATER_EQUAL_DATE_FORMAT, 0, pattern);
 	}
 
 	/**
@@ -941,6 +1164,16 @@ public class QueryProvider {
 	 */
 	public void lessThan(String filterName, Object value) {
 		this.andFilter(filterName, FilterEnum.LESS_THAN, value);
+	}
+
+	/**
+	 * 增加 and 查询条件，小于查询，<,针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 * @param pattern
+	 */
+	public void lessThanDateFormat(String filterName, Object value, String pattern) {
+		this.andFilter(filterName, FilterEnum.LESS_THAN_DATE_FORMAT, value, pattern);
 	}
 
 	/**
@@ -962,6 +1195,15 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加连接查询 and 查询条件，小于查询，<，针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 */
+	public void onLessThanDateFormat(String filterName, Object value, String pattern) {
+		this.andOnFilter(filterName, FilterEnum.LESS_THAN_DATE_FORMAT, value, pattern);
+	}
+
+	/**
 	 * 增加连接查询 and 字段比较查询条件，小于查询，<，例如 a < b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
@@ -977,6 +1219,15 @@ public class QueryProvider {
 	 */
 	public void orLessThan(String filterName, Object value) {
 		this.or(filterName, FilterEnum.LESS_THAN, value);
+	}
+
+	/**
+	 * 增加 or 查询条件，小于查询，<，针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 */
+	public void orLessThanDateFormat(String filterName, Object value, String pattern) {
+		this.or(filterName, FilterEnum.LESS_THAN_DATE_FORMAT, value, pattern);
 	}
 
 	/**
@@ -998,6 +1249,15 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加连接查询 or 查询条件，小于查询 <，针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 */
+	public void onOrLessThanDateFormat(String filterName, Object value, String pattern) {
+		this.onOr(filterName, FilterEnum.LESS_THAN_DATE_FORMAT, value, pattern);
+	}
+
+	/**
 	 * 增加连接查询 or 字段比较查询条件，小于查询，<，例如 a < b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
@@ -1013,6 +1273,15 @@ public class QueryProvider {
 	 */
 	public void lessEqual(String filterName, Object value) {
 		this.andFilter(filterName, FilterEnum.LESS_EQUAL, value);
+	}
+
+	/**
+	 * 增加 and 查询条件，小于等于查询，<=，针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 */
+	public void lessEqualDateFormat(String filterName, Object value, String pattern) {
+		this.andFilter(filterName, FilterEnum.LESS_EQUAL_DATE_FORMAT, value, pattern);
 	}
 
 	/**
@@ -1034,6 +1303,16 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加连接查询 and 查询条件，小于等于查询，<= 针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 * @param pattern
+	 */
+	public void onLessEqualDateFormat(String filterName, Object value, String pattern) {
+		this.andOnFilter(filterName, FilterEnum.LESS_EQUAL_DATE_FORMAT, value, pattern);
+	}
+
+	/**
 	 * 增加连接查询 and 字段比较查询条件，小于等于查询，<=，例如 a <= b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
@@ -1049,6 +1328,16 @@ public class QueryProvider {
 	 */
 	public void orLessEqual(String filterName, Object value) {
 		this.or(filterName, FilterEnum.LESS_EQUAL, value);
+	}
+
+	/**
+	 * 增加 or 查询条件，小于等于查询，<= 针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 * @param pattern
+	 */
+	public void orLessEqualDateFormat(String filterName, Object value, String pattern) {
+		this.or(filterName, FilterEnum.LESS_EQUAL_DATE_FORMAT, value, pattern);
 	}
 
 	/**
@@ -1070,6 +1359,16 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加连接查询 or 查询条件，小于等于查询，<=  针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 * @param pattern
+	 */
+	public void onOrLessEqualDateFormat(String filterName, Object value, String pattern) {
+		this.onOr(filterName, FilterEnum.LESS_EQUAL_DATE_FORMAT, value, pattern);
+	}
+
+	/**
 	 * 增加连接查询 or 字段比较查询条件，小于等于查询，<=，例如 a <= b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
@@ -1085,6 +1384,16 @@ public class QueryProvider {
 	 */
 	public void notEqual(String filterName, Object value) {
 		this.andFilter(filterName, FilterEnum.NOT_EQUAL, value);
+	}
+
+	/**
+	 * 增加 and 查询，不等于查询，<>  针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 * @param pattern
+	 */
+	public void notEqualDateFormat(String filterName, Object value, String pattern) {
+		this.andFilter(filterName, FilterEnum.NOT_EQUAL_DATE_FORMAT, value, pattern);
 	}
 
 	/**
@@ -1106,6 +1415,16 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加连接查询 and 查询，不等于查询，<>  针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 * @param pattern
+	 */
+	public void onNotEqualDateFormat(String filterName, Object value, String pattern) {
+		this.andOnFilter(filterName, FilterEnum.NOT_EQUAL_DATE_FORMAT, value, pattern);
+	}
+
+	/**
 	 * 增加连接查询 and 查询，不等于查询，<>,例如 a <> b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
@@ -1124,6 +1443,16 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 增加 or 查询，不等于查询，<> 针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 * @param pattern
+	 */
+	public void orNotEqualDateFormat(String filterName, Object value, String pattern) {
+		this.or(filterName, FilterEnum.NOT_EQUAL_DATE_FORMAT, value, pattern);
+	}
+
+	/**
 	 * 增加 or 字段比较查询，不等于查询，<>,例如 a <> b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
@@ -1139,6 +1468,16 @@ public class QueryProvider {
 	 */
 	public void onOrNotEqual(String filterName, Object value) {
 		this.onOr(filterName, FilterEnum.NOT_EQUAL, value);
+	}
+
+	/**
+	 * 增加连接查询 or 查询，不等于查询，<>  针对时间格式化查询条件
+	 * @param filterName
+	 * @param value
+	 * @param pattern
+	 */
+	public void onOrNotEqualDateFormat(String filterName, Object value, String pattern) {
+		this.onOr(filterName, FilterEnum.NOT_EQUAL_DATE_FORMAT, value, pattern);
 	}
 
 	/**
@@ -1600,13 +1939,25 @@ public class QueryProvider {
 	 * @param groupName
 	 */
 	public void setGroup(String groupName) {
+		this.setGroups(groupName, SqlHandleEnum.HANDLE_DEFAULT, null);
+	}
+
+	public void setGroupDateFormat(String groupName, String pattern) {
+		if (ValidateTool.isEmpty(pattern)) {
+			throw new HandleException("error: pattern is null");
+		}
+		this.setGroups(groupName, SqlHandleEnum.HANDLE_DATE_FORMAT, pattern);
+	}
+
+	private void setGroups(String groupName, SqlHandleEnum sqlHandleEnum, String pattern) {
 		if (ValidateTool.isEmpty(groupName)) {
 			throw new HandleException("error: group field is null");
 		}
 		if (this.groups == null) {
 			this.groups = new ArrayList<>();
 		}
-		this.groups.add(groupName);
+		Object[] group = {groupName, sqlHandleEnum, pattern};
+		this.groups.add(group);
 	}
 
 	/**
