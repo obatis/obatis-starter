@@ -298,7 +298,7 @@ public abstract class AbstractSqlHandleMethod {
 				Map<String, String> childFieldMap = CacheInfoConstant.FIELD_CACHE.get(leftJoinProvider.getJoinTableName());
 				Map<String, String> childColumnMap = CacheInfoConstant.COLUMN_CACHE.get(leftJoinProvider.getJoinTableName());
 				this.addGroupBy(groups, childTableAsName, childColumnMap, leftJoinProvider);
-				this.addOrder(orders, childTableAsName, childColumnMap, leftJoinProvider);
+				this.addOrder(orders, childTableAsName, childFieldMap, childColumnMap, leftJoinProvider);
 				String leftJoinFilterSql = getFilterSql(leftJoinProvider.getLeftJoinProviders(), groups, orders, childTableAsName, leftJoinProvider.getFilters(),
 						leftJoinProvider.getOrProviders(), value, index + "_lt_" + j, childColumnMap, childFieldMap, findType);
 				if (!ValidateTool.isEmpty(leftJoinFilterSql)) {
@@ -428,7 +428,7 @@ public abstract class AbstractSqlHandleMethod {
 		List<String> groups = new ArrayList<>();
 		List<String> orders = new ArrayList<>();
 		this.addGroupBy(groups, tableAliasName, columnMap, queryProvider);
-		this.addOrder(orders, tableAliasName, columnMap, queryProvider);
+		this.addOrder(orders, tableAliasName, fieldMap, columnMap, queryProvider);
 
 		List<Object[]> filters = queryProvider.getFilters();
 		if ((filters != null && !filters.isEmpty()) || (queryProvider.getLeftJoinProviders() != null && !queryProvider.getLeftJoinProviders().isEmpty())) {
@@ -497,15 +497,15 @@ public abstract class AbstractSqlHandleMethod {
 	private void addGroupBy(List<String> groups, String tableAsName, Map<String, String> columnMap, QueryProvider queryProvider) {
 		List<Object[]> queryGroup = queryProvider.getGroups();
 		if (queryGroup != null && !queryGroup.isEmpty()) {
-			for (Object[] group : queryGroup) {
-				SqlHandleEnum handleEnum = (SqlHandleEnum) group[1];
-				String fieldName = getField(group[0].toString(), columnMap);
+			for (Object[] groupArray : queryGroup) {
+				SqlHandleEnum handleEnum = (SqlHandleEnum) groupArray[1];
+				String fieldName = getField(groupArray[0].toString(), columnMap);
 				switch (handleEnum) {
 					case HANDLE_DEFAULT:
 						groups.add(tableAsName + "." + fieldName);
 						break;
 					case HANDLE_DATE_FORMAT:
-						groups.add("DATE_FORMAT(" + tableAsName + "." + fieldName + ",'" + group[2] + "')");
+						groups.add("DATE_FORMAT(" + tableAsName + "." + fieldName + ",'" + groupArray[2] + "')");
 						break;
 					default:
 						break;
@@ -515,19 +515,42 @@ public abstract class AbstractSqlHandleMethod {
 			}
 		}
 	}
-	
-	private void addOrder(List<String> orders, String tableAliasName, Map<String, String> columnMap, QueryProvider queryProvider) {
-		List<String[]> queryOrder = queryProvider.getOrders();
+
+	/**
+	 * 处理排序
+	 * @param orders
+	 * @param tableAliasName
+	 * @param fieldMap
+	 * @param columnMap
+	 * @param queryProvider
+	 */
+	private void addOrder(List<String> orders, String tableAliasName, Map<String, String> fieldMap, Map<String, String> columnMap, QueryProvider queryProvider) {
+		List<Object[]> queryOrder = queryProvider.getOrders();
 		if (queryOrder != null && !queryOrder.isEmpty()) {
-			for (String[] field : queryOrder) {
-				String column = columnMap.get(field[0]);
+			for (Object[] orderArray : queryOrder) {
+				String column = columnMap.get(orderArray[0]);
 				String fieldName;
 				if (!ValidateTool.isEmpty(column)) {
 					fieldName = column;
 				} else {
-					fieldName = field[0];
+					fieldName = orderArray[0].toString();
 				}
-				orders.add(tableAliasName + "." + fieldName + " " + field[1]);
+
+				SqlHandleEnum sqlHandleEnum = (SqlHandleEnum) orderArray[2];
+				switch (sqlHandleEnum) {
+					case HANDLE_DEFAULT:
+						orders.add(tableAliasName + "." + fieldName + " " + orderArray[1]);
+						break;
+					case HANDLE_SUM:
+						orders.add("sum(" + tableAliasName + "." + fieldName + ") " + orderArray[1]);
+						break;
+					case HANDLE_AVG:
+						orders.add("avg(" + tableAliasName + "." + fieldName + ") " + orderArray[1]);
+						break;
+					case HANDLE_EXP:
+						orders.add(getAgFunction(tableAliasName, fieldName, fieldMap, columnMap) + " " + orderArray[1]);
+						break;
+				}
 			}
 		}
 	}
@@ -595,7 +618,7 @@ public abstract class AbstractSqlHandleMethod {
 	 */
 	private String getSelectFieldColumns(QueryProvider queryProvider, String tableAliasName, Map<String, String> columnMap, Map<String, String> fieldMap)
 			throws HandleException {
-		List<Object[]> fields = null;
+		List<Object[]> fields;
 		boolean allFlag = true;
 		if ((fields = queryProvider.getFields()) != null && fields.size() > 0) {
 			allFlag = false;
@@ -977,7 +1000,7 @@ public abstract class AbstractSqlHandleMethod {
 		// 构造order by 语句
 		List<String> orders = new ArrayList<>();
 		this.addGroupBy(groups, tableAliasName, columnMap, queryProvider);
-		this.addOrder(orders, tableAliasName, columnMap, queryProvider);
+		this.addOrder(orders, tableAliasName, fieldMap, columnMap, queryProvider);
 
 		List<Object[]> filters = queryProvider.getFilters();
 		if ((filters != null && !filters.isEmpty()) || (queryProvider.getLeftJoinProviders() != null && !queryProvider.getLeftJoinProviders().isEmpty())) {

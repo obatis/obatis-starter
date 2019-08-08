@@ -1,6 +1,7 @@
 package com.obatis.core.sql.mysql;
 
 import com.obatis.core.constant.type.OrderEnum;
+import com.obatis.core.constant.type.SqlHandleEnum;
 import com.obatis.core.sql.AbstractOrder;
 
 import java.util.List;
@@ -18,8 +19,8 @@ public class HandleOrderMethod extends AbstractOrder {
 	 * @param orderType
 	 */
 	@Override
-	protected void addOrder(List<String[]> orders, String orderName, OrderEnum orderType) {
-		String[] order = {"`" + orderName + "` ", (OrderEnum.ORDER_ASC.equals(orderType) ? "asc" : "desc")};
+	protected void addOrder(List<Object[]> orders, String orderName, OrderEnum orderType, SqlHandleEnum sqlHandleEnum) {
+		Object[] order = {"`" + orderName + "` ", (OrderEnum.ORDER_ASC.equals(orderType) ? "asc" : "desc"), sqlHandleEnum};
 		orders.add(order);
 	}
 

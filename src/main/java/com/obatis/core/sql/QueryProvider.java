@@ -43,7 +43,7 @@ public class QueryProvider {
 
 	private List<Object[]> fields;
 	private List<Object[]> filters;
-	private List<String[]> orders;
+	private List<Object[]> orders;
 	private List<Object[]> groups;
 	private List<QueryProvider> orProviders;
 	private Map<String, String> notFields;
@@ -85,7 +85,7 @@ public class QueryProvider {
 		return filters;
 	}
 
-	public List<String[]> getOrders() {
+	public List<Object[]> getOrders() {
 		return orders;
 	}
 
@@ -1923,20 +1923,57 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加排序，参数分别为排序字段，排序值，排序值类型参考QueryParam中ORDER开头的常量
+	 * 增加排序，参数分别为排序字段，排序值，排序值类型参考 QueryParam 中 ORDER 开头的常量
 	 * @param orderName
 	 * @param orderType
 	 */
 	public void setOrder(String orderName, OrderEnum orderType) {
-		if (ValidateTool.isEmpty(orderName)) {
+		this.setOrder(orderName, orderType, SqlHandleEnum.HANDLE_DEFAULT);
+	}
+
+	/**
+	 * 针对 sum 聚合函数的排序
+	 * @param orderName
+	 * @param orderType
+	 */
+	public void setSumOrder(String orderName, OrderEnum orderType) {
+		this.setOrder(orderName, orderType, SqlHandleEnum.HANDLE_SUM);
+	}
+
+	/**
+	 * 针对平均数 avg 聚合函数的排序
+	 * @param orderName
+	 * @param orderType
+	 */
+	public void setAvgOrder(String orderName, OrderEnum orderType) {
+		this.setOrder(orderName, orderType, SqlHandleEnum.HANDLE_AVG);
+	}
+
+	/**
+	 * 支持传入表达式的排序
+	 * @param orderName
+	 * @param orderType
+	 */
+	public void setExpOrder(String orderName, OrderEnum orderType) {
+		this.setOrder(orderName, orderType, SqlHandleEnum.HANDLE_EXP);
+	}
+
+	/**
+	 * 增加排序，参数分别为排序字段，排序值，排序值类型参考 QueryParam 中 ORDER 开头的常量
+	 * @param orderName
+	 * @param orderType
+	 */
+	private void setOrder(String orderName, OrderEnum orderType, SqlHandleEnum sqlHandleEnum) {
+		if (ValidateTool.isEmpty(orderName) && !sqlHandleEnum.equals(SqlHandleEnum.HANDLE_COUNT)) {
 			throw new HandleException("error: order field is null ！！！");
 		}
 
 		if (this.orders == null) {
 			this.orders = new ArrayList<>();
 		}
-		abstractOrder.addOrder(orders, orderName, orderType);
+		abstractOrder.addOrder(orders, orderName, orderType, sqlHandleEnum);
 	}
+
 
 	/**
 	 * 增加分组，根据字段名称进行分组
