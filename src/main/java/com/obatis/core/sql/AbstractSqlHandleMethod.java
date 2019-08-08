@@ -775,9 +775,9 @@ public abstract class AbstractSqlHandleMethod {
 				if (!fieldMap.containsKey(fieldTemp) && !columnMap.containsKey(fieldTemp)) {
 					throw new HandleException("error: fieldName('" + fieldName + "')  is invalid");
 				} else {
-					columnName = tableAliasName + fieldTemp;
-					column.add(columnName + fieldAsTemp);
-					column.add("DATE_FORMAT(" + tableAliasName + fieldTemp + ",'" + obj[3] + "')");
+//					columnName = tableAliasName + fieldTemp;
+//					column.add(columnName + fieldAsTemp);
+					column.add("DATE_FORMAT(" + tableAliasName + fieldTemp + ",'" + obj[3] + "')" + fieldAsTemp);
 				}
 				break;
 			default:
