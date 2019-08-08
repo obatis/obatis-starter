@@ -725,14 +725,14 @@ public abstract class AbstractSqlHandleMethod {
 			String fieldName = obj[0].toString();
 			Object value = obj[2];
 
-			String fieldTemp = null;
+			String fieldTemp;
 			if (columnMap.containsKey(fieldName)) {
 				fieldTemp = columnMap.get(fieldName);
 			} else {
 				fieldTemp = fieldName;
 			}
 			String fieldAliaName = ValidateTool.isEmpty(value) ? "" : value.toString();
-			if (ValidateTool.isEmpty(fieldAliaName) || (fieldMap.containsKey(fieldTemp) && !columnMap.containsKey(fieldAliaName))) {
+			if (ValidateTool.isEmpty(fieldAliaName) && fieldMap.containsKey(fieldTemp)) {
 				fieldAliaName = fieldMap.get(fieldTemp);
 			}
 
@@ -740,7 +740,7 @@ public abstract class AbstractSqlHandleMethod {
 				continue;
 			}
 			SqlHandleEnum type = (SqlHandleEnum) obj[1];
-			String columnName = null;
+			String columnName;
 			String fieldAsTemp = ValidateTool.isEmpty(fieldAliaName) ? "" : " as " + fieldAliaName;
 			switch (type) {
 			case HANDLE_COUNT:
