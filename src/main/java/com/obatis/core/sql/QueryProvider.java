@@ -1963,7 +1963,7 @@ public class QueryProvider {
          */
         String regExp = "[~!/@#$%^&*()=+\\|[{}];:\'\",<.>/?]+";
         Pattern p = Pattern.compile(regExp);
-        Matcher m = p.matcher("(");
+        Matcher m = p.matcher(groupName);
         if(m.find()) {
             throw new HandleException("error: group field is invalid");
         }
