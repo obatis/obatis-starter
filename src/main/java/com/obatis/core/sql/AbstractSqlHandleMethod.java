@@ -43,7 +43,7 @@ public abstract class AbstractSqlHandleMethod {
 
 	public String getUpdateBatchSql(Map<String, Object> providers, String tableName) throws HandleException {
 		List<QueryProvider> list = (List<QueryProvider>) providers.get(SqlConstant.PROVIDER_OBJ);
-		StringBuffer s = new StringBuffer();
+		StringBuffer sql = new StringBuffer();
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 
@@ -52,12 +52,12 @@ public abstract class AbstractSqlHandleMethod {
 
 		for (int i = 0, j = list.size(); i < j; i++) {
 			QueryProvider queryProvider = list.get(i);
-			s.append(this.getUpdateSql(queryProvider, tableName, i + "", columnMap, fieldMap, fieldValue, filterValue) + ";");
+			sql.append(this.getUpdateSql(queryProvider, tableName, i + "", columnMap, fieldMap, fieldValue, filterValue) + ";");
 		}
 
 		providers.put(SqlConstant.PROVIDER_FIELD, fieldValue);
 		providers.put(SqlConstant.PROVIDER_FILTER, filterValue);
-		return getBatchUpdateDbSql(s.toString());
+		return getBatchUpdateDbSql(sql.toString());
 	}
 
 	protected abstract String getBatchUpdateDbSql(String sql);

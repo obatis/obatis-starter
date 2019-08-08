@@ -1,6 +1,7 @@
 package com.obatis.core;
 
 import com.obatis.config.response.result.PageInfo;
+import com.obatis.core.constant.CacheInfoConstant;
 import com.obatis.core.constant.SqlConstant;
 import com.obatis.core.exception.HandleException;
 import com.obatis.core.mapper.BaseBeanSessionMapper;
@@ -10,11 +11,8 @@ import com.obatis.core.mapper.factory.ResultSessionMapperFactory;
 import com.obatis.core.result.ResultInfoOutput;
 import com.obatis.core.sql.QueryProvider;
 import com.obatis.core.sql.SqlHandleProvider;
-import com.obatis.core.constant.CacheInfoConstant;
 import com.obatis.validate.ValidateTool;
-import org.apache.ibatis.session.SqlSession;
 
-import javax.annotation.Resource;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.math.BigInteger;

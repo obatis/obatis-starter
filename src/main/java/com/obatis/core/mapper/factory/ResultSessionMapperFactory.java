@@ -33,7 +33,7 @@ public class ResultSessionMapperFactory {
 			return;
 		}
 
-		Class<?> mapperCls = null;
+		Class<?> mapperCls;
 		try {
 			mapperCls = SessionMapperCompilerTemplet.compilerMapper(canonicalName, BaseResultSessionMapper.class);
 		} catch (Exception e) {

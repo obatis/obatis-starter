@@ -34,7 +34,7 @@ public class BeanSessionMapperFactory {
 			return;
 		}
 
-		Class<?> mapperCls = null;
+		Class<?> mapperCls;
 		try {
 			mapperCls = SessionMapperCompilerTemplet.compilerMapper(canonicalName, BaseBeanSessionMapper.class);
 		} catch (Exception e) {
