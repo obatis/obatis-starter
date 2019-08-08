@@ -14,6 +14,8 @@ import com.obatis.core.sql.mysql.HandleOrderMethod;
 import com.obatis.validate.ValidateTool;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 数据库操作 sql 封装操作类，除使用直接拼装 sql 外，其余数据库操作全部使用这个类提供的属性进行操作
@@ -1925,7 +1927,7 @@ public class QueryProvider {
 	 */
 	public void setOrder(String orderName, OrderEnum orderType) {
 		if (ValidateTool.isEmpty(orderName)) {
-			throw new HandleException("error: order field is null");
+			throw new HandleException("error: order field is null ！！！");
 		}
 
 		if (this.orders == null) {
@@ -1953,6 +1955,17 @@ public class QueryProvider {
 		if (ValidateTool.isEmpty(groupName)) {
 			throw new HandleException("error: group field is null");
 		}
+
+        /**
+         *  判断传入的分组字段是否包含特殊字符
+         */
+        String regEx = "[~!/@#$%^&*()=+\\|[{}];:\'\",<.>/?]+";
+        Pattern p = Pattern.compile(regEx);
+        Matcher m = p.matcher("(");
+        if(m.find()) {
+            throw new HandleException("error: group field is invalid");
+        }
+
 		if (this.groups == null) {
 			this.groups = new ArrayList<>();
 		}
