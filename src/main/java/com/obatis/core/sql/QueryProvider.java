@@ -1959,8 +1959,8 @@ public class QueryProvider {
         /**
          *  判断传入的分组字段是否包含特殊字符
          */
-        String regEx = "[~!/@#$%^&*()=+\\|[{}];:\'\",<.>/?]+";
-        Pattern p = Pattern.compile(regEx);
+        String regExp = "[~!/@#$%^&*()=+\\|[{}];:\'\",<.>/?]+";
+        Pattern p = Pattern.compile(regExp);
         Matcher m = p.matcher("(");
         if(m.find()) {
             throw new HandleException("error: group field is invalid");
