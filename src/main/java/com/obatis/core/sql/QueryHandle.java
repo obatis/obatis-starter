@@ -137,12 +137,12 @@ public class QueryHandle {
 				continue;
 			}
 			
-			UpdateField uField = field.getAnnotation(UpdateField.class);
-			if (uField == null) {
+			UpdateField updateField = field.getAnnotation(UpdateField.class);
+			if (updateField == null) {
 				continue;
 			}
 			
-			String fieldName = !ValidateTool.isEmpty(uField.name()) ? uField.name() : field.getName();
+			String fieldName = !ValidateTool.isEmpty(updateField.name()) ? updateField.name() : field.getName();
 			field.setAccessible(true);
 			Object value = null;
 			try {
@@ -151,11 +151,11 @@ public class QueryHandle {
 				e.printStackTrace();
 			}
 			
-			if(!uField.isnull() && ValidateTool.isEmpty(value)) {
+			if(!updateField.isnull() && ValidateTool.isEmpty(value)) {
 				continue;
 			}
 			
-			SqlHandleEnum type = uField.type();
+			SqlHandleEnum type = updateField.type();
 			switch (type) {
 			case HANDLE_DEFAULT:
 				/**
