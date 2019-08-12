@@ -572,7 +572,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	private void andOnFilter(String filterName, FilterEnum filterType, Object value, String pattern) {
-		this.addOnFilter(filterName, filterType, value, JOIN_AND_EXPRESS);
+		this.addOnFilter(filterName, filterType, value, JOIN_AND_EXPRESS, pattern);
 	}
 
 	/**
@@ -590,7 +590,7 @@ public class QueryProvider {
 		if (ValidateTool.isEmpty(filterName)) {
 			throw new HandleException("error: filter field is null");
 		} else if (!FilterEnum.IS_NULL.equals(filterType) && !FilterEnum.IS_NOT_NULL.equals(filterType) && null == value) {
-			throw new HandleException("error: value is null");
+			throw new HandleException("error: filter value is null");
 		}
 		if (this.filters == null) {
 			this.filters = new ArrayList<>();
@@ -627,10 +627,10 @@ public class QueryProvider {
 		}
 		if(ValidateTool.isEmpty(pattern)) {
 			Object[] obj = {filterName, filterType, value, joinType};
-			this.filters.add(obj);
+			this.onFilters.add(obj);
 		} else {
 			Object[] obj = {filterName, filterType, value, joinType, pattern};
-			this.filters.add(obj);
+			this.onFilters.add(obj);
 		}
 	}
 
