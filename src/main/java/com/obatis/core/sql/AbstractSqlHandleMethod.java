@@ -775,7 +775,7 @@ public abstract class AbstractSqlHandleMethod {
 				}
 				break;
 			case HANDLE_SUM:
-				columnName = "sum(" + getAgFunction(tableAliasName, fieldTemp, fieldMap, columnMap) + ")";
+				columnName = "sum(ifnull(" + getAgFunction(tableAliasName, fieldTemp, fieldMap, columnMap) + ", 0))";
 				column.add(columnName + fieldAsTemp);
 				break;
 			case HANDLE_MAX:
@@ -787,7 +787,7 @@ public abstract class AbstractSqlHandleMethod {
 				column.add(columnName + fieldAsTemp);
 				break;
 			case HANDLE_AVG:
-				columnName = "avg(" + getAgFunction(tableAliasName, fieldTemp, fieldMap, columnMap) + ")";
+				columnName = "avg(ifnull(" + getAgFunction(tableAliasName, fieldTemp, fieldMap, columnMap) + ", 0))";
 				column.add(columnName + fieldAsTemp);
 				break;
 			case HANDLE_EXP:
