@@ -1,6 +1,7 @@
 package com.obatis.core;
 
 import com.obatis.config.response.result.PageInfo;
+import com.obatis.convert.CommonConvert;
 import com.obatis.core.constant.CacheInfoConstant;
 import com.obatis.core.constant.SqlConstant;
 import com.obatis.core.exception.HandleException;
@@ -387,9 +388,23 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	public int findInt(QueryProvider provider) {
 		Object obj = this.findObject(provider);
 		if (obj != null) {
-			return Integer.valueOf(obj.toString());
+			return (int) obj;
 		}
 		return 0;
+	}
+
+	/**
+	 * 根据传入的 QueryProvider 对象，返回int的类型值。
+	 * 如果根据条件有多条数据符合，则抛出异常。
+	 * @param provider
+	 * @return
+	 */
+	public Long findLong(QueryProvider provider) {
+		Object obj = this.findObject(provider);
+		if (obj != null) {
+			return (Long) obj;
+		}
+		return 0L;
 	}
 
 	/**
@@ -400,7 +415,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	public Double findDouble(QueryProvider provider) {
 		Object obj = this.findObject(provider);
 		if (obj != null) {
-			return Double.valueOf(obj.toString());
+			return (Double) obj;
 		}
 		return 0D;
 	}
