@@ -374,7 +374,15 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	public BigDecimal findBigDecimal(QueryProvider provider) {
 		Object obj = this.findObject(provider);
 		if (obj != null) {
-			return new BigDecimal(obj.toString());
+			if(obj instanceof BigDecimal) {
+				return (BigDecimal) obj;
+			} else if (obj instanceof String) {
+				return CommonConvert.convert((String) obj);
+			} else if (obj instanceof Integer) {
+				return CommonConvert.convert((Integer) obj);
+			} else {
+				return CommonConvert.convert(obj.toString());
+			}
 		}
 		return BigDecimal.ZERO;
 	}
@@ -388,7 +396,13 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	public int findInt(QueryProvider provider) {
 		Object obj = this.findObject(provider);
 		if (obj != null) {
-			return (int) obj;
+			if(obj instanceof Integer) {
+				return (int) obj;
+			} else if(obj instanceof Long) {
+				return ((Long) obj).intValue();
+			} else {
+				return Integer.parseInt(CommonConvert.toString(obj));
+			}
 		}
 		return 0;
 	}
@@ -402,7 +416,18 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	public Long findLong(QueryProvider provider) {
 		Object obj = this.findObject(provider);
 		if (obj != null) {
-			return (Long) obj;
+			if(obj instanceof Long) {
+				return (Long) obj;
+			} else if (obj instanceof BigDecimal) {
+				return ((BigDecimal) obj).longValue();
+			} else if (obj instanceof Double) {
+				return ((Double) obj).longValue();
+			} else if (obj instanceof Float) {
+				return ((Float) obj).longValue();
+			} else {
+				return Long.parseLong(CommonConvert.toString(obj));
+			}
+
 		}
 		return 0L;
 	}
@@ -415,7 +440,17 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	public Double findDouble(QueryProvider provider) {
 		Object obj = this.findObject(provider);
 		if (obj != null) {
-			return (Double) obj;
+			if(obj instanceof Double) {
+				return (Double) obj;
+			} else if (obj instanceof BigDecimal) {
+				return ((BigDecimal) obj).doubleValue();
+			} else if (obj instanceof Float) {
+				return ((Float) obj).doubleValue();
+			} else if (obj instanceof Long) {
+				return ((Long) obj).doubleValue();
+			} else if (obj instanceof Integer) {
+				return ((Integer) obj).doubleValue();
+			}
 		}
 		return 0D;
 	}
