@@ -31,6 +31,7 @@ public class QueryProvider {
 	protected static AbstractOrder abstractOrder = new HandleOrderMethod();
 
 	private static final Map<Integer, OrderEnum> ORDER_TYPE_MAP = new HashMap<>();
+	private Object updateObj;
 
 	static {
 		// 加载排序方式和值
@@ -592,8 +593,11 @@ public class QueryProvider {
 		} else if (!FilterEnum.IS_NULL.equals(filterType) && !FilterEnum.IS_NOT_NULL.equals(filterType) && null == value) {
 			throw new HandleException("error: filter value is null");
 		}
+
 		if (this.filters == null) {
 			this.filters = new ArrayList<>();
+		} else {
+			this.checkFilter(this.filters, filterName, filterType, value, joinType);
 		}
 		if(ValidateTool.isEmpty(pattern)) {
 			Object[] obj = {filterName, filterType, value, joinType};
@@ -601,6 +605,21 @@ public class QueryProvider {
 		} else {
 			Object[] obj = {filterName, filterType, value, joinType, pattern};
 			this.filters.add(obj);
+		}
+	}
+
+	private void checkFilter(List<Object[]> filterList, String filterName, FilterEnum filterType, Object value, String joinType) {
+		for (int i = 0, j = filterList.size(); i < j; i++) {
+			Object[] filter = filterList.get(i);
+			if(filter[0].toString().equals(filterName) && filterType.equals(filter[1]) && joinType.equals(filter[3])) {
+				if(FilterEnum.IS_NULL.equals(filterType) || FilterEnum.IS_NOT_NULL.equals(filterType)) {
+					break;
+				} else if (value.equals(filter[2])) {
+					break;
+				} else {
+					filterList.remove(i);
+				}
+			}
 		}
 	}
 
@@ -624,7 +643,10 @@ public class QueryProvider {
 		}
 		if (this.onFilters == null) {
 			this.onFilters = new ArrayList<>();
+		} else {
+			this.checkFilter(this.onFilters, filterName, filterType, value, joinType);
 		}
+
 		if(ValidateTool.isEmpty(pattern)) {
 			Object[] obj = {filterName, filterType, value, joinType};
 			this.onFilters.add(obj);
@@ -1846,9 +1868,9 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 添加查询添加，比如 and (type = 1 or name = 2)，主要作用于拼接 and 后括号中的表达式，主要用于 or
-	 * 查询的表达式，不然没必要。 如果 多条件拼接 or 查询(类似 where id = ? and name = ? or type = 1
-	 * 的条件)，or 条件查询不能被当成第一个条件放入(type属性 orFilter 方法不能在第一个加入)，否则会被解析为 and 条件查询。 V
+	 * 添加 or 查询条件，比如 and (type = 1 or name = 2)，主要作用于拼接 and 后括号中的表达式，主要用于 or
+	 * 查询的表达式，不然没必要。 如果 多条件拼接 or 查询(类似 where id = ? or type = 1
+	 * 的条件)，or 条件查询不能被当成第一个条件放入(type属性 orFilter 方法不能在第一个加入)，否则会被解析为 and 条件查询。
 	 * @param queryProvider
 	 */
 	public void orProvider(QueryProvider queryProvider) {
@@ -2022,6 +2044,7 @@ public class QueryProvider {
 
 	/**
 	 * 根据前端传入的 command 实体，获取查询属性的 @QueryFilter 注解值
+	 * obj 必须为 RequestParam 的子类，否则抛出 HandleException 异常
 	 * @author HuangLongPu
 	 * @param obj
 	 */
@@ -2029,18 +2052,24 @@ public class QueryProvider {
 		if (!(obj instanceof RequestParam)) {
 			throw new HandleException("error: the filter is not instanceof RequestParam");
 		}
+		if(updateObj != null && updateObj == obj) {
+			return;
+		}
 		QueryHandle.getFilters(obj, this);
 	}
 
 	/**
 	 * 根据前端传入的 command 实体，获取修改属性的 @UpdateField 注解值
+	 * obj 必须为 RequestParam 的子类，否则抛出 HandleException 异常
 	 * @param obj
 	 */
 	public void setUpdate(Object obj) {
 		if (!(obj instanceof RequestParam)) {
 			throw new HandleException("error: the update is not instanceof RequestParam");
 		}
+		updateObj = obj;
 		QueryHandle.getUpdateField(obj, this);
+		QueryHandle.getFilters(obj, this);
 	}
 	
 	/**

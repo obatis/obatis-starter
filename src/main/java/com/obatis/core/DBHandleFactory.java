@@ -388,6 +388,31 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	}
 
 	/**
+	 * 根据传入的 QueryProvider 对象，返回 BigInteger 的类型值。 该方法常主要用于查询ID类型字段。
+	 * @param provider
+	 * @return
+	 */
+	public BigInteger findBigInteger(QueryProvider provider) {
+		Object obj = this.findObject(provider);
+		if(obj != null) {
+			if(obj instanceof BigInteger) {
+				return (BigInteger) obj;
+			} else if (obj instanceof BigDecimal) {
+				return ((BigDecimal) obj).toBigInteger();
+			} else if (obj instanceof Double) {
+				return BigInteger.valueOf(((Double) obj).longValue());
+			} else if (obj instanceof Long) {
+				return BigInteger.valueOf((Long) obj);
+			} else if (obj instanceof Integer) {
+				return BigInteger.valueOf((Integer) obj);
+			} else {
+				return new BigInteger(obj.toString());
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * 根据传入的 QueryProvider 对象，返回int的类型值。 该方法常用于查询count等类型的业务。
 	 * 如果根据条件有多条数据符合，则抛出异常。
 	 * @param provider

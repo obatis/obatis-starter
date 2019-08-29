@@ -30,37 +30,47 @@ public class QueryHandle {
 			if (isStatic) {
 				continue;
 			}
-			
-			QueryFilter queryFilter = field.getAnnotation(QueryFilter.class);
-			if (queryFilter == null) {
+			if(!setFilter(object, queryProvider, field)) {
 				continue;
 			}
-			
-			String fieldName = !ValidateTool.isEmpty(queryFilter.name()) ? queryFilter.name() : field.getName();
-			field.setAccessible(true);
-			Object value = null;
-			try {
-				value = field.get(object);
-			} catch (Exception e) {
-				e.printStackTrace();
+		}
+		
+		Class<?> supCls = cls.getSuperclass();
+		if(supCls != null) {
+			getFilters(object, supCls, queryProvider);
+		}
+	}
+
+	private static boolean setFilter(Object object, QueryProvider queryProvider, Field field) {
+		QueryFilter queryFilter = field.getAnnotation(QueryFilter.class);
+		if (queryFilter == null) {
+			return false;
+		}
+		String fieldName = !ValidateTool.isEmpty(queryFilter.name()) ? queryFilter.name() : field.getName();
+		field.setAccessible(true);
+		Object value = null;
+		try {
+			value = field.get(object);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if(!queryFilter.isnull() && ValidateTool.isEmpty(value)) {
+			return false;
+		}
+
+		DateHandleEnum dateHandle = queryFilter.datetype();
+		if(value instanceof Date) {
+			if(DateHandleEnum.BEGIN_HANDLE.equals(dateHandle)) {
+				value = DateCommonConvert.formatBeginDateTime((Date) value);
+			} else if (DateHandleEnum.END_HANDLE.equals(dateHandle)) {
+				value = DateCommonConvert.formatEndDateTime((Date) value);
 			}
-			
-			if(!queryFilter.isnull() && ValidateTool.isEmpty(value)) {
-				continue;
-			}
-			
-			DateHandleEnum dateHandle = queryFilter.datetype();
-			if(value instanceof Date) {
-				if(DateHandleEnum.BEGIN_HANDLE.equals(dateHandle)) {
-					value = DateCommonConvert.formatBeginDateTime((Date) value);
-				} else if (DateHandleEnum.END_HANDLE.equals(dateHandle)) {
-					value = DateCommonConvert.formatEndDateTime((Date) value);
-				}
-			}
-			
-			
-			FilterEnum filterType = queryFilter.type();
-			switch (filterType) {
+		}
+
+
+		FilterEnum filterType = queryFilter.type();
+		switch (filterType) {
 			case LIKE:
 				queryProvider.like(fieldName, value);
 				break;
@@ -103,7 +113,7 @@ public class QueryHandle {
 			case UP_GREATER_THAN:
 				queryProvider.upGreaterThanZero(fieldName, value);
 				break;
-				case UP_GREATER_EQUAL:
+			case UP_GREATER_EQUAL:
 				queryProvider.upGreaterEqualZero(fieldName, value);
 				break;
 			case REDUCE_GREATER_THAN:
@@ -114,14 +124,9 @@ public class QueryHandle {
 				break;
 			default:
 				throw new HandleException("error: filter annotation invalid");
-			}
-			
 		}
-		
-		Class<?> supCls = cls.getSuperclass();
-		if(supCls != null) {
-			getFilters(object, supCls, queryProvider);
-		}
+
+		return true;
 	}
 	
 	public static final void getUpdateField(Object object, QueryProvider queryProvider) {
@@ -136,11 +141,16 @@ public class QueryHandle {
 			if (isStatic) {
 				continue;
 			}
-			
+
+			/**
+			 * 进行条件的连带处理
+			 */
+			setFilter(object, queryProvider, field);
 			UpdateField updateField = field.getAnnotation(UpdateField.class);
 			if (updateField == null) {
 				continue;
 			}
+
 			
 			String fieldName = !ValidateTool.isEmpty(updateField.name()) ? updateField.name() : field.getName();
 			field.setAccessible(true);
