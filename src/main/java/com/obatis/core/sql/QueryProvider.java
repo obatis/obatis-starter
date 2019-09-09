@@ -1876,6 +1876,8 @@ public class QueryProvider {
 	public void orProvider(QueryProvider queryProvider) {
 		if (queryProvider == null) {
 			throw new HandleException("error: queryProvider is null");
+		} else if (queryProvider == this) {
+			throw new HandleException("error: queryProvider is same");
 		}
 
 		if (this.orProviders == null) {
@@ -1883,6 +1885,7 @@ public class QueryProvider {
 		}
 
 		this.orProviders.add(queryProvider);
+
 	}
 
 	/**
@@ -1903,6 +1906,9 @@ public class QueryProvider {
 		}
 		if (ValidateTool.isEmpty(queryProvider.getJoinTableName())) {
 			throw new HandleException("error: queryProvider joinTableName is null");
+		}
+		if(queryProvider == this) {
+			throw new HandleException("error: queryProvider is same");
 		}
 
 		if (this.leftJoinProviders == null) {
@@ -1934,6 +1940,9 @@ public class QueryProvider {
 		}
 		if (queryProvider == null) {
 			throw new HandleException("error: queryProvider is null");
+		}
+		if(queryProvider == this) {
+			throw new HandleException("error: queryProvider is same");
 		}
 
 		if (this.leftJoinProviders == null) {
