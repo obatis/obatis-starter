@@ -14,6 +14,6 @@ public class TableIndexCache {
 
     public String getTableAsName() {
         setIndex(index + 1);
-        return "t_" + (getIndex() + 1);
+        return "t_" + getIndex();
     }
 }
