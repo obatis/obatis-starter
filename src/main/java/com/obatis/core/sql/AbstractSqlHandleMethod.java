@@ -19,8 +19,6 @@ import java.util.*;
  */
 public abstract class AbstractSqlHandleMethod {
 
-//	private static final Logger log = LoggerFactory.getLogger(AbstractSqlHandleMethod.class);
-
 	private final static String INDEX_DEFAULT = "0";
 	private final static int DEFAULT_FIND = 0;
 	private final static int NOT_FIND = 1;
@@ -44,15 +42,15 @@ public abstract class AbstractSqlHandleMethod {
 	public String getUpdateBatchSql(Map<String, Object> providers, String tableName) throws HandleException {
 		List<QueryProvider> list = (List<QueryProvider>) providers.get(SqlConstant.PROVIDER_OBJ);
 		StringBuffer sql = new StringBuffer();
-		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
-		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
+//		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
+//		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 
 		Map<String, Object> fieldValue = new HashMap<>();
 		Map<String, Object> filterValue = new HashMap<>();
 
 		for (int i = 0, j = list.size(); i < j; i++) {
 			QueryProvider queryProvider = list.get(i);
-			sql.append(this.getUpdateSql(queryProvider, tableName, i + "", columnMap, fieldMap, fieldValue, filterValue) + ";");
+			sql.append(this.getUpdateSql(queryProvider, tableName, i + "", CacheInfoConstant.COLUMN_CACHE.get(tableName), CacheInfoConstant.FIELD_CACHE.get(tableName), fieldValue, filterValue) + ";");
 		}
 
 		providers.put(SqlConstant.PROVIDER_FIELD, fieldValue);
@@ -70,7 +68,7 @@ public abstract class AbstractSqlHandleMethod {
 		List<Object[]> filters = queryProvider.getFilters();
 		if (filters != null && !filters.isEmpty()) {
 			TableIndexCache cache = new TableIndexCache();
-			sql.WHERE(getFilterSql(queryProvider.getLeftJoinProviders(), null, null, cache, "", filters, queryProvider.getOrProviders(), filterValue, index + "_ut", columnMap,
+			sql.WHERE(getFilterSql( "", filters, queryProvider.getOrProviders(), filterValue, index + "_ut", columnMap,
 					fieldMap, NOT_FIND));
 		} else {
 			throw new HandleException("error：filters is empty");
@@ -135,7 +133,7 @@ public abstract class AbstractSqlHandleMethod {
 			Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 			Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 			Map<String, Object> value = new HashMap<>();
-			sql.WHERE(getFilterSql(queryProvider.getLeftJoinProviders(), null, null, null, "", filters, queryProvider.getOrProviders(), value, INDEX_DEFAULT + "_dt", columnMap,
+			sql.WHERE(getFilterSql("", filters, queryProvider.getOrProviders(), value, INDEX_DEFAULT + "_dt", columnMap,
 					fieldMap, NOT_FIND));
 			// 放入值到map
 			param.put(SqlConstant.PROVIDER_FILTER, value);
@@ -156,19 +154,18 @@ public abstract class AbstractSqlHandleMethod {
 	 * @return
 	 * @throws HandleException
 	 */
-	private String getFilterSql(TableIndexCache cache, String tableAliasName, List<Object[]> filters, Map<String, Object> value, String index, Map<String, String> columnMap, Map<String, String> fieldMap) throws HandleException {
-		return getFilterSql(null, null, null, cache, tableAliasName, filters, null, value, index, columnMap, fieldMap, DEFAULT_FIND);
+	private String getFilterSql(String tableAliasName, List<Object[]> filters, Map<String, Object> value, String index, Map<String, String> columnMap, Map<String, String> fieldMap) throws HandleException {
+		return getFilterSql(tableAliasName, filters, null, value, index, columnMap, fieldMap, DEFAULT_FIND);
 	}
 
 	/**
 	 * 根据传入的filter，获取条件filter的数组
 	 * @author HuangLongPu
-	 * @param leftJoinProviders
 	 * @param filters
 	 * @return
 	 * @throws HandleException
 	 */
-	private String getFilterSql(List<Object[]> leftJoinProviders, List<String> groups, List<String> orders, TableIndexCache cache, String tableAliasName, List<Object[]> filters,
+	private String getFilterSql(String tableAliasName, List<Object[]> filters,
 			List<QueryProvider> orProviders, Map<String, Object> value, String index, Map<String, String> columnMap, Map<String, String> fieldMap,
 			int findType) throws HandleException {
 		int filtersLen = 0;
@@ -280,7 +277,7 @@ public abstract class AbstractSqlHandleMethod {
 		if (orProviders != null && !orProviders.isEmpty()) {
 			for (int j = 0, l = orProviders.size(); j < l; j++) {
 				QueryProvider queryProvider = orProviders.get(j);
-				String orItemSql = getFilterSql(queryProvider.getLeftJoinProviders(), groups, orders, cache, tableAliasName, queryProvider.getFilters(), queryProvider.getOrProviders(), value, index + "_ot_" + j, columnMap, fieldMap, findType);
+				String orItemSql = getFilterSql(tableAliasName, queryProvider.getFilters(), queryProvider.getOrProviders(), value, index + "_ot_" + j, columnMap, fieldMap, findType);
 				if (!ValidateTool.isEmpty(orItemSql)) {
 					if (ValidateTool.isEmpty(filterSql.toString())) {
 						filterSql.append("(" + orItemSql + ")");
@@ -289,28 +286,6 @@ public abstract class AbstractSqlHandleMethod {
 					}
 				}
 			}
-		}
-
-		if (leftJoinProviders != null && !leftJoinProviders.isEmpty()) {
-			for (int j = 0, k = leftJoinProviders.size(); j < k; j++) {
-				Object[] obj = leftJoinProviders.get(j);
-				QueryProvider leftJoinProvider = (QueryProvider) obj[2];
-				String childTableAsName = cache.getTableAsName();
-				Map<String, String> childFieldMap = CacheInfoConstant.FIELD_CACHE.get(leftJoinProvider.getJoinTableName());
-				Map<String, String> childColumnMap = CacheInfoConstant.COLUMN_CACHE.get(leftJoinProvider.getJoinTableName());
-				this.addGroupBy(groups, childTableAsName, childColumnMap, leftJoinProvider);
-				this.addOrder(orders, childTableAsName, childFieldMap, childColumnMap, leftJoinProvider);
-				String leftJoinFilterSql = getFilterSql(leftJoinProvider.getLeftJoinProviders(), groups, orders, cache, childTableAsName, leftJoinProvider.getFilters(),
-						leftJoinProvider.getOrProviders(), value, index + "_lt_" + j, childColumnMap, childFieldMap, findType);
-				if (!ValidateTool.isEmpty(leftJoinFilterSql)) {
-					if (ValidateTool.isEmpty(filterSql.toString())) {
-						filterSql.append(leftJoinFilterSql);
-					} else {
-						filterSql.append(" and " + leftJoinFilterSql);
-					}
-				}
-			}
-
 		}
 
 		return filterSql.toString();
@@ -422,10 +397,13 @@ public abstract class AbstractSqlHandleMethod {
 		TableIndexCache cache = new TableIndexCache();
 		String tableAliasName = cache.getTableAsName();
 		SQL sql = new SQL();
-		sql.SELECT(getSelectFieldColumns(queryProvider, cache, tableAliasName, columnMap, fieldMap));
+		List<String> column = new ArrayList<>();
+		getSelectFieldColumns(queryProvider, tableAliasName, columnMap, fieldMap, column);
 		Map<String, Object> value = new HashMap<>();
-		sql.FROM(tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl"));
+		StringBuffer leftJoinFilterSql = null;
 
+		sql.FROM(tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column));
+		sql.SELECT(String.join(",", column));
 		// 构建 group by 语句
 		List<String> groups = new ArrayList<>();
 		List<String> orders = new ArrayList<>();
@@ -433,9 +411,16 @@ public abstract class AbstractSqlHandleMethod {
 		this.addOrder(orders, tableAliasName, fieldMap, columnMap, queryProvider);
 
 		List<Object[]> filters = queryProvider.getFilters();
-		if ((filters != null && !filters.isEmpty()) || (queryProvider.getLeftJoinProviders() != null && !queryProvider.getLeftJoinProviders().isEmpty())) {
-			String filterSql = getFilterSql(queryProvider.getLeftJoinProviders(), groups, orders, cache, tableAliasName, filters, queryProvider.getOrProviders(), value,
+		if (filters != null && !filters.isEmpty()) {
+			String filterSql = getFilterSql(tableAliasName, filters, queryProvider.getOrProviders(), value,
 					INDEX_DEFAULT + "_tl", columnMap, fieldMap, DEFAULT_FIND);
+			if(leftJoinFilterSql != null) {
+				if(!ValidateTool.isEmpty(filterSql)) {
+					filterSql += " and " + leftJoinFilterSql.toString();
+				} else {
+					filterSql = leftJoinFilterSql.toString();
+				}
+			}
 			if (!ValidateTool.isEmpty(filterSql)) {
 				sql.WHERE(filterSql);
 			}
@@ -470,7 +455,9 @@ public abstract class AbstractSqlHandleMethod {
 		SQL sql = new SQL();
 		sql.SELECT("count(1)");
 		Map<String, Object> value = new HashMap<>();
-		sql.FROM(tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl"));
+		StringBuffer leftJoinFilterSql = null;
+		String table = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, null);
+		sql.FROM(table);
 
 		// 处理 group by 语句
 		List<String> groups = new ArrayList<>();
@@ -479,8 +466,15 @@ public abstract class AbstractSqlHandleMethod {
 		List<Object[]> filters = queryProvider.getFilters();
 		if ((filters != null && !filters.isEmpty()) || (queryProvider.getLeftJoinProviders() != null && !queryProvider.getLeftJoinProviders().isEmpty())) {
 
-			String filterSql = getFilterSql(queryProvider.getLeftJoinProviders(), groups, null, cache, tableAliasName, filters, queryProvider.getOrProviders(), value,
+			String filterSql = getFilterSql(tableAliasName, filters, queryProvider.getOrProviders(), value,
 					INDEX_DEFAULT + "_tl", columnMap, fieldMap, DEFAULT_FIND);
+			if(leftJoinFilterSql != null) {
+				if(!ValidateTool.isEmpty(filterSql)) {
+					filterSql += " and " + leftJoinFilterSql.toString();
+				} else {
+					filterSql = leftJoinFilterSql.toString();
+				}
+			}
 			if (!ValidateTool.isEmpty(filterSql)) {
 				sql.WHERE(filterSql);
 			}
@@ -558,7 +552,7 @@ public abstract class AbstractSqlHandleMethod {
 		}
 	}
 
-	private String getLeftJoinTable(TableIndexCache cache, String tableAliasName, List<Object[]> leftJoinProviders, Map<String, Object> value, String index) {
+	private String getLeftJoinTable(TableIndexCache cache, String tableAliasName, List<Object[]> leftJoinProviders, Map<String, Object> value, String index, StringBuffer leftJoinFilterSql, List<String> column) {
 
 		if (leftJoinProviders == null || leftJoinProviders.isEmpty()) {
 			return "";
@@ -566,14 +560,12 @@ public abstract class AbstractSqlHandleMethod {
 
 		StringBuffer sql = new StringBuffer();
 		for (int l = 0, m = leftJoinProviders.size(); l < m; l++) {
-//		for (Object[] leftJoinArray : leftJoinProviders) {
 			Object[] leftJoinArray = leftJoinProviders.get(l);
 			QueryProvider childParam = (QueryProvider) leftJoinArray[2];
 			String connectTableName = childParam.getJoinTableName();
 			if (ValidateTool.isEmpty(connectTableName)) {
-				throw new HandleException("error:connectTableName is null");
+				throw new HandleException("error: connectTableName is null");
 			}
-//			String connectTableAliasName = TableNameConvert.getTableAsName(connectTableName);
 			String connectTableAliasName = cache.getTableAsName();
 			Object fieldName = leftJoinArray[0];
 			Object paramFieldName = leftJoinArray[1];
@@ -594,20 +586,37 @@ public abstract class AbstractSqlHandleMethod {
 				}
 			}
 
+			Map<String, String> childColumnMap = CacheInfoConstant.COLUMN_CACHE.get(connectTableName);
+			Map<String, String> childFieldMap = CacheInfoConstant.FIELD_CACHE.get(connectTableName);
+			if(column != null) {
+				getSelectFieldColumns(childParam, connectTableAliasName, childColumnMap, childFieldMap, column);
+			}
+
 			List<Object[]> onFilters = childParam.getOnFilters();
 			if(onFilters != null && !onFilters.isEmpty()) {
-				Map<String, String> childColumnMap = CacheInfoConstant.COLUMN_CACHE.get(connectTableName);
-				Map<String, String> childFieldMap = CacheInfoConstant.FIELD_CACHE.get(connectTableName);
-				String onFilterSql = this.getFilterSql(cache, connectTableAliasName, onFilters, value, index + "_" + l, childColumnMap, childFieldMap);
+				String onFilterSql = this.getFilterSql(connectTableAliasName, onFilters, value, index + "_" + l, childColumnMap, childFieldMap);
 				if(!ValidateTool.isEmpty(onFilterSql)) {
 					sql.append(" and " + onFilterSql);
 				}
 			}
 
+			if(childParam.getFilters() != null && !childParam.getFilters().isEmpty()) {
+				String filterSql = this.getFilterSql(connectTableAliasName, childParam.getFilters(), value, index + "_fl" + l, childColumnMap, childFieldMap);
+				if(!ValidateTool.isEmpty(filterSql) && leftJoinFilterSql == null) {
+					leftJoinFilterSql = new StringBuffer();
+				}
+				if(ValidateTool.isEmpty(leftJoinFilterSql)) {
+					leftJoinFilterSql.append(filterSql);
+				} else {
+					leftJoinFilterSql.append(" and " + filterSql);
+				}
+			}
+
 			List<Object[]> paramLeftJoinProviders = childParam.getLeftJoinProviders();
 			if (paramLeftJoinProviders != null && paramLeftJoinProviders.size() > 0) {
-				sql.append(getLeftJoinTable(cache, connectTableAliasName, paramLeftJoinProviders, value, index + "_" + l));
+				sql.append(getLeftJoinTable(cache, connectTableAliasName, paramLeftJoinProviders, value, index + "_" + l, leftJoinFilterSql, column));
 			}
+
 		}
 
 		return sql.toString();
@@ -620,7 +629,7 @@ public abstract class AbstractSqlHandleMethod {
 	 * @return
 	 * @throws HandleException
 	 */
-	private String getSelectFieldColumns(QueryProvider queryProvider, TableIndexCache cache, String tableAliasName, Map<String, String> columnMap, Map<String, String> fieldMap)
+	private void getSelectFieldColumns(QueryProvider queryProvider, String tableAliasName, Map<String, String> columnMap, Map<String, String> fieldMap, List<String> column)
 			throws HandleException {
 		List<Object[]> fields;
 		boolean allFlag = true;
@@ -629,7 +638,7 @@ public abstract class AbstractSqlHandleMethod {
 		}
 
 		tableAliasName += ".";
-		List<String> column = new ArrayList<>();
+
 		Map<String, String> notFields = queryProvider.getNotFields();
 		if (allFlag) {
             /**
@@ -652,31 +661,30 @@ public abstract class AbstractSqlHandleMethod {
 			}
 
 			// 获取left join
-			List<Object[]> leftJoinParams = queryProvider.getLeftJoinProviders();
-			if (leftJoinParams != null && !leftJoinParams.isEmpty()) {
-				getLeftJoinSelectColumn(cache, leftJoinParams, column);
-			}
+//			List<Object[]> leftJoinParams = queryProvider.getLeftJoinProviders();
+//			if (leftJoinParams != null && !leftJoinParams.isEmpty()) {
+//				getLeftJoinSelectColumn(cache, leftJoinParams, column);
+//			}
 
 			if (column.isEmpty()) {
 				throw new HandleException("error：field is null");
 			}
-			return String.join(",", column);
+			return;
 		}
 
 		// 获取列
 		getSelectColumn(tableAliasName, column, fields, fieldMap, columnMap, notFields);
 
 		// 获取left join
-		List<Object[]> leftJoinParams = queryProvider.getLeftJoinProviders();
-		if (leftJoinParams != null && !leftJoinParams.isEmpty()) {
-			getLeftJoinSelectColumn(cache, leftJoinParams, column);
-		}
+//		List<Object[]> leftJoinParams = queryProvider.getLeftJoinProviders();
+//		if (leftJoinParams != null && !leftJoinParams.isEmpty()) {
+//			getLeftJoinSelectColumn(cache, leftJoinParams, column);
+//		}
 
 		if (column.size() == 0) {
 			throw new HandleException("error：field is null");
 		}
 
-		return String.join(",", column);
 	}
 
 	/**
@@ -685,53 +693,53 @@ public abstract class AbstractSqlHandleMethod {
 	 * @param leftJoinProviders
 	 * @param column
 	 */
-	private void getLeftJoinSelectColumn(TableIndexCache cache, List<Object[]> leftJoinProviders, List<String> column) {
-
-		for (Object[] obj : leftJoinProviders) {
-			QueryProvider queryProvider = (QueryProvider) obj[2];
-//			String tableAliasName = TableNameConvert.getTableAsName(queryProvider.getJoinTableName());
-			String tableAliasName = cache.getTableAsName();
-			Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(queryProvider.getJoinTableName());
-			Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(queryProvider.getJoinTableName());
-			
-			List<Object[]> fields = null;
-			if ((fields = queryProvider.getFields()) != null && !fields.isEmpty()) {
-				getSelectColumn(tableAliasName, column, queryProvider.getFields(), fieldMap, columnMap, queryProvider.getNotFields());
-			}
-
-			/**
-			 * 针对left join查询，不查询所有字段，字段必须指定
-			 * HuangLongPu 于 2019年07月02日修复
-			 */
-//			else {
-//				Map<String, String> notFields = queryProvider.getNotFields();
-//				/**
-//				 * 表示未查询全部字段，sql 语句例如：select * from demo ************
-//				 * 为提升查询效率，不建议 sql 查询所有字段，打印一条日志进行提醒开发人员
-//				 */
-//				log.warn("*********** WARN : no suggest use sql >>>>>>>>>  select * from XXXXXX ********");
-//				for (Map.Entry<String, String> entry : columnMap.entrySet()) {
-//					String name = entry.getValue();
-//					String key = entry.getKey();
-//					if (notFields != null && (notFields.containsKey(name) || notFields.containsKey(key))) {
-//						continue;
-//					}
-//					String columnName = tableAliasName + "." + name;
-//					if (name.equals(key)) {
-//						column.add(columnName);
-//					} else {
-//						column.add(columnName + " as " + key);
-//					}
-//				}
+//	private void getLeftJoinSelectColumn(String leftJoinTableAliasName, List<Object[]> leftJoinProviders, List<String> column, Map<String, String> columnMap, Map<String, String> fieldMap) {
+//
+//		for (Object[] obj : leftJoinProviders) {
+//			QueryProvider queryProvider = (QueryProvider) obj[2];
+////			String tableAliasName = TableNameConvert.getTableAsName(queryProvider.getJoinTableName());
+////			String tableAliasName = cache.getTableAsName();
+////			Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(queryProvider.getJoinTableName());
+////			Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(queryProvider.getJoinTableName());
+//
+//			List<Object[]> fields = null;
+//			if ((fields = queryProvider.getFields()) != null && !fields.isEmpty()) {
+//				getSelectColumn(leftJoinTableAliasName, column, queryProvider.getFields(), fieldMap, columnMap, queryProvider.getNotFields());
 //			}
-			
-
-			List<Object[]> childLeftJoinProviders = queryProvider.getLeftJoinProviders();
-			if (childLeftJoinProviders != null && !childLeftJoinProviders.isEmpty()) {
-				this.getLeftJoinSelectColumn(cache, childLeftJoinProviders, column);
-			}
-		}
-	}
+//
+//			/**
+//			 * 针对left join查询，不查询所有字段，字段必须指定
+//			 * HuangLongPu 于 2019年07月02日修复
+//			 */
+////			else {
+////				Map<String, String> notFields = queryProvider.getNotFields();
+////				/**
+////				 * 表示未查询全部字段，sql 语句例如：select * from demo ************
+////				 * 为提升查询效率，不建议 sql 查询所有字段，打印一条日志进行提醒开发人员
+////				 */
+////				log.warn("*********** WARN : no suggest use sql >>>>>>>>>  select * from XXXXXX ********");
+////				for (Map.Entry<String, String> entry : columnMap.entrySet()) {
+////					String name = entry.getValue();
+////					String key = entry.getKey();
+////					if (notFields != null && (notFields.containsKey(name) || notFields.containsKey(key))) {
+////						continue;
+////					}
+////					String columnName = tableAliasName + "." + name;
+////					if (name.equals(key)) {
+////						column.add(columnName);
+////					} else {
+////						column.add(columnName + " as " + key);
+////					}
+////				}
+////			}
+//
+//
+////			List<Object[]> childLeftJoinProviders = queryProvider.getLeftJoinProviders();
+////			if (childLeftJoinProviders != null && !childLeftJoinProviders.isEmpty()) {
+////				this.getLeftJoinSelectColumn(cache, childLeftJoinProviders, column);
+////			}
+//		}
+//	}
 
 	/**
 	 * 获取需要查询的字段
@@ -992,9 +1000,12 @@ public abstract class AbstractSqlHandleMethod {
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 		TableIndexCache cache = new TableIndexCache();
 		String tableAliasName = cache.getTableAsName();
-		sql.SELECT(getSelectFieldColumns(queryProvider, cache, tableAliasName, columnMap, fieldMap));
+		List<String> column = new ArrayList<>();
+		getSelectFieldColumns(queryProvider, tableAliasName, columnMap, fieldMap, column);
 		Map<String, Object> value = new HashMap<>();
-		String table = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl");
+		StringBuffer leftJoinFilterSql = null;
+		String table = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column);
+		sql.SELECT(String.join(",", column));
 		sql.FROM(table);
 		// 分页的语句
 		SQL totalSql = new SQL();
@@ -1009,10 +1020,17 @@ public abstract class AbstractSqlHandleMethod {
 		this.addOrder(orders, tableAliasName, fieldMap, columnMap, queryProvider);
 
 		List<Object[]> filters = queryProvider.getFilters();
-		if ((filters != null && !filters.isEmpty()) || (queryProvider.getLeftJoinProviders() != null && !queryProvider.getLeftJoinProviders().isEmpty())) {
+		if ((filters != null && !filters.isEmpty())) {
 
-			String filterSql = getFilterSql(queryProvider.getLeftJoinProviders(), groups, orders, cache, tableAliasName, filters, queryProvider.getOrProviders(), value,
+			String filterSql = getFilterSql(tableAliasName, filters, queryProvider.getOrProviders(), value,
 					INDEX_DEFAULT + "_t", columnMap, fieldMap, DEFAULT_FIND);
+			if(leftJoinFilterSql != null) {
+				if(!ValidateTool.isEmpty(filterSql)) {
+					filterSql += " and " + leftJoinFilterSql.toString();
+				} else {
+					filterSql = leftJoinFilterSql.toString();
+				}
+			}
 			if (!ValidateTool.isEmpty(filterSql)) {
 				sql.WHERE(filterSql);
 				totalSql.WHERE(filterSql);

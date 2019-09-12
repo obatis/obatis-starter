@@ -5,20 +5,29 @@
 
     <groupId>com.obatis</groupId>
     <artifactId>obatis-core</artifactId>
-    <version>1.1.12.1</version>
+    <version>1.1.12.2</version>
     <packaging>jar</packaging>
     <name>obatis-core</name>
     <description>obatis-core, apply web and database project</description>
     <url>https://github.com/obatis/obatis-core</url>
 
+    <!-- 中央仓库 -->
+    <!--<distributionManagement>-->
+        <!--<snapshotRepository>-->
+            <!--<id>oss</id>-->
+            <!--<url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
+        <!--</snapshotRepository>-->
+        <!--<repository>-->
+            <!--<id>oss</id>-->
+            <!--<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
+        <!--</repository>-->
+    <!--</distributionManagement>-->
+
+    <!-- 私有仓库 -->
     <distributionManagement>
-        <snapshotRepository>
-            <id>oss</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
         <repository>
-            <id>oss</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>private-oss</id>
+            <url>http://139.9.81.33:8089/nexus/content/repositories/releases/</url>
         </repository>
     </distributionManagement>
 
