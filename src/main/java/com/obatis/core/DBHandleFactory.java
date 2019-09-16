@@ -365,6 +365,30 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 		return this.getBaseBeanSessionMapper().query(paramMap, this.getTableName());
 	}
 
+	public List<BigInteger> listBigInteger(QueryProvider provider) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
+		return this.getBaseBeanSessionMapper().listBigInteger(paramMap, this.getTableName());
+	}
+
+	public List<BigDecimal> listBigDecimal(QueryProvider provider) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
+		return this.getBaseBeanSessionMapper().listBigDecimal(paramMap, this.getTableName());
+	}
+
+	public List<Integer> listInteger(QueryProvider provider) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
+		return this.getBaseBeanSessionMapper().listInteger(paramMap, this.getTableName());
+	}
+
+	public List<String> listString(QueryProvider provider) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
+		return this.getBaseBeanSessionMapper().listString(paramMap, this.getTableName());
+	}
+
 	/**
 	 * 根据传入的 QueryProvider 对象，返回BigDecimal的类型值。 该方法常用于查询金额字段。
 	 * 如果根据条件有多条数据符合，则抛出异常。
