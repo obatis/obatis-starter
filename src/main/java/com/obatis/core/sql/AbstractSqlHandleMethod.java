@@ -1057,7 +1057,7 @@ public abstract class AbstractSqlHandleMethod {
 //			totalSql.WHERE(filterSql);
 //		}
 
-		if(ValidateTool.isEmpty(filterSqlBuffer)) {
+		if(!ValidateTool.isEmpty(filterSqlBuffer)) {
 			sql.WHERE(filterSqlBuffer.toString());
 			totalSql.WHERE(filterSqlBuffer.toString());
 		}
