@@ -400,8 +400,8 @@ public abstract class AbstractSqlHandleMethod {
 		List<String> column = new ArrayList<>();
 		getSelectFieldColumns(queryProvider, tableAliasName, columnMap, fieldMap, column);
 		Map<String, Object> value = new HashMap<>();
-		StringBuffer leftJoinFilterSql = null;
 
+		StringBuffer leftJoinFilterSql = new StringBuffer();
 		sql.FROM(tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column));
 		sql.SELECT(String.join(",", column));
 		// 构建 group by 语句
@@ -410,20 +410,27 @@ public abstract class AbstractSqlHandleMethod {
 		this.addGroupBy(groups, tableAliasName, columnMap, queryProvider);
 		this.addOrder(orders, tableAliasName, fieldMap, columnMap, queryProvider);
 
+		StringBuffer filterSqlBuffer = new StringBuffer();
 		List<Object[]> filters = queryProvider.getFilters();
 		if (filters != null && !filters.isEmpty()) {
 			String filterSql = getFilterSql(tableAliasName, filters, queryProvider.getOrProviders(), value,
 					INDEX_DEFAULT + "_tl", columnMap, fieldMap, DEFAULT_FIND);
-			if(leftJoinFilterSql != null) {
-				if(!ValidateTool.isEmpty(filterSql)) {
-					filterSql += " and " + leftJoinFilterSql.toString();
-				} else {
-					filterSql = leftJoinFilterSql.toString();
-				}
+			if(ValidateTool.isEmpty(filterSql)) {
+				filterSqlBuffer.append(filterSql);
 			}
-			if (!ValidateTool.isEmpty(filterSql)) {
-				sql.WHERE(filterSql);
+		}
+
+		if(leftJoinFilterSql != null) {
+			if(!ValidateTool.isEmpty(filterSqlBuffer)) {
+				filterSqlBuffer.append(" and " + leftJoinFilterSql.toString());
+//				filterSql += " and " + leftJoinFilterSql.toString();
+			} else {
+				filterSqlBuffer.append(leftJoinFilterSql);
+//				filterSql = leftJoinFilterSql.toString();
 			}
+		}
+		if (!ValidateTool.isEmpty(filterSqlBuffer)) {
+			sql.WHERE(filterSqlBuffer.toString());
 		}
 
 		if(!value.isEmpty()) {
@@ -455,7 +462,8 @@ public abstract class AbstractSqlHandleMethod {
 		SQL sql = new SQL();
 		sql.SELECT("count(1)");
 		Map<String, Object> value = new HashMap<>();
-		StringBuffer leftJoinFilterSql = null;
+
+		StringBuffer leftJoinFilterSql = new StringBuffer();
 		String table = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, null);
 		sql.FROM(table);
 
@@ -463,21 +471,28 @@ public abstract class AbstractSqlHandleMethod {
 		List<String> groups = new ArrayList<>();
 		this.addGroupBy(groups, tableAliasName, columnMap, queryProvider);
 
+		StringBuffer filterSqlBuffer = new StringBuffer();
 		List<Object[]> filters = queryProvider.getFilters();
 		if ((filters != null && !filters.isEmpty()) || (queryProvider.getLeftJoinProviders() != null && !queryProvider.getLeftJoinProviders().isEmpty())) {
 
 			String filterSql = getFilterSql(tableAliasName, filters, queryProvider.getOrProviders(), value,
 					INDEX_DEFAULT + "_tl", columnMap, fieldMap, DEFAULT_FIND);
-			if(leftJoinFilterSql != null) {
-				if(!ValidateTool.isEmpty(filterSql)) {
-					filterSql += " and " + leftJoinFilterSql.toString();
-				} else {
-					filterSql = leftJoinFilterSql.toString();
-				}
+			if(!ValidateTool.isEmpty(filterSql)) {
+				filterSqlBuffer.append(filterSql);
 			}
-			if (!ValidateTool.isEmpty(filterSql)) {
-				sql.WHERE(filterSql);
+		}
+
+		if(leftJoinFilterSql != null) {
+			if(!ValidateTool.isEmpty(filterSqlBuffer)) {
+				filterSqlBuffer.append(" and " + leftJoinFilterSql);
+//				filterSql += " and " + leftJoinFilterSql.toString();
+			} else {
+				filterSqlBuffer.append(leftJoinFilterSql);
+//				filterSql = leftJoinFilterSql.toString();
 			}
+		}
+		if (!ValidateTool.isEmpty(filterSqlBuffer)) {
+			sql.WHERE(filterSqlBuffer.toString());
 		}
 
 		if(!value.isEmpty()) {
@@ -602,10 +617,7 @@ public abstract class AbstractSqlHandleMethod {
 
 			if(childParam.getFilters() != null && !childParam.getFilters().isEmpty()) {
 				String filterSql = this.getFilterSql(connectTableAliasName, childParam.getFilters(), value, index + "_fl" + l, childColumnMap, childFieldMap);
-				if(!ValidateTool.isEmpty(filterSql) && leftJoinFilterSql == null) {
-					leftJoinFilterSql = new StringBuffer();
-				}
-				if(ValidateTool.isEmpty(leftJoinFilterSql)) {
+				if(ValidateTool.isEmpty(leftJoinFilterSql.toString())) {
 					leftJoinFilterSql.append(filterSql);
 				} else {
 					leftJoinFilterSql.append(" and " + filterSql);
@@ -1003,7 +1015,8 @@ public abstract class AbstractSqlHandleMethod {
 		List<String> column = new ArrayList<>();
 		getSelectFieldColumns(queryProvider, tableAliasName, columnMap, fieldMap, column);
 		Map<String, Object> value = new HashMap<>();
-		StringBuffer leftJoinFilterSql = null;
+
+		StringBuffer leftJoinFilterSql = new StringBuffer();
 		String table = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column);
 		sql.SELECT(String.join(",", column));
 		sql.FROM(table);
@@ -1019,22 +1032,34 @@ public abstract class AbstractSqlHandleMethod {
 		this.addGroupBy(groups, tableAliasName, columnMap, queryProvider);
 		this.addOrder(orders, tableAliasName, fieldMap, columnMap, queryProvider);
 
+		StringBuffer filterSqlBuffer = new StringBuffer();
 		List<Object[]> filters = queryProvider.getFilters();
 		if ((filters != null && !filters.isEmpty())) {
 
 			String filterSql = getFilterSql(tableAliasName, filters, queryProvider.getOrProviders(), value,
 					INDEX_DEFAULT + "_t", columnMap, fieldMap, DEFAULT_FIND);
-			if(leftJoinFilterSql != null) {
-				if(!ValidateTool.isEmpty(filterSql)) {
-					filterSql += " and " + leftJoinFilterSql.toString();
-				} else {
-					filterSql = leftJoinFilterSql.toString();
-				}
+			if(!ValidateTool.isEmpty(filterSql)) {
+				filterSqlBuffer.append(filterSql);
 			}
-			if (!ValidateTool.isEmpty(filterSql)) {
-				sql.WHERE(filterSql);
-				totalSql.WHERE(filterSql);
+		}
+
+		if(leftJoinFilterSql != null) {
+			if(!ValidateTool.isEmpty(filterSqlBuffer)) {
+				filterSqlBuffer.append(" and " + leftJoinFilterSql);
+//				filterSql += " and " + leftJoinFilterSql.toString();
+			} else {
+				filterSqlBuffer.append(leftJoinFilterSql);
+//				filterSql = leftJoinFilterSql.toString();
 			}
+		}
+//		if (!ValidateTool.isEmpty(filterSql)) {
+//			sql.WHERE(filterSql);
+//			totalSql.WHERE(filterSql);
+//		}
+
+		if(ValidateTool.isEmpty(filterSqlBuffer)) {
+			sql.WHERE(filterSqlBuffer.toString());
+			totalSql.WHERE(filterSqlBuffer.toString());
 		}
 
 		if(!value.isEmpty()) {
