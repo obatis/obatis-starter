@@ -420,7 +420,7 @@ public abstract class AbstractSqlHandleMethod {
 			}
 		}
 
-		if(leftJoinFilterSql != null) {
+		if(!ValidateTool.isEmpty(leftJoinFilterSql)) {
 			if(!ValidateTool.isEmpty(filterSqlBuffer)) {
 				filterSqlBuffer.append(" and " + leftJoinFilterSql.toString());
 //				filterSql += " and " + leftJoinFilterSql.toString();
@@ -482,7 +482,7 @@ public abstract class AbstractSqlHandleMethod {
 			}
 		}
 
-		if(leftJoinFilterSql != null) {
+		if(!ValidateTool.isEmpty(leftJoinFilterSql)) {
 			if(!ValidateTool.isEmpty(filterSqlBuffer)) {
 				filterSqlBuffer.append(" and " + leftJoinFilterSql);
 //				filterSql += " and " + leftJoinFilterSql.toString();
@@ -1043,7 +1043,7 @@ public abstract class AbstractSqlHandleMethod {
 			}
 		}
 
-		if(leftJoinFilterSql != null) {
+		if(!ValidateTool.isEmpty(leftJoinFilterSql)) {
 			if(!ValidateTool.isEmpty(filterSqlBuffer)) {
 				filterSqlBuffer.append(" and " + leftJoinFilterSql);
 //				filterSql += " and " + leftJoinFilterSql.toString();
