@@ -415,13 +415,13 @@ public abstract class AbstractSqlHandleMethod {
 		if (filters != null && !filters.isEmpty()) {
 			String filterSql = getFilterSql(tableAliasName, filters, queryProvider.getOrProviders(), value,
 					INDEX_DEFAULT + "_tl", columnMap, fieldMap, DEFAULT_FIND);
-			if(ValidateTool.isEmpty(filterSql)) {
+			if(!ValidateTool.isEmpty(filterSql)) {
 				filterSqlBuffer.append(filterSql);
 			}
 		}
 
-		if(!ValidateTool.isEmpty(leftJoinFilterSql)) {
-			if(!ValidateTool.isEmpty(filterSqlBuffer)) {
+		if(!ValidateTool.isEmpty(leftJoinFilterSql.toString())) {
+			if(!ValidateTool.isEmpty(filterSqlBuffer.toString())) {
 				filterSqlBuffer.append(" and " + leftJoinFilterSql.toString());
 //				filterSql += " and " + leftJoinFilterSql.toString();
 			} else {
@@ -429,7 +429,7 @@ public abstract class AbstractSqlHandleMethod {
 //				filterSql = leftJoinFilterSql.toString();
 			}
 		}
-		if (!ValidateTool.isEmpty(filterSqlBuffer)) {
+		if (!ValidateTool.isEmpty(filterSqlBuffer.toString())) {
 			sql.WHERE(filterSqlBuffer.toString());
 		}
 
@@ -482,8 +482,8 @@ public abstract class AbstractSqlHandleMethod {
 			}
 		}
 
-		if(!ValidateTool.isEmpty(leftJoinFilterSql)) {
-			if(!ValidateTool.isEmpty(filterSqlBuffer)) {
+		if(!ValidateTool.isEmpty(leftJoinFilterSql.toString())) {
+			if(!ValidateTool.isEmpty(filterSqlBuffer.toString())) {
 				filterSqlBuffer.append(" and " + leftJoinFilterSql);
 //				filterSql += " and " + leftJoinFilterSql.toString();
 			} else {
@@ -491,7 +491,7 @@ public abstract class AbstractSqlHandleMethod {
 //				filterSql = leftJoinFilterSql.toString();
 			}
 		}
-		if (!ValidateTool.isEmpty(filterSqlBuffer)) {
+		if (!ValidateTool.isEmpty(filterSqlBuffer.toString())) {
 			sql.WHERE(filterSqlBuffer.toString());
 		}
 
@@ -1043,8 +1043,8 @@ public abstract class AbstractSqlHandleMethod {
 			}
 		}
 
-		if(!ValidateTool.isEmpty(leftJoinFilterSql)) {
-			if(!ValidateTool.isEmpty(filterSqlBuffer)) {
+		if(!ValidateTool.isEmpty(leftJoinFilterSql.toString())) {
+			if(!ValidateTool.isEmpty(filterSqlBuffer.toString())) {
 				filterSqlBuffer.append(" and " + leftJoinFilterSql);
 //				filterSql += " and " + leftJoinFilterSql.toString();
 			} else {
@@ -1057,7 +1057,7 @@ public abstract class AbstractSqlHandleMethod {
 //			totalSql.WHERE(filterSql);
 //		}
 
-		if(!ValidateTool.isEmpty(filterSqlBuffer)) {
+		if(!ValidateTool.isEmpty(filterSqlBuffer.toString())) {
 			sql.WHERE(filterSqlBuffer.toString());
 			totalSql.WHERE(filterSqlBuffer.toString());
 		}
