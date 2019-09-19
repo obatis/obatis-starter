@@ -402,11 +402,11 @@ public abstract class AbstractSqlHandleMethod {
 		Map<String, Object> value = new HashMap<>();
 
 		StringBuffer leftJoinFilterSql = new StringBuffer();
-		sql.FROM(tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column));
-		sql.SELECT(String.join(",", column));
-		// 构建 group by 语句
 		List<String> groups = new ArrayList<>();
 		List<String> orders = new ArrayList<>();
+		sql.FROM(tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column, groups, orders));
+		sql.SELECT(String.join(",", column));
+		// 构建 group by 语句
 		this.addGroupBy(groups, tableAliasName, columnMap, queryProvider);
 		this.addOrder(orders, tableAliasName, fieldMap, columnMap, queryProvider);
 
@@ -464,16 +464,16 @@ public abstract class AbstractSqlHandleMethod {
 		Map<String, Object> value = new HashMap<>();
 
 		StringBuffer leftJoinFilterSql = new StringBuffer();
-		String table = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, null);
+		List<String> groups = new ArrayList<>();
+		String table = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, null, groups, null);
 		sql.FROM(table);
 
 		// 处理 group by 语句
-		List<String> groups = new ArrayList<>();
 		this.addGroupBy(groups, tableAliasName, columnMap, queryProvider);
 
 		StringBuffer filterSqlBuffer = new StringBuffer();
 		List<Object[]> filters = queryProvider.getFilters();
-		if ((filters != null && !filters.isEmpty()) || (queryProvider.getLeftJoinProviders() != null && !queryProvider.getLeftJoinProviders().isEmpty())) {
+		if ((filters != null && !filters.isEmpty())) {
 
 			String filterSql = getFilterSql(tableAliasName, filters, queryProvider.getOrProviders(), value,
 					INDEX_DEFAULT + "_tl", columnMap, fieldMap, DEFAULT_FIND);
@@ -567,7 +567,7 @@ public abstract class AbstractSqlHandleMethod {
 		}
 	}
 
-	private String getLeftJoinTable(TableIndexCache cache, String tableAliasName, List<Object[]> leftJoinProviders, Map<String, Object> value, String index, StringBuffer leftJoinFilterSql, List<String> column) {
+	private String getLeftJoinTable(TableIndexCache cache, String tableAliasName, List<Object[]> leftJoinProviders, Map<String, Object> value, String index, StringBuffer leftJoinFilterSql, List<String> column, List<String> groups, List<String> orders) {
 
 		if (leftJoinProviders == null || leftJoinProviders.isEmpty()) {
 			return "";
@@ -607,6 +607,11 @@ public abstract class AbstractSqlHandleMethod {
 				getSelectFieldColumns(childParam, connectTableAliasName, childColumnMap, childFieldMap, column);
 			}
 
+			this.addGroupBy(groups, connectTableAliasName, childColumnMap, childParam);
+			if(orders != null) {
+				this.addOrder(orders, connectTableAliasName, childFieldMap, childColumnMap, childParam);
+			}
+
 			List<Object[]> onFilters = childParam.getOnFilters();
 			if(onFilters != null && !onFilters.isEmpty()) {
 				String onFilterSql = this.getFilterSql(connectTableAliasName, onFilters, value, index + "_" + l, childColumnMap, childFieldMap);
@@ -626,7 +631,7 @@ public abstract class AbstractSqlHandleMethod {
 
 			List<Object[]> paramLeftJoinProviders = childParam.getLeftJoinProviders();
 			if (paramLeftJoinProviders != null && paramLeftJoinProviders.size() > 0) {
-				sql.append(getLeftJoinTable(cache, connectTableAliasName, paramLeftJoinProviders, value, index + "_" + l, leftJoinFilterSql, column));
+				sql.append(getLeftJoinTable(cache, connectTableAliasName, paramLeftJoinProviders, value, index + "_" + l, leftJoinFilterSql, column, groups, orders));
 			}
 
 		}
@@ -1017,7 +1022,11 @@ public abstract class AbstractSqlHandleMethod {
 		Map<String, Object> value = new HashMap<>();
 
 		StringBuffer leftJoinFilterSql = new StringBuffer();
-		String table = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column);
+		// 构造 group by 语句
+		List<String> groups = new ArrayList<>();
+		// 构造order by 语句
+		List<String> orders = new ArrayList<>();
+		String table = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column, groups, orders);
 		sql.SELECT(String.join(",", column));
 		sql.FROM(table);
 		// 分页的语句
@@ -1025,10 +1034,6 @@ public abstract class AbstractSqlHandleMethod {
 		totalSql.SELECT("count(1)");
 		totalSql.FROM(table);
 
-		// 构造 group by 语句
-		List<String> groups = new ArrayList<>();
-		// 构造order by 语句
-		List<String> orders = new ArrayList<>();
 		this.addGroupBy(groups, tableAliasName, columnMap, queryProvider);
 		this.addOrder(orders, tableAliasName, fieldMap, columnMap, queryProvider);
 

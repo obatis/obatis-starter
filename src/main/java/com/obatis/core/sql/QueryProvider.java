@@ -2014,12 +2014,25 @@ public class QueryProvider {
 		this.setGroups(groupName, SqlHandleEnum.HANDLE_DEFAULT, null);
 	}
 
+	/**
+	 * 增加分组，支持一次性传入多个分组字段
+	 * @param groupNames
+	 */
+	public void setGroup(String...groupNames) {
+		for(String groupName : groupNames) {
+			this.setGroups(groupName, SqlHandleEnum.HANDLE_DEFAULT, null);
+		}
+	}
+
+
 	public void setGroupDateFormat(String groupName, String pattern) {
 		if (ValidateTool.isEmpty(pattern)) {
 			throw new HandleException("error: pattern is null");
 		}
 		this.setGroups(groupName, SqlHandleEnum.HANDLE_DATE_FORMAT, pattern);
 	}
+
+
 
 	private void setGroups(String groupName, SqlHandleEnum sqlHandleEnum, String pattern) {
 		if (ValidateTool.isEmpty(groupName)) {
