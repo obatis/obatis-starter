@@ -17,6 +17,7 @@ import com.obatis.validate.ValidateTool;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -502,6 +503,19 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 			}
 		}
 		return 0D;
+	}
+
+	/**
+	 * 根据传入的 QueryProvider 对象，返回 Date 的类型值。 如果根据条件有多条数据符合，则抛出异常。
+	 * @param provider
+	 * @return
+	 */
+	public Date findDate(QueryProvider provider) {
+		Object obj = this.findObject(provider);
+		if(obj != null && obj instanceof Date) {
+			return (Date) obj;
+		}
+		return null;
 	}
 
 	/**
