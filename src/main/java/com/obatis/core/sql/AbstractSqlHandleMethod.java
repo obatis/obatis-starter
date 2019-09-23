@@ -23,8 +23,29 @@ public abstract class AbstractSqlHandleMethod {
 	private final static int DEFAULT_FIND = 0;
 	private final static int NOT_FIND = 1;
 
+	private TableIndexCache cache;
+	private Map<String, String> tableAsNameMap = new HashMap<>();
+
 	protected AbstractSqlHandleMethod() {
 
+	}
+
+	/**
+	 * 获取别名入口
+	 * @param tableAsNameSerialNumber
+	 * @return
+	 */
+	private String getTableAsName(String tableAsNameSerialNumber) {
+		if(tableAsNameMap.containsKey(tableAsNameSerialNumber)) {
+			return tableAsNameMap.get(tableAsNameSerialNumber);
+		}
+
+		if(cache == null) {
+			cache = new TableIndexCache();
+		}
+		String tableAsName = cache.getTableAsName();
+		tableAsNameMap.put(tableAsNameSerialNumber, tableAsName);
+		return tableAsName;
 	}
 
 	public String getUpdateSql(Map<String, Object> providers, String tableName) throws HandleException {
@@ -395,7 +416,8 @@ public abstract class AbstractSqlHandleMethod {
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 
 		TableIndexCache cache = new TableIndexCache();
-		String tableAliasName = cache.getTableAsName();
+//		String tableAliasName = cache.getTableAsName();
+		String tableAliasName = this.getTableAsName(queryProvider.getTableAsNameSerialNumber());
 		SQL sql = new SQL();
 		List<String> column = new ArrayList<>();
 		getSelectFieldColumns(queryProvider, tableAliasName, columnMap, fieldMap, column);
@@ -458,7 +480,8 @@ public abstract class AbstractSqlHandleMethod {
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 
 		TableIndexCache cache = new TableIndexCache();
-		String tableAliasName = cache.getTableAsName();
+//		String tableAliasName = cache.getTableAsName();
+		String tableAliasName = this.getTableAsName(queryProvider.getTableAsNameSerialNumber());
 		SQL sql = new SQL();
 		sql.SELECT("count(1)");
 		Map<String, Object> value = new HashMap<>();
@@ -581,7 +604,8 @@ public abstract class AbstractSqlHandleMethod {
 			if (ValidateTool.isEmpty(connectTableName)) {
 				throw new HandleException("error: connectTableName is null");
 			}
-			String connectTableAliasName = cache.getTableAsName();
+//			String connectTableAliasName = cache.getTableAsName();
+			String connectTableAliasName = this.getTableAsName(childParam.getTableAsNameSerialNumber());
 			Object fieldName = leftJoinArray[0];
 			Object paramFieldName = leftJoinArray[1];
 
@@ -913,18 +937,48 @@ public abstract class AbstractSqlHandleMethod {
 				String field = map.getValue();
 //				String tempField = field.toLowerCase();
 
-				if(fieldMap.containsKey(field)) {
-					fieldName = fieldName.replace("{" + field + "}", tableAliasName + field);
-				} else if (columnMap.containsKey(field)) {
-					fieldName = fieldName.replace("{" + field + "}", tableAliasName + columnMap.get(field));
+				if(field.startsWith(CacheInfoConstant.TABLE_AS_START_PREFIX)) {
+					// 说明带有自定义别名
+					// #tas_201919999.name
+					String[] fieldArray = field.split(".");
+					String tableAsNameSerialNumber = fieldArray[0].substring(fieldArray[0].indexOf("_") + 1);
+					String expFieldName = fieldArray[1];
+					if(fieldMap.containsKey(expFieldName)) {
+						fieldName = fieldName.replace("{" + field + "}", getTableAsName(tableAsNameSerialNumber) + "." + field);
+					} else if (columnMap.containsKey(field)) {
+						fieldName = fieldName.replace("{" + field + "}", getTableAsName(tableAsNameSerialNumber) + "." + columnMap.get(field));
+					} else {
+						throw new HandleException("error: exp field invalid");
+					}
 				} else {
-					fieldName = fieldName.replace("{" + field + "}", cacheFieldNameTempMap.get(map.getKey()));
+					// {name}
+					if(fieldMap.containsKey(field)) {
+						fieldName = fieldName.replace("{" + field + "}", tableAliasName + field);
+					} else if (columnMap.containsKey(field)) {
+						fieldName = fieldName.replace("{" + field + "}", tableAliasName + columnMap.get(field));
+					} else {
+						fieldName = fieldName.replace("{" + field + "}", cacheFieldNameTempMap.get(map.getKey()));
+					}
 				}
 			}
 
 			return fieldName.replaceAll("[{}]", "");
 		} else {
 			String tempFieldName = fieldName.replace(" ", "");
+			if(tempFieldName.startsWith(CacheInfoConstant.TABLE_AS_START_PREFIX)) {
+				String[] fieldArray = tempFieldName.split(".");
+				String tableAsNameSerialNumber = fieldArray[0].substring(fieldArray[0].indexOf("_") + 1);
+				String expFieldName = fieldArray[1];
+
+				if(fieldMap.containsKey(expFieldName)) {
+					return getTableAsName(tableAsNameSerialNumber) + "." + tempFieldName;
+				} else if (columnMap.containsKey(tempFieldName)) {
+					return getTableAsName(tableAsNameSerialNumber) + "." + columnMap.get(tempFieldName);
+				} else {
+					throw new HandleException("error: exp field invalid");
+				}
+			}
+
 			if(fieldMap.containsKey(tempFieldName)) {
 				return tableAliasName + tempFieldName;
 			} else if (columnMap.containsKey(tempFieldName)) {
@@ -933,6 +987,12 @@ public abstract class AbstractSqlHandleMethod {
 				return fieldName;
 			}
 		}
+	}
+
+	public static void main(String[] args) {
+		String name = CacheInfoConstant.TABLE_AS_START_PREFIX + "dddd";
+		System.out.println(name);
+		System.out.println(name.substring(name.indexOf(CacheInfoConstant.TABLE_AS_START_PREFIX)));
 	}
 
 	/**
@@ -1016,7 +1076,8 @@ public abstract class AbstractSqlHandleMethod {
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 		TableIndexCache cache = new TableIndexCache();
-		String tableAliasName = cache.getTableAsName();
+//		String tableAliasName = cache.getTableAsName();
+		String tableAliasName = this.getTableAsName(queryProvider.getTableAsNameSerialNumber());
 		List<String> column = new ArrayList<>();
 		getSelectFieldColumns(queryProvider, tableAliasName, columnMap, fieldMap, column);
 		Map<String, Object> value = new HashMap<>();
@@ -1026,13 +1087,13 @@ public abstract class AbstractSqlHandleMethod {
 		List<String> groups = new ArrayList<>();
 		// 构造order by 语句
 		List<String> orders = new ArrayList<>();
-		String table = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column, groups, orders);
+		String fromTable = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column, groups, orders);
 		sql.SELECT(String.join(",", column));
-		sql.FROM(table);
+		sql.FROM(fromTable);
 		// 分页的语句
 		SQL totalSql = new SQL();
 		totalSql.SELECT("count(1)");
-		totalSql.FROM(table);
+		totalSql.FROM(fromTable);
 
 		this.addGroupBy(groups, tableAliasName, columnMap, queryProvider);
 		this.addOrder(orders, tableAliasName, fieldMap, columnMap, queryProvider);

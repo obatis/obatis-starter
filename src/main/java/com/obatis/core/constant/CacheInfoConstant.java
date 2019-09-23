@@ -40,4 +40,6 @@ public class CacheInfoConstant {
 	 * 存放 ResultInfoOutput 的子类的 sessionMapper
 	 */
 	public static final Map<String, BaseResultSessionMapper<?>> RESULT_SESSION_MAPPER = new HashMap<>();
+
+	public static final String TABLE_AS_START_PREFIX = "#as_";
 }
