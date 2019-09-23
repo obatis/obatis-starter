@@ -983,12 +983,6 @@ public abstract class AbstractSqlHandleMethod {
 		}
 	}
 
-	public static void main(String[] args) {
-		String name = CacheInfoConstant.TABLE_AS_START_PREFIX + "dddd";
-		System.out.println(name);
-		System.out.println(name.substring(name.indexOf(CacheInfoConstant.TABLE_AS_START_PREFIX)));
-	}
-
 	/**
 	 * 传入查询的枚举类型值，判断条件类型
 	 * @author HuangLongPu
