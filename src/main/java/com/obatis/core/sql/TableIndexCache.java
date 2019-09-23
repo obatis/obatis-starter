@@ -1,6 +1,11 @@
 package com.obatis.core.sql;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TableIndexCache {
+
+    private Map<String, String> tableAsNameMap = new HashMap<>();
 
     private int index;
 
@@ -12,8 +17,17 @@ public class TableIndexCache {
         this.index = index;
     }
 
-    public String getTableAsName() {
+    public String getTableAsName(String tableAsNameSerialNumber) {
+
+        if(tableAsNameMap.containsKey(tableAsNameSerialNumber)) {
+            return tableAsNameMap.get(tableAsNameSerialNumber);
+        }
+
         setIndex(index + 1);
-        return "t_" + getIndex();
+//        return "t_" + getIndex();
+
+        String tableAsName = "t_" + getIndex();
+        tableAsNameMap.put(tableAsNameSerialNumber, tableAsName);
+        return tableAsName;
     }
 }

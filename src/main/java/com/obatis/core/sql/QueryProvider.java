@@ -14,7 +14,6 @@ import com.obatis.core.result.ResultInfoOutput;
 import com.obatis.core.sql.mysql.HandleOrderMethod;
 import com.obatis.validate.ValidateTool;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +55,8 @@ public class QueryProvider {
 	private List<Object[]> onFilters;
 
 	private String tableAsNameSerialNumber;
-	private ProviderExpHandle providerExpHandle;
+//	private ProviderExpHandle providerExpHandle;
+
 
 	public String getTableAsNameSerialNumber() {
 		if(tableAsNameSerialNumber == null) {
@@ -539,8 +539,8 @@ public class QueryProvider {
 
 	}
 
-	public String selectColumn(String fieldName) {
-		return CacheInfoConstant.TABLE_AS_START_PREFIX + tableAsNameSerialNumber + "." + fieldName;
+	public String getColumn(String fieldName) {
+		return CacheInfoConstant.TABLE_AS_START_PREFIX + getTableAsNameSerialNumber() + "." + fieldName;
 	}
 
 	/**
@@ -2131,104 +2131,111 @@ public class QueryProvider {
 
 	/**
 	 * 拼接加运算
-	 * @param columns
 	 * @return
 	 */
-	public ProviderExpHandle addColumn(String...columns) {
-		return getProviderExpHandle().addColumn(columns);
-	}
+//	public QueryProvider.ProviderExpHandle addColumn(String...columns) {
+//		return getProviderExpHandle().addColumn(columns);
+//	}
+//
+//	/**
+//	 * 拼接减运算
+//	 * @param columns
+//	 * @return
+//	 */
+//	public QueryProvider.ProviderExpHandle subColumn(String...columns) {
+//		return getProviderExpHandle().subColumn(columns);
+//	}
+//
+//	/**
+//	 * 拼接乘运算
+//	 * @param columns
+//	 * @return
+//	 */
+//	public QueryProvider.ProviderExpHandle multiplyColumn(String...columns) {
+//		return getProviderExpHandle().multiplyColumn(columns);
+//	}
+//
+//	/**
+//	 * 拼接除运算
+//	 * @param columns
+//	 * @return
+//	 */
+//	public QueryProvider.ProviderExpHandle divideColumn(String...columns) {
+//		return getProviderExpHandle().divideColumn(columns);
+//	}
+//
+//	private ProviderExpHandle getProviderExpHandle() {
+//		if(providerExpHandle == null) {
+//			providerExpHandle = new ProviderExpHandle();
+//		}
+//		return providerExpHandle;
+//	}
 
-	/**
-	 * 拼接减运算
-	 * @param columns
-	 * @return
-	 */
-	public ProviderExpHandle subColumn(String...columns) {
-		return getProviderExpHandle().subColumn(columns);
-	}
+//	public ProviderExpHandle getProviderExpHandle() {
+//		if(providerExpHandle == null) {
+//			providerExpHandle = new ProviderExpHandle();
+//		}
+//		return providerExpHandle;
+//	}
 
-	/**
-	 * 拼接乘运算
-	 * @param columns
-	 * @return
-	 */
-	public ProviderExpHandle multiplyColumn(String...columns) {
-		return getProviderExpHandle().multiplyColumn(columns);
-	}
-
-	/**
-	 * 拼接除运算
-	 * @param columns
-	 * @return
-	 */
-	public ProviderExpHandle divideColumn(String...columns) {
-		return getProviderExpHandle().divideColumn(columns);
-	}
-
-	private ProviderExpHandle getProviderExpHandle() {
-		if(providerExpHandle == null) {
-			providerExpHandle = new ProviderExpHandle();
-		}
-		return providerExpHandle;
-	}
-
-	class ProviderExpHandle {
-
-		StringBuffer exp = new StringBuffer();
-
-		private ProviderExpHandle() {
-
-		}
-
-		public String toString() {
-			return exp.toString();
-		}
-
-		public ProviderExpHandle addColumn(String...columns) {
-			return handleColumn("+", columns);
-		}
-
-		public ProviderExpHandle subColumn(String...columns) {
-			return handleColumn("-", columns);
-		}
-
-		public ProviderExpHandle multiplyColumn(String...columns) {
-			return handleColumn("*", columns);
-		}
-
-		public ProviderExpHandle divideColumn(String...columns) {
-			return handleColumn("/", columns);
-		}
-
-		private ProviderExpHandle handleColumn(String operator, String...columns) {
-			if(columns == null) {
-				throw new HandleException("error: columns is null");
-			}
-
-			if(!ValidateTool.isEmpty(exp.toString())) {
-				exp.insert(0, "(");
-				exp.append(")");
-			}
-
-			boolean itemAppendFlag = false;
-			int columnLength = columns.length;
-			if(columns.length > 1) {
-				itemAppendFlag = true;
-				exp.append("(");
-			}
-
-			for (int i = 0; i < columnLength; i++) {
-				exp.append(columns[i]);
-				if(i != columnLength - 1) {
-					exp.append(operator);
-				}
-			}
-
-			if(itemAppendFlag) {
-				exp.append(")");
-			}
-
-			return this;
-		}
-	}
 }
+
+//class ProviderExpHandle {
+//
+//	private StringBuffer exp = new StringBuffer();
+//
+//	public ProviderExpHandle() {
+//
+//	}
+//
+//	public String toString() {
+//		return exp.toString();
+//	}
+//
+//	public ProviderExpHandle addColumn(String...columns) {
+//		return handleColumn("+", columns);
+//	}
+//
+//	public ProviderExpHandle subColumn(String...columns) {
+//		return handleColumn("-", columns);
+//	}
+//
+//	public ProviderExpHandle multiplyColumn(String...columns) {
+//		return handleColumn("*", columns);
+//	}
+//
+//	public ProviderExpHandle divideColumn(String...columns) {
+//		return handleColumn("/", columns);
+//	}
+//
+//	private ProviderExpHandle handleColumn(String operator, String...columns) {
+//		if(columns == null) {
+//			throw new HandleException("error: columns is null");
+//		}
+//
+//		if(!ValidateTool.isEmpty(exp.toString())) {
+//			exp.insert(0, "(");
+//			exp.append(")");
+//		}
+//
+//		boolean itemAppendFlag = false;
+//		int columnLength = columns.length;
+//		if(columns.length > 1) {
+//			itemAppendFlag = true;
+//			exp.append("(");
+//		}
+//
+//		for (int i = 0; i < columnLength; i++) {
+//			exp.append(columns[i]);
+//			if(i != columnLength - 1) {
+//				exp.append(operator);
+//			}
+//		}
+//
+//		if(itemAppendFlag) {
+//			exp.append(")");
+//		}
+//
+//		return this;
+//	}
+//}

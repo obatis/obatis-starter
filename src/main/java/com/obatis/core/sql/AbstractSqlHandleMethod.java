@@ -36,16 +36,10 @@ public abstract class AbstractSqlHandleMethod {
 	 * @return
 	 */
 	private String getTableAsName(String tableAsNameSerialNumber) {
-		if(tableAsNameMap.containsKey(tableAsNameSerialNumber)) {
-			return tableAsNameMap.get(tableAsNameSerialNumber);
-		}
-
 		if(cache == null) {
 			cache = new TableIndexCache();
 		}
-		String tableAsName = cache.getTableAsName();
-		tableAsNameMap.put(tableAsNameSerialNumber, tableAsName);
-		return tableAsName;
+		return cache.getTableAsName(tableAsNameSerialNumber);
 	}
 
 	public String getUpdateSql(Map<String, Object> providers, String tableName) throws HandleException {
@@ -88,7 +82,7 @@ public abstract class AbstractSqlHandleMethod {
 		sql.SET(getUpdateField(queryProvider.getFields(), columnMap, fieldMap, index + "_u", fieldValue));
 		List<Object[]> filters = queryProvider.getFilters();
 		if (filters != null && !filters.isEmpty()) {
-			TableIndexCache cache = new TableIndexCache();
+//			TableIndexCache cache = new TableIndexCache();
 			sql.WHERE(getFilterSql( "", filters, queryProvider.getOrProviders(), filterValue, index + "_ut", columnMap,
 					fieldMap, NOT_FIND));
 		} else {
@@ -940,13 +934,13 @@ public abstract class AbstractSqlHandleMethod {
 				if(field.startsWith(CacheInfoConstant.TABLE_AS_START_PREFIX)) {
 					// 说明带有自定义别名
 					// #tas_201919999.name
-					String[] fieldArray = field.split(".");
+					String[] fieldArray = field.split("[.]");
 					String tableAsNameSerialNumber = fieldArray[0].substring(fieldArray[0].indexOf("_") + 1);
 					String expFieldName = fieldArray[1];
 					if(fieldMap.containsKey(expFieldName)) {
-						fieldName = fieldName.replace("{" + field + "}", getTableAsName(tableAsNameSerialNumber) + "." + field);
+						fieldName = fieldName.replace("{" + field + "}", getTableAsName(tableAsNameSerialNumber) + "." + expFieldName);
 					} else if (columnMap.containsKey(field)) {
-						fieldName = fieldName.replace("{" + field + "}", getTableAsName(tableAsNameSerialNumber) + "." + columnMap.get(field));
+						fieldName = fieldName.replace("{" + field + "}", getTableAsName(tableAsNameSerialNumber) + "." + columnMap.get(expFieldName));
 					} else {
 						throw new HandleException("error: exp field invalid");
 					}
@@ -966,14 +960,14 @@ public abstract class AbstractSqlHandleMethod {
 		} else {
 			String tempFieldName = fieldName.replace(" ", "");
 			if(tempFieldName.startsWith(CacheInfoConstant.TABLE_AS_START_PREFIX)) {
-				String[] fieldArray = tempFieldName.split(".");
+				String[] fieldArray = tempFieldName.split("[.]");
 				String tableAsNameSerialNumber = fieldArray[0].substring(fieldArray[0].indexOf("_") + 1);
 				String expFieldName = fieldArray[1];
 
 				if(fieldMap.containsKey(expFieldName)) {
-					return getTableAsName(tableAsNameSerialNumber) + "." + tempFieldName;
+					return getTableAsName(tableAsNameSerialNumber) + "." + expFieldName;
 				} else if (columnMap.containsKey(tempFieldName)) {
-					return getTableAsName(tableAsNameSerialNumber) + "." + columnMap.get(tempFieldName);
+					return getTableAsName(tableAsNameSerialNumber) + "." + columnMap.get(expFieldName);
 				} else {
 					throw new HandleException("error: exp field invalid");
 				}
