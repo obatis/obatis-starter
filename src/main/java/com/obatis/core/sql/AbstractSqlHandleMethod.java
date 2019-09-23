@@ -937,12 +937,10 @@ public abstract class AbstractSqlHandleMethod {
 					String[] fieldArray = field.split("[.]");
 					String tableAsNameSerialNumber = fieldArray[0].substring(fieldArray[0].indexOf("_") + 1);
 					String expFieldName = fieldArray[1];
-					if(fieldMap.containsKey(expFieldName)) {
-						fieldName = fieldName.replace("{" + field + "}", getTableAsName(tableAsNameSerialNumber) + "." + expFieldName);
-					} else if (columnMap.containsKey(field)) {
+					if(columnMap.containsKey(field)) {
 						fieldName = fieldName.replace("{" + field + "}", getTableAsName(tableAsNameSerialNumber) + "." + columnMap.get(expFieldName));
-					} else {
-						throw new HandleException("error: exp field invalid");
+					}  else {
+						fieldName = fieldName.replace("{" + field + "}", getTableAsName(tableAsNameSerialNumber) + "." + expFieldName);
 					}
 				} else {
 					// {name}

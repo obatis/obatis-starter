@@ -3,6 +3,7 @@ package com.obatis.core.sql;
 import com.obatis.config.request.PageParam;
 import com.obatis.config.request.RequestConstant;
 import com.obatis.config.request.RequestParam;
+import com.obatis.convert.CommonConvert;
 import com.obatis.core.constant.CacheInfoConstant;
 import com.obatis.core.constant.type.FilterEnum;
 import com.obatis.core.constant.type.OrderEnum;
@@ -285,7 +286,7 @@ public class QueryProvider {
 	 * @param fieldName
 	 */
 	public void selectSum(String fieldName) {
-		this.selectSum(fieldName, fieldName);
+		this.selectSum(fieldName, fieldName.matches("[0-9A-Za-z_]*") ? fieldName : "sumValue");
 	}
 	
 	/**
@@ -323,7 +324,7 @@ public class QueryProvider {
 	 * @param fieldName
 	 */
 	public void selectMin(String fieldName) {
-		this.selectMin(fieldName, fieldName);
+		this.selectMin(fieldName, fieldName.matches("[0-9A-Za-z_]*") ? fieldName : "minValue");
 	}
 	
 	/**
@@ -367,7 +368,7 @@ public class QueryProvider {
 	 * @param fieldName
 	 */
 	public void selectMax(String fieldName) {
-		this.selectMax(fieldName, fieldName);
+		this.selectMax(fieldName, fieldName.matches("[0-9A-Za-z_]*") ? fieldName : "maxValue");
 	}
 	
 	/**
@@ -411,7 +412,7 @@ public class QueryProvider {
 	 * @param fieldName
 	 */
 	public void selectAvg(String fieldName) {
-		this.selectAvg(fieldName, fieldName);
+		this.selectAvg(fieldName, fieldName.matches("[0-9A-Za-z_]*") ? fieldName : "avgValue");
 	}
 	
 	/**
@@ -455,7 +456,7 @@ public class QueryProvider {
 	 * @param fieldName
 	 */
 	public void selectExp(String fieldName) {
-		this.selectExp(fieldName, null);
+		this.selectExp(fieldName, "expValue");
 	}
 	
 	/**

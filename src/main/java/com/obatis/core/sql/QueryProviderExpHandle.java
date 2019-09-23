@@ -33,9 +33,12 @@ public class QueryProviderExpHandle {
         }
 
         if(!ValidateTool.isEmpty(exp.toString())) {
-            exp.insert(0, "(");
-            exp.append(")");
+//            exp.insert(0, "(");
+//            exp.append(")");
+            exp.append(operator);
         }
+
+
 
         boolean itemAppendFlag = false;
         int columnLength = columns.length;
