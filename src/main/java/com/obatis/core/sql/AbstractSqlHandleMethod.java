@@ -310,12 +310,10 @@ public abstract class AbstractSqlHandleMethod {
 			String tableAsNameSerialNumber = fieldArray[0].substring(fieldArray[0].indexOf("_") + 1);
 			String expFieldName = fieldArray[1];
 
-			if(fieldMap.containsKey(expFieldName)) {
-				return getTableAsName(cache, tableAsNameSerialNumber) + "." + expFieldName;
-			} else if (columnMap.containsKey(tempFieldName)) {
+			if(columnMap.containsKey(expFieldName)) {
 				return getTableAsName(cache, tableAsNameSerialNumber) + "." + columnMap.get(expFieldName);
 			} else {
-				throw new HandleException("error: exp field invalid");
+				return getTableAsName(cache, tableAsNameSerialNumber) + "." + expFieldName;
 			}
 		} else {
 			return tableAliasName + tempFieldName;
@@ -952,7 +950,7 @@ public abstract class AbstractSqlHandleMethod {
 					String[] fieldArray = field.split("[.]");
 					String tableAsNameSerialNumber = fieldArray[0].substring(fieldArray[0].indexOf("_") + 1);
 					String expFieldName = fieldArray[1];
-					if(columnMap.containsKey(field)) {
+					if(columnMap.containsKey(expFieldName)) {
 						fieldName = fieldName.replace("{" + field + "}", getTableAsName(cache, tableAsNameSerialNumber) + "." + columnMap.get(expFieldName));
 					}  else {
 						fieldName = fieldName.replace("{" + field + "}", getTableAsName(cache, tableAsNameSerialNumber) + "." + expFieldName);
@@ -977,12 +975,10 @@ public abstract class AbstractSqlHandleMethod {
 				String tableAsNameSerialNumber = fieldArray[0].substring(fieldArray[0].indexOf("_") + 1);
 				String expFieldName = fieldArray[1];
 
-				if(fieldMap.containsKey(expFieldName)) {
-					return getTableAsName(cache, tableAsNameSerialNumber) + "." + expFieldName;
-				} else if (columnMap.containsKey(tempFieldName)) {
+				if(columnMap.containsKey(expFieldName)) {
 					return getTableAsName(cache, tableAsNameSerialNumber) + "." + columnMap.get(expFieldName);
 				} else {
-					throw new HandleException("error: exp field invalid");
+					return getTableAsName(cache, tableAsNameSerialNumber) + "." + expFieldName;
 				}
 			}
 
