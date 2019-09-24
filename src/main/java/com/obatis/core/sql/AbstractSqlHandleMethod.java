@@ -23,8 +23,8 @@ public abstract class AbstractSqlHandleMethod {
 	private final static int DEFAULT_FIND = 0;
 	private final static int NOT_FIND = 1;
 
-	private TableIndexCache cache;
-	private Map<String, String> tableAsNameMap = new HashMap<>();
+//	private TableIndexCache cache;
+//	private Map<String, String> tableAsNameMap = new HashMap<>();
 
 	protected AbstractSqlHandleMethod() {
 
@@ -32,13 +32,11 @@ public abstract class AbstractSqlHandleMethod {
 
 	/**
 	 * 获取别名入口
+	 * @param cache
 	 * @param tableAsNameSerialNumber
 	 * @return
 	 */
-	private String getTableAsName(String tableAsNameSerialNumber) {
-		if(cache == null) {
-			cache = new TableIndexCache();
-		}
+	private String getTableAsName(TableIndexCache cache, String tableAsNameSerialNumber) {
 		return cache.getTableAsName(tableAsNameSerialNumber);
 	}
 
@@ -82,8 +80,7 @@ public abstract class AbstractSqlHandleMethod {
 		sql.SET(getUpdateField(queryProvider.getFields(), columnMap, fieldMap, index + "_u", fieldValue));
 		List<Object[]> filters = queryProvider.getFilters();
 		if (filters != null && !filters.isEmpty()) {
-//			TableIndexCache cache = new TableIndexCache();
-			sql.WHERE(getFilterSql( "", filters, queryProvider.getOrProviders(), filterValue, index + "_ut", columnMap,
+			sql.WHERE(getFilterSql(null, "", filters, queryProvider.getOrProviders(), filterValue, index + "_ut", columnMap,
 					fieldMap, NOT_FIND));
 		} else {
 			throw new HandleException("error：filters is empty");
@@ -148,7 +145,7 @@ public abstract class AbstractSqlHandleMethod {
 			Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 			Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 			Map<String, Object> value = new HashMap<>();
-			sql.WHERE(getFilterSql("", filters, queryProvider.getOrProviders(), value, INDEX_DEFAULT + "_dt", columnMap,
+			sql.WHERE(getFilterSql(null, "", filters, queryProvider.getOrProviders(), value, INDEX_DEFAULT + "_dt", columnMap,
 					fieldMap, NOT_FIND));
 			// 放入值到map
 			param.put(SqlConstant.PROVIDER_FILTER, value);
@@ -169,8 +166,8 @@ public abstract class AbstractSqlHandleMethod {
 	 * @return
 	 * @throws HandleException
 	 */
-	private String getFilterSql(String tableAliasName, List<Object[]> filters, Map<String, Object> value, String index, Map<String, String> columnMap, Map<String, String> fieldMap) throws HandleException {
-		return getFilterSql(tableAliasName, filters, null, value, index, columnMap, fieldMap, DEFAULT_FIND);
+	private String getFilterSql(TableIndexCache cache, String tableAliasName, List<Object[]> filters, Map<String, Object> value, String index, Map<String, String> columnMap, Map<String, String> fieldMap) throws HandleException {
+		return getFilterSql(cache, tableAliasName, filters, null, value, index, columnMap, fieldMap, DEFAULT_FIND);
 	}
 
 	/**
@@ -180,7 +177,7 @@ public abstract class AbstractSqlHandleMethod {
 	 * @return
 	 * @throws HandleException
 	 */
-	private String getFilterSql(String tableAliasName, List<Object[]> filters,
+	private String getFilterSql(TableIndexCache cache, String tableAliasName, List<Object[]> filters,
 			List<QueryProvider> orProviders, Map<String, Object> value, String index, Map<String, String> columnMap, Map<String, String> fieldMap,
 			int findType) throws HandleException {
 		int filtersLen = 0;
@@ -205,50 +202,51 @@ public abstract class AbstractSqlHandleMethod {
 			Object vue = obj[2];
 			switch (filterType) {
 			case LIKE:
-				sql = tableAliasNamePrefix + field + getFilterType(filterType);
+//				sql = tableAliasNamePrefix + field + getFilterType(filterType);
+				sql = getHandleField(cache, tableAliasNamePrefix, field, columnMap, fieldMap) + getFilterType(filterType);
 				sql += getLikeSql(expression);
 				value.put(key, vue);
 				break;
 			case LEFT_LIKE:
-				sql = tableAliasNamePrefix + field + getFilterType(filterType);
+				sql = getHandleField(cache, tableAliasNamePrefix, field, columnMap, fieldMap) + getFilterType(filterType);
 				sql += getLeftLikeSql(expression);
 				value.put(key, vue);
 				break;
 			case RIGHT_LIKE:
-				sql = tableAliasNamePrefix + field + getFilterType(filterType);
+				sql = getHandleField(cache, tableAliasNamePrefix, field, columnMap, fieldMap) + getFilterType(filterType);
 				sql += getRightLikeSql(expression);
 				value.put(key, vue);
 				break;
 			case IN:
 			case NOT_IN:
-				sql = tableAliasNamePrefix + field + getFilterType(filterType);
+				sql = getHandleField(cache, tableAliasNamePrefix, field, columnMap, fieldMap) + getFilterType(filterType);
 				sql += "(" + modifyInFilter(vue, key, value) + ")";
 				break;
 			case UP_GREATER_THAN:
-				sql = getAgFunction(tableAliasNamePrefix, field, fieldMap, columnMap) + " + " + expression + ">0";
+				sql = getAgFunction(cache, tableAliasNamePrefix, field, fieldMap, columnMap) + " + " + expression + ">0";
 				value.put(key, vue);
 				break;
 			case UP_GREATER_EQUAL:
-				sql = getAgFunction(tableAliasNamePrefix, field, fieldMap, columnMap) + " + " + expression + ">=0";
+				sql = getAgFunction(cache, tableAliasNamePrefix, field, fieldMap, columnMap) + " + " + expression + ">=0";
 				value.put(key, vue);
 				break;
 			case REDUCE_GREATER_THAN:
-				sql = getAgFunction(tableAliasNamePrefix, field, fieldMap, columnMap) + " - " + expression + ">0";
+				sql = getAgFunction(cache, tableAliasNamePrefix, field, fieldMap, columnMap) + " - " + expression + ">0";
 				value.put(key, vue);
 				break;
 			case REDUCE_GREATER_EQUAL:
-				sql = getAgFunction(tableAliasNamePrefix, field, fieldMap, columnMap) + " - " + expression + ">=0";
+				sql = getAgFunction(cache, tableAliasNamePrefix, field, fieldMap, columnMap) + " - " + expression + ">=0";
 				value.put(key, vue);
 				break;
 			case IS_NULL:
 			case IS_NOT_NULL:
-				sql = getAgFunction(tableAliasNamePrefix, field, fieldMap, columnMap) + getFilterType(filterType);
+				sql = getAgFunction(cache, tableAliasNamePrefix, field, fieldMap, columnMap) + getFilterType(filterType);
 				break;
 			case GREATER_THAN:
 			case GREATER_EQUAL:
 			case LESS_THAN:
 			case LESS_EQUAL:
-				sql = getAgFunction(tableAliasNamePrefix, field, fieldMap, columnMap) + getFilterType(filterType);
+				sql = getAgFunction(cache, tableAliasNamePrefix, field, fieldMap, columnMap) + getFilterType(filterType);
 				sql += expression;
 				value.put(key, vue);
 				break;
@@ -258,8 +256,8 @@ public abstract class AbstractSqlHandleMethod {
 			case LESS_THAN_FIELD:
 			case LESS_EQUAL_FIELD:
 			case NOT_EQUAL_FIELD:
-				sql = getAgFunction(tableAliasNamePrefix, field, fieldMap, columnMap) + getFilterType(filterType);
-				sql += getAgFunction(tableAliasNamePrefix, getField(value.toString(), columnMap), fieldMap, columnMap);
+				sql = getAgFunction(cache, tableAliasNamePrefix, field, fieldMap, columnMap) + getFilterType(filterType);
+				sql += getAgFunction(cache, tableAliasNamePrefix, getField(value.toString(), columnMap), fieldMap, columnMap);
 				break;
 			case EQUAL_DATE_FORMAT:
 			case NOT_EQUAL_DATE_FORMAT:
@@ -268,12 +266,12 @@ public abstract class AbstractSqlHandleMethod {
 			case LESS_THAN_DATE_FORMAT:
 			case LESS_EQUAL_DATE_FORMAT:
 //				"DATE_FORMAT(" + tableAliasNamePrefix + field + ",'" + obj[4] + "')";
-				sql = "DATE_FORMAT(" + tableAliasNamePrefix + field + ",'" + obj[4] + "')" + getFilterType(filterType);
+				sql = "DATE_FORMAT(" + getHandleField(cache, tableAliasNamePrefix, field, columnMap, fieldMap) + ",'" + obj[4] + "')" + getFilterType(filterType);
 				sql += expression;
 				value.put(key, vue);
 				break;
 			default:
-				sql = tableAliasNamePrefix + field + getFilterType(filterType);
+				sql = getHandleField(cache, tableAliasNamePrefix, field, columnMap, fieldMap) + getFilterType(filterType);
 				sql += expression;
 				value.put(key, vue);
 				break;
@@ -292,7 +290,7 @@ public abstract class AbstractSqlHandleMethod {
 		if (orProviders != null && !orProviders.isEmpty()) {
 			for (int j = 0, l = orProviders.size(); j < l; j++) {
 				QueryProvider queryProvider = orProviders.get(j);
-				String orItemSql = getFilterSql(tableAliasName, queryProvider.getFilters(), queryProvider.getOrProviders(), value, index + "_ot_" + j, columnMap, fieldMap, findType);
+				String orItemSql = getFilterSql(cache, tableAliasName, queryProvider.getFilters(), queryProvider.getOrProviders(), value, index + "_ot_" + j, columnMap, fieldMap, findType);
 				if (!ValidateTool.isEmpty(orItemSql)) {
 					if (ValidateTool.isEmpty(filterSql.toString())) {
 						filterSql.append("(" + orItemSql + ")");
@@ -304,6 +302,24 @@ public abstract class AbstractSqlHandleMethod {
 		}
 
 		return filterSql.toString();
+	}
+
+	private String getHandleField(TableIndexCache cache, String tableAliasName, String tempFieldName, Map<String, String> columnMap, Map<String, String> fieldMap) {
+		if(tempFieldName.startsWith(CacheInfoConstant.TABLE_AS_START_PREFIX)) {
+			String[] fieldArray = tempFieldName.split("[.]");
+			String tableAsNameSerialNumber = fieldArray[0].substring(fieldArray[0].indexOf("_") + 1);
+			String expFieldName = fieldArray[1];
+
+			if(fieldMap.containsKey(expFieldName)) {
+				return getTableAsName(cache, tableAsNameSerialNumber) + "." + expFieldName;
+			} else if (columnMap.containsKey(tempFieldName)) {
+				return getTableAsName(cache, tableAsNameSerialNumber) + "." + columnMap.get(expFieldName);
+			} else {
+				throw new HandleException("error: exp field invalid");
+			}
+		} else {
+			return tableAliasName + tempFieldName;
+		}
 	}
 
 	private String getField(String filterName, Map<String, String> columnMap) {
@@ -410,11 +426,10 @@ public abstract class AbstractSqlHandleMethod {
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 
 		TableIndexCache cache = new TableIndexCache();
-//		String tableAliasName = cache.getTableAsName();
-		String tableAliasName = this.getTableAsName(queryProvider.getTableAsNameSerialNumber());
+		String tableAliasName = this.getTableAsName(cache, queryProvider.getTableAsNameSerialNumber());
 		SQL sql = new SQL();
 		List<String> column = new ArrayList<>();
-		getSelectFieldColumns(queryProvider, tableAliasName, columnMap, fieldMap, column);
+		getSelectFieldColumns(queryProvider, cache, tableAliasName, columnMap, fieldMap, column);
 		Map<String, Object> value = new HashMap<>();
 
 		StringBuffer leftJoinFilterSql = new StringBuffer();
@@ -424,12 +439,12 @@ public abstract class AbstractSqlHandleMethod {
 		sql.SELECT(String.join(",", column));
 		// 构建 group by 语句
 		this.addGroupBy(groups, tableAliasName, columnMap, queryProvider);
-		this.addOrder(orders, tableAliasName, fieldMap, columnMap, queryProvider);
+		this.addOrder(orders, cache, tableAliasName, fieldMap, columnMap, queryProvider);
 
 		StringBuffer filterSqlBuffer = new StringBuffer();
 		List<Object[]> filters = queryProvider.getFilters();
 		if (filters != null && !filters.isEmpty()) {
-			String filterSql = getFilterSql(tableAliasName, filters, queryProvider.getOrProviders(), value,
+			String filterSql = getFilterSql(cache, tableAliasName, filters, queryProvider.getOrProviders(), value,
 					INDEX_DEFAULT + "_tl", columnMap, fieldMap, DEFAULT_FIND);
 			if(!ValidateTool.isEmpty(filterSql)) {
 				filterSqlBuffer.append(filterSql);
@@ -475,7 +490,7 @@ public abstract class AbstractSqlHandleMethod {
 
 		TableIndexCache cache = new TableIndexCache();
 //		String tableAliasName = cache.getTableAsName();
-		String tableAliasName = this.getTableAsName(queryProvider.getTableAsNameSerialNumber());
+		String tableAliasName = this.getTableAsName(cache, queryProvider.getTableAsNameSerialNumber());
 		SQL sql = new SQL();
 		sql.SELECT("count(1)");
 		Map<String, Object> value = new HashMap<>();
@@ -492,7 +507,7 @@ public abstract class AbstractSqlHandleMethod {
 		List<Object[]> filters = queryProvider.getFilters();
 		if ((filters != null && !filters.isEmpty())) {
 
-			String filterSql = getFilterSql(tableAliasName, filters, queryProvider.getOrProviders(), value,
+			String filterSql = getFilterSql(cache, tableAliasName, filters, queryProvider.getOrProviders(), value,
 					INDEX_DEFAULT + "_tl", columnMap, fieldMap, DEFAULT_FIND);
 			if(!ValidateTool.isEmpty(filterSql)) {
 				filterSqlBuffer.append(filterSql);
@@ -553,7 +568,7 @@ public abstract class AbstractSqlHandleMethod {
 	 * @param columnMap
 	 * @param queryProvider
 	 */
-	private void addOrder(List<String> orders, String tableAliasName, Map<String, String> fieldMap, Map<String, String> columnMap, QueryProvider queryProvider) {
+	private void addOrder(List<String> orders, TableIndexCache cache, String tableAliasName, Map<String, String> fieldMap, Map<String, String> columnMap, QueryProvider queryProvider) {
 		List<Object[]> queryOrder = queryProvider.getOrders();
 		if (queryOrder != null && !queryOrder.isEmpty()) {
 			for (Object[] orderArray : queryOrder) {
@@ -577,7 +592,7 @@ public abstract class AbstractSqlHandleMethod {
 						orders.add("avg(" + tableAliasName + "." + fieldName + ") " + orderArray[1]);
 						break;
 					case HANDLE_EXP:
-						orders.add(getAgFunction(tableAliasName, fieldName, fieldMap, columnMap) + " " + orderArray[1]);
+						orders.add(getAgFunction(cache, tableAliasName, fieldName, fieldMap, columnMap) + " " + orderArray[1]);
 						break;
 				}
 			}
@@ -599,7 +614,7 @@ public abstract class AbstractSqlHandleMethod {
 				throw new HandleException("error: connectTableName is null");
 			}
 //			String connectTableAliasName = cache.getTableAsName();
-			String connectTableAliasName = this.getTableAsName(childParam.getTableAsNameSerialNumber());
+			String connectTableAliasName = this.getTableAsName(cache, childParam.getTableAsNameSerialNumber());
 			Object fieldName = leftJoinArray[0];
 			Object paramFieldName = leftJoinArray[1];
 
@@ -622,24 +637,24 @@ public abstract class AbstractSqlHandleMethod {
 			Map<String, String> childColumnMap = CacheInfoConstant.COLUMN_CACHE.get(connectTableName);
 			Map<String, String> childFieldMap = CacheInfoConstant.FIELD_CACHE.get(connectTableName);
 			if(column != null) {
-				getSelectFieldColumns(childParam, connectTableAliasName, childColumnMap, childFieldMap, column);
+				getSelectFieldColumns(childParam, cache, connectTableAliasName, childColumnMap, childFieldMap, column);
 			}
 
 			this.addGroupBy(groups, connectTableAliasName, childColumnMap, childParam);
 			if(orders != null) {
-				this.addOrder(orders, connectTableAliasName, childFieldMap, childColumnMap, childParam);
+				this.addOrder(orders, cache, connectTableAliasName, childFieldMap, childColumnMap, childParam);
 			}
 
 			List<Object[]> onFilters = childParam.getOnFilters();
 			if(onFilters != null && !onFilters.isEmpty()) {
-				String onFilterSql = this.getFilterSql(connectTableAliasName, onFilters, value, index + "_" + l, childColumnMap, childFieldMap);
+				String onFilterSql = this.getFilterSql(cache, connectTableAliasName, onFilters, value, index + "_" + l, childColumnMap, childFieldMap);
 				if(!ValidateTool.isEmpty(onFilterSql)) {
 					sql.append(" and " + onFilterSql);
 				}
 			}
 
 			if(childParam.getFilters() != null && !childParam.getFilters().isEmpty()) {
-				String filterSql = this.getFilterSql(connectTableAliasName, childParam.getFilters(), value, index + "_fl" + l, childColumnMap, childFieldMap);
+				String filterSql = this.getFilterSql(cache, connectTableAliasName, childParam.getFilters(), value, index + "_fl" + l, childColumnMap, childFieldMap);
 				if(ValidateTool.isEmpty(leftJoinFilterSql.toString())) {
 					leftJoinFilterSql.append(filterSql);
 				} else {
@@ -664,7 +679,7 @@ public abstract class AbstractSqlHandleMethod {
 	 * @return
 	 * @throws HandleException
 	 */
-	private void getSelectFieldColumns(QueryProvider queryProvider, String tableAliasName, Map<String, String> columnMap, Map<String, String> fieldMap, List<String> column)
+	private void getSelectFieldColumns(QueryProvider queryProvider, TableIndexCache cache, String tableAliasName, Map<String, String> columnMap, Map<String, String> fieldMap, List<String> column)
 			throws HandleException {
 		List<Object[]> fields;
 		boolean allFlag = true;
@@ -708,7 +723,7 @@ public abstract class AbstractSqlHandleMethod {
 		}
 
 		// 获取列
-		getSelectColumn(tableAliasName, column, fields, fieldMap, columnMap, notFields);
+		getSelectColumn(cache, tableAliasName, column, fields, fieldMap, columnMap, notFields);
 
 		// 获取left join
 //		List<Object[]> leftJoinParams = queryProvider.getLeftJoinProviders();
@@ -786,7 +801,7 @@ public abstract class AbstractSqlHandleMethod {
 	 * @param columnMap
 	 * @param notFields
 	 */
-	private void getSelectColumn(String tableAliasName, List<String> column, List<Object[]> fields, Map<String, String> fieldMap,
+	private void getSelectColumn(TableIndexCache cache, String tableAliasName, List<String> column, List<Object[]> fields, Map<String, String> fieldMap,
 			Map<String, String> columnMap, Map<String, String> notFields) {
 		// 别名加点
 		if (!ValidateTool.isEmpty(tableAliasName) && !tableAliasName.contains(".")) {
@@ -823,23 +838,23 @@ public abstract class AbstractSqlHandleMethod {
 				}
 				break;
 			case HANDLE_SUM:
-				columnName = "sum(ifnull(" + getAgFunction(tableAliasName, fieldTemp, fieldMap, columnMap) + ", 0))";
+				columnName = "sum(ifnull(" + getAgFunction(cache, tableAliasName, fieldTemp, fieldMap, columnMap) + ", 0))";
 				column.add(columnName + fieldAsTemp);
 				break;
 			case HANDLE_MAX:
-				columnName = "max(" + getAgFunction(tableAliasName, fieldTemp, fieldMap, columnMap) + ")";
+				columnName = "max(" + getAgFunction(cache, tableAliasName, fieldTemp, fieldMap, columnMap) + ")";
 				column.add(columnName + fieldAsTemp);
 				break;
 			case HANDLE_MIN:
-				columnName = "min(" + getAgFunction(tableAliasName, fieldTemp, fieldMap, columnMap) + ")";
+				columnName = "min(" + getAgFunction(cache, tableAliasName, fieldTemp, fieldMap, columnMap) + ")";
 				column.add(columnName + fieldAsTemp);
 				break;
 			case HANDLE_AVG:
-				columnName = "avg(ifnull(" + getAgFunction(tableAliasName, fieldTemp, fieldMap, columnMap) + ", 0))";
+				columnName = "avg(ifnull(" + getAgFunction(cache, tableAliasName, fieldTemp, fieldMap, columnMap) + ", 0))";
 				column.add(columnName + fieldAsTemp);
 				break;
 			case HANDLE_EXP:
-				columnName = getAgFunction(tableAliasName, fieldTemp, fieldMap, columnMap);
+				columnName = getAgFunction(cache, tableAliasName, fieldTemp, fieldMap, columnMap);
 				column.add(columnName + fieldAsTemp);
 				break;
 			case HANDLE_DATE_FORMAT:
@@ -870,7 +885,7 @@ public abstract class AbstractSqlHandleMethod {
 	 * @param fieldName
 	 * @return
 	 */
-	private String getAgFunction(String tableAliasName, String fieldName, Map<String, String> fieldMap, Map<String, String> columnMap) {
+	private String getAgFunction(TableIndexCache cache, String tableAliasName, String fieldName, Map<String, String> fieldMap, Map<String, String> columnMap) {
 		boolean replaceFlag = false;
 		String fieldNameTemp = fieldName;
 		if (fieldName.contains("+")) {
@@ -938,9 +953,9 @@ public abstract class AbstractSqlHandleMethod {
 					String tableAsNameSerialNumber = fieldArray[0].substring(fieldArray[0].indexOf("_") + 1);
 					String expFieldName = fieldArray[1];
 					if(columnMap.containsKey(field)) {
-						fieldName = fieldName.replace("{" + field + "}", getTableAsName(tableAsNameSerialNumber) + "." + columnMap.get(expFieldName));
+						fieldName = fieldName.replace("{" + field + "}", getTableAsName(cache, tableAsNameSerialNumber) + "." + columnMap.get(expFieldName));
 					}  else {
-						fieldName = fieldName.replace("{" + field + "}", getTableAsName(tableAsNameSerialNumber) + "." + expFieldName);
+						fieldName = fieldName.replace("{" + field + "}", getTableAsName(cache, tableAsNameSerialNumber) + "." + expFieldName);
 					}
 				} else {
 					// {name}
@@ -963,9 +978,9 @@ public abstract class AbstractSqlHandleMethod {
 				String expFieldName = fieldArray[1];
 
 				if(fieldMap.containsKey(expFieldName)) {
-					return getTableAsName(tableAsNameSerialNumber) + "." + expFieldName;
+					return getTableAsName(cache, tableAsNameSerialNumber) + "." + expFieldName;
 				} else if (columnMap.containsKey(tempFieldName)) {
-					return getTableAsName(tableAsNameSerialNumber) + "." + columnMap.get(expFieldName);
+					return getTableAsName(cache, tableAsNameSerialNumber) + "." + columnMap.get(expFieldName);
 				} else {
 					throw new HandleException("error: exp field invalid");
 				}
@@ -1062,10 +1077,9 @@ public abstract class AbstractSqlHandleMethod {
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 		TableIndexCache cache = new TableIndexCache();
-//		String tableAliasName = cache.getTableAsName();
-		String tableAliasName = this.getTableAsName(queryProvider.getTableAsNameSerialNumber());
+		String tableAliasName = this.getTableAsName(cache, queryProvider.getTableAsNameSerialNumber());
 		List<String> column = new ArrayList<>();
-		getSelectFieldColumns(queryProvider, tableAliasName, columnMap, fieldMap, column);
+		getSelectFieldColumns(queryProvider, cache, tableAliasName, columnMap, fieldMap, column);
 		Map<String, Object> value = new HashMap<>();
 
 		StringBuffer leftJoinFilterSql = new StringBuffer();
@@ -1082,13 +1096,13 @@ public abstract class AbstractSqlHandleMethod {
 		totalSql.FROM(fromTable);
 
 		this.addGroupBy(groups, tableAliasName, columnMap, queryProvider);
-		this.addOrder(orders, tableAliasName, fieldMap, columnMap, queryProvider);
+		this.addOrder(orders, cache, tableAliasName, fieldMap, columnMap, queryProvider);
 
 		StringBuffer filterSqlBuffer = new StringBuffer();
 		List<Object[]> filters = queryProvider.getFilters();
 		if ((filters != null && !filters.isEmpty())) {
 
-			String filterSql = getFilterSql(tableAliasName, filters, queryProvider.getOrProviders(), value,
+			String filterSql = getFilterSql(cache, tableAliasName, filters, queryProvider.getOrProviders(), value,
 					INDEX_DEFAULT + "_t", columnMap, fieldMap, DEFAULT_FIND);
 			if(!ValidateTool.isEmpty(filterSql)) {
 				filterSqlBuffer.append(filterSql);

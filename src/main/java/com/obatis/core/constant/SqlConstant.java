@@ -29,4 +29,5 @@ public class SqlConstant {
 	 * 默认起始值
 	 */
 	public static final int DEFAULT_INIT = 0;
+
 }

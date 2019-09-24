@@ -5,7 +5,12 @@ import java.util.Map;
 
 public class TableIndexCache {
 
+    protected TableIndexCache() {
+
+    }
+
     private Map<String, String> tableAsNameMap = new HashMap<>();
+//    private Map<String, String> tableNameMap = new HashMap<>();
 
     private int index;
 
