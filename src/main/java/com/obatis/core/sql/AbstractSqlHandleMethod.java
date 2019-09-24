@@ -634,7 +634,7 @@ public abstract class AbstractSqlHandleMethod {
 
 			Map<String, String> childColumnMap = CacheInfoConstant.COLUMN_CACHE.get(connectTableName);
 			Map<String, String> childFieldMap = CacheInfoConstant.FIELD_CACHE.get(connectTableName);
-			if(column != null) {
+			if(column != null && childParam.getFields() != null && !childParam.getFields().isEmpty()) {
 				getSelectFieldColumns(childParam, cache, connectTableAliasName, childColumnMap, childFieldMap, column);
 			}
 
