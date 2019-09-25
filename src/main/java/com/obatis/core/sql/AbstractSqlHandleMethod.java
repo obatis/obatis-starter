@@ -679,6 +679,11 @@ public abstract class AbstractSqlHandleMethod {
 	 */
 	private void getSelectFieldColumns(QueryProvider queryProvider, TableIndexCache cache, String tableAliasName, Map<String, String> columnMap, Map<String, String> fieldMap, List<String> column)
 			throws HandleException {
+
+		if(queryProvider.isSelectNothingFlag()) {
+			return;
+		}
+
 		List<Object[]> fields;
 		boolean allFlag = true;
 		if ((fields = queryProvider.getFields()) != null && fields.size() > 0) {

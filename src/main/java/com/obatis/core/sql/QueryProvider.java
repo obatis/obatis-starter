@@ -55,6 +55,7 @@ public class QueryProvider {
 	private List<Object[]> onFilters;
 
 	private String tableAsNameSerialNumber;
+	private boolean selectNothingFlag;
 
 	public String getTableAsNameSerialNumber() {
 		if(tableAsNameSerialNumber == null) {
@@ -123,6 +124,10 @@ public class QueryProvider {
 
 	public List<Object[]> getOnFilters() {
 		return onFilters;
+	}
+
+	public boolean isSelectNothingFlag() {
+		return selectNothingFlag;
 	}
 
 	/**
@@ -536,6 +541,11 @@ public class QueryProvider {
 
 	}
 
+	/**
+	 * 用户获取此 QueryProvider 所对应的字段，调用该方法，主要用于多表查询的时候使用
+	 * @param fieldName
+	 * @return
+	 */
 	public String getColumn(String fieldName) {
 		return CacheInfoConstant.TABLE_AS_START_PREFIX + getTableAsNameSerialNumber() + "." + fieldName;
 	}
@@ -552,6 +562,14 @@ public class QueryProvider {
 			this.notFields = new HashMap<>();
 		}
 		this.notFields.put(fieldName, fieldName);
+	}
+
+	/**
+	 * 如果需要 QueryProvider 不查询任何字段，调用此方法传入 true 即可
+	 * @param selectNothingFlag
+	 */
+	public void selectNothing(boolean selectNothingFlag) {
+		this.selectNothingFlag = selectNothingFlag;
 	}
 
 	/**
