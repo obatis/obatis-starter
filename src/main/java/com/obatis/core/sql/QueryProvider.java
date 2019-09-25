@@ -565,7 +565,8 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 如果需要 QueryProvider 不查询任何字段，调用此方法传入 true 即可
+	 * 如果需要 QueryProvider 不查询任何字段，调用此方法传入 true 即可。
+	 * 该方法主要用于主表对应的 QueryProvider，left join 连接的从表可以不用调用此方法传入，从表不指定查询字段默认不查询
 	 * @param selectNothingFlag
 	 */
 	public void selectNothing(boolean selectNothingFlag) {
