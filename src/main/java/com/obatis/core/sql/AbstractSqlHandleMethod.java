@@ -987,6 +987,13 @@ public abstract class AbstractSqlHandleMethod {
 				replaceFlag = true;
 			}
 		}
+		if (fieldName.contains(",")) {
+			fieldName = fieldName.replace(",", "},{");
+//			fieldNameTemp = fieldNameTemp.replace(",", ",");
+			if (!replaceFlag) {
+				replaceFlag = true;
+			}
+		}
 
 		if (replaceFlag) {
 			fieldName = "{" + fieldName + "}";
