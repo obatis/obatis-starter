@@ -28,9 +28,6 @@ import java.util.regex.Pattern;
  */
 public class QueryProvider {
 
-	protected static final String JOIN_AND_EXPRESS = " and ";
-	protected static final String JOIN_OR_EXPRESS = " or ";
-
 	protected static AbstractOrder abstractOrder = new HandleOrderMethod();
 
 	private static final Map<Integer, OrderEnum> ORDER_TYPE_MAP = new HashMap<>();
@@ -582,11 +579,11 @@ public class QueryProvider {
 	 * @param value
 	 */
 	private void andFilter(String filterName, FilterEnum filterType, Object value) {
-		this.addFilter(filterName, filterType, value, JOIN_AND_EXPRESS);
+		this.addFilter(filterName, filterType, value, JoinTypeEnum.AND);
 	}
 
 	private void andFilter(String filterName, FilterEnum filterType, Object value, String pattern) {
-		this.addFilter(filterName, filterType, value, JOIN_AND_EXPRESS, pattern);
+		this.addFilter(filterName, filterType, value, JoinTypeEnum.AND, pattern);
 	}
 
 	/**
@@ -597,7 +594,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	private void andOnFilter(String filterName, FilterEnum filterType, Object value) {
-		this.addOnFilter(filterName, filterType, value, JOIN_AND_EXPRESS);
+		this.addOnFilter(filterName, filterType, value, JoinTypeEnum.AND);
 	}
 
 	/**
@@ -608,7 +605,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	private void andOnFilter(String filterName, FilterEnum filterType, Object value, String pattern) {
-		this.addOnFilter(filterName, filterType, value, JOIN_AND_EXPRESS, pattern);
+		this.addOnFilter(filterName, filterType, value, JoinTypeEnum.AND, pattern);
 	}
 
 	/**
@@ -616,13 +613,13 @@ public class QueryProvider {
 	 * @param filterName
 	 * @param filterType
 	 * @param value
-	 * @param joinType
+	 * @param joinTypeEnum
 	 */
-	private void addFilter(String filterName, FilterEnum filterType, Object value, String joinType) {
-		this.addFilter(filterName, filterType, value, joinType, null);
+	private void addFilter(String filterName, FilterEnum filterType, Object value, JoinTypeEnum joinTypeEnum) {
+		this.addFilter(filterName, filterType, value, joinTypeEnum, null);
 	}
 
-	private void addFilter(String filterName, FilterEnum filterType, Object value, String joinType, String pattern) {
+	private void addFilter(String filterName, FilterEnum filterType, Object value, JoinTypeEnum joinTypeEnum, String pattern) {
 		if (ValidateTool.isEmpty(filterName)) {
 			throw new HandleException("error: filter field is null");
 		} else if (!FilterEnum.IS_NULL.equals(filterType) && !FilterEnum.IS_NOT_NULL.equals(filterType) && null == value) {
@@ -632,21 +629,21 @@ public class QueryProvider {
 		if (this.filters == null) {
 			this.filters = new ArrayList<>();
 		} else {
-			this.checkFilter(this.filters, filterName, filterType, value, joinType);
+			this.checkFilter(this.filters, filterName, filterType, value, joinTypeEnum);
 		}
 		if(ValidateTool.isEmpty(pattern)) {
-			Object[] obj = {filterName, filterType, value, joinType};
+			Object[] obj = {filterName, filterType, value, joinTypeEnum};
 			this.filters.add(obj);
 		} else {
-			Object[] obj = {filterName, filterType, value, joinType, pattern};
+			Object[] obj = {filterName, filterType, value, joinTypeEnum, pattern};
 			this.filters.add(obj);
 		}
 	}
 
-	private void checkFilter(List<Object[]> filterList, String filterName, FilterEnum filterType, Object value, String joinType) {
+	private void checkFilter(List<Object[]> filterList, String filterName, FilterEnum filterType, Object value, JoinTypeEnum joinTypeEnum) {
 		for (int i = 0, j = filterList.size(); i < j; i++) {
 			Object[] filter = filterList.get(i);
-			if(filter[0].toString().equals(filterName) && filterType.equals(filter[1]) && joinType.equals(filter[3])) {
+			if(filter[0].toString().equals(filterName) && filterType.equals(filter[1]) && joinTypeEnum.equals(filter[3])) {
 				if(FilterEnum.IS_NULL.equals(filterType) || FilterEnum.IS_NOT_NULL.equals(filterType)) {
 					break;
 				} else if (value.equals(filter[2])) {
@@ -664,13 +661,13 @@ public class QueryProvider {
 	 * @param filterName
 	 * @param filterType
 	 * @param value
-	 * @param joinType
+	 * @param joinTypeEnum
 	 */
-	private void addOnFilter(String filterName, FilterEnum filterType, Object value, String joinType) {
-		this.addOnFilter(filterName, filterType, value, joinType, null);
+	private void addOnFilter(String filterName, FilterEnum filterType, Object value, JoinTypeEnum joinTypeEnum) {
+		this.addOnFilter(filterName, filterType, value, joinTypeEnum, null);
 	}
 
-	private void addOnFilter(String filterName, FilterEnum filterType, Object value, String joinType, String pattern) {
+	private void addOnFilter(String filterName, FilterEnum filterType, Object value, JoinTypeEnum joinTypeEnum, String pattern) {
 		if (ValidateTool.isEmpty(filterName)) {
 			throw new HandleException("error: on filter field is null");
 		} else if (!FilterEnum.IS_NULL.equals(filterType) && !FilterEnum.IS_NOT_NULL.equals(filterType) && null == value) {
@@ -679,14 +676,14 @@ public class QueryProvider {
 		if (this.onFilters == null) {
 			this.onFilters = new ArrayList<>();
 		} else {
-			this.checkFilter(this.onFilters, filterName, filterType, value, joinType);
+			this.checkFilter(this.onFilters, filterName, filterType, value, joinTypeEnum);
 		}
 
 		if(ValidateTool.isEmpty(pattern)) {
-			Object[] obj = {filterName, filterType, value, joinType};
+			Object[] obj = {filterName, filterType, value, joinTypeEnum};
 			this.onFilters.add(obj);
 		} else {
-			Object[] obj = {filterName, filterType, value, joinType, pattern};
+			Object[] obj = {filterName, filterType, value, joinTypeEnum, pattern};
 			this.onFilters.add(obj);
 		}
 	}
@@ -698,7 +695,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	private void or(String filterName, FilterEnum filterType, Object value) {
-		this.addFilter(filterName, filterType, value, JOIN_OR_EXPRESS);
+		this.addFilter(filterName, filterType, value, JoinTypeEnum.OR);
 	}
 
 	/**
@@ -708,7 +705,7 @@ public class QueryProvider {
 	 * @param value
 	 */
 	private void or(String filterName, FilterEnum filterType, Object value, String pattern) {
-		this.addFilter(filterName, filterType, value, JOIN_OR_EXPRESS, pattern);
+		this.addFilter(filterName, filterType, value, JoinTypeEnum.OR, pattern);
 	}
 
 	/**
@@ -718,11 +715,11 @@ public class QueryProvider {
 	 * @param value
 	 */
 	private void onOr(String filterName, FilterEnum filterType, Object value) {
-		this.addOnFilter(filterName, filterType, value, JOIN_OR_EXPRESS);
+		this.addOnFilter(filterName, filterType, value, JoinTypeEnum.OR);
 	}
 
 	private void onOr(String filterName, FilterEnum filterType, Object value, String pattern) {
-		this.addOnFilter(filterName, filterType, value, JOIN_OR_EXPRESS, pattern);
+		this.addOnFilter(filterName, filterType, value, JoinTypeEnum.OR, pattern);
 	}
 
 	/**

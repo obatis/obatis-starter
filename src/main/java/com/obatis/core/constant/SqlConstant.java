@@ -1,5 +1,7 @@
 package com.obatis.core.constant;
 
+import com.obatis.core.constant.type.JoinTypeEnum;
+
 public class SqlConstant {
 	
 	private SqlConstant(){}

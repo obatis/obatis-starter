@@ -284,7 +284,8 @@ public abstract class AbstractSqlHandleMethod {
                  */
 				filterSql.append(sql);
 			} else {
-				filterSql.append(obj[3] + sql);
+				JoinTypeEnum joinTypeEnum = (JoinTypeEnum) obj[3];
+				filterSql.append(joinTypeEnum.getJoinTypeName() + sql);
 			}
 		}
 
@@ -298,11 +299,7 @@ public abstract class AbstractSqlHandleMethod {
 						filterSql.append("(" + orItemSql + ")");
 					} else {
 						JoinTypeEnum joinTypeEnum = (JoinTypeEnum) queryProviderObject[1];
-						if(joinTypeEnum == JoinTypeEnum.AND) {
-							filterSql.append(" and (" + orItemSql + ")");
-						} else {
-							filterSql.append(" or (" + orItemSql + ")");
-						}
+						filterSql.append(joinTypeEnum.getJoinTypeName() + "(" + orItemSql + ")");
 					}
 				}
 			}
@@ -458,7 +455,8 @@ public abstract class AbstractSqlHandleMethod {
 
 		if(!ValidateTool.isEmpty(leftJoinFilterSql.toString())) {
 			if(!ValidateTool.isEmpty(filterSqlBuffer.toString())) {
-				filterSqlBuffer.append(" and " + leftJoinFilterSql.toString());
+				filterSqlBuffer.append(JoinTypeEnum.AND.getJoinTypeName() + leftJoinFilterSql.toString());
+//				filterSqlBuffer.append(" and " + leftJoinFilterSql.toString());
 //				filterSql += " and " + leftJoinFilterSql.toString();
 			} else {
 				filterSqlBuffer.append(leftJoinFilterSql);
@@ -521,7 +519,8 @@ public abstract class AbstractSqlHandleMethod {
 
 		if(!ValidateTool.isEmpty(leftJoinFilterSql.toString())) {
 			if(!ValidateTool.isEmpty(filterSqlBuffer.toString())) {
-				filterSqlBuffer.append(" and " + leftJoinFilterSql);
+				filterSqlBuffer.append(JoinTypeEnum.AND.getJoinTypeName() + leftJoinFilterSql);
+//				filterSqlBuffer.append(" and " + leftJoinFilterSql);
 //				filterSql += " and " + leftJoinFilterSql.toString();
 			} else {
 				filterSqlBuffer.append(leftJoinFilterSql);
@@ -634,7 +633,7 @@ public abstract class AbstractSqlHandleMethod {
 				for (int i = 0, j = fieldArr.length; i < j; i++) {
 					sql.append(tableAliasName + "." + fieldArr[i] + "=" + connectTableAliasName + "." + paramFieldArr[i]);
 					if (i != j - 1) {
-						sql.append(" and ");
+						sql.append(JoinTypeEnum.AND.getJoinTypeName());
 					}
 				}
 			}
@@ -654,7 +653,7 @@ public abstract class AbstractSqlHandleMethod {
 			if(onFilters != null && !onFilters.isEmpty()) {
 				String onFilterSql = this.getFilterSql(cache, connectTableAliasName, onFilters, value, index + "_" + l, childColumnMap, childFieldMap);
 				if(!ValidateTool.isEmpty(onFilterSql)) {
-					sql.append(" and " + onFilterSql);
+					sql.append(JoinTypeEnum.AND.getJoinTypeName() + onFilterSql);
 				}
 			}
 
@@ -663,7 +662,7 @@ public abstract class AbstractSqlHandleMethod {
 				if(ValidateTool.isEmpty(leftJoinFilterSql.toString())) {
 					leftJoinFilterSql.append(filterSql);
 				} else {
-					leftJoinFilterSql.append(" and " + filterSql);
+					leftJoinFilterSql.append(JoinTypeEnum.AND.getJoinTypeName() + filterSql);
 				}
 			}
 
@@ -1119,7 +1118,7 @@ public abstract class AbstractSqlHandleMethod {
 
 		if(!ValidateTool.isEmpty(leftJoinFilterSql.toString())) {
 			if(!ValidateTool.isEmpty(filterSqlBuffer.toString())) {
-				filterSqlBuffer.append(" and " + leftJoinFilterSql);
+				filterSqlBuffer.append(JoinTypeEnum.AND.getJoinTypeName() + leftJoinFilterSql);
 //				filterSql += " and " + leftJoinFilterSql.toString();
 			} else {
 				filterSqlBuffer.append(leftJoinFilterSql);
