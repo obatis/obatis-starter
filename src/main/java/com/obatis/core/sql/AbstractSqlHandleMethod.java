@@ -4,6 +4,7 @@ import com.obatis.core.CommonField;
 import com.obatis.core.constant.CacheInfoConstant;
 import com.obatis.core.constant.SqlConstant;
 import com.obatis.core.constant.type.FilterEnum;
+import com.obatis.core.constant.type.JoinTypeEnum;
 import com.obatis.core.constant.type.SqlHandleEnum;
 import com.obatis.core.exception.HandleException;
 import com.obatis.validate.ValidateTool;
@@ -178,7 +179,7 @@ public abstract class AbstractSqlHandleMethod {
 	 * @throws HandleException
 	 */
 	private String getFilterSql(TableIndexCache cache, String tableAliasName, List<Object[]> filters,
-			List<QueryProvider> orProviders, Map<String, Object> value, String index, Map<String, String> columnMap, Map<String, String> fieldMap,
+			List<Object[]> orProviders, Map<String, Object> value, String index, Map<String, String> columnMap, Map<String, String> fieldMap,
 			int findType) throws HandleException {
 		int filtersLen = 0;
 		if (filters != null && !filters.isEmpty()) {
@@ -289,13 +290,19 @@ public abstract class AbstractSqlHandleMethod {
 
 		if (orProviders != null && !orProviders.isEmpty()) {
 			for (int j = 0, l = orProviders.size(); j < l; j++) {
-				QueryProvider queryProvider = orProviders.get(j);
+				Object[] queryProviderObject = orProviders.get(j);
+				QueryProvider queryProvider = (QueryProvider) queryProviderObject[0];
 				String orItemSql = getFilterSql(cache, tableAliasName, queryProvider.getFilters(), queryProvider.getOrProviders(), value, index + "_ot_" + j, columnMap, fieldMap, findType);
 				if (!ValidateTool.isEmpty(orItemSql)) {
 					if (ValidateTool.isEmpty(filterSql.toString())) {
 						filterSql.append("(" + orItemSql + ")");
 					} else {
-						filterSql.append(" and (" + orItemSql + ")");
+						JoinTypeEnum joinTypeEnum = (JoinTypeEnum) queryProviderObject[1];
+						if(joinTypeEnum == JoinTypeEnum.AND) {
+							filterSql.append(" and (" + orItemSql + ")");
+						} else {
+							filterSql.append(" or (" + orItemSql + ")");
+						}
 					}
 				}
 			}

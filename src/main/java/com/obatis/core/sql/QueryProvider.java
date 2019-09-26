@@ -5,6 +5,7 @@ import com.obatis.config.request.RequestConstant;
 import com.obatis.config.request.RequestParam;
 import com.obatis.core.constant.CacheInfoConstant;
 import com.obatis.core.constant.type.FilterEnum;
+import com.obatis.core.constant.type.JoinTypeEnum;
 import com.obatis.core.constant.type.OrderEnum;
 import com.obatis.core.constant.type.SqlHandleEnum;
 import com.obatis.core.convert.BeanCacheConvert;
@@ -48,7 +49,7 @@ public class QueryProvider {
 	private List<Object[]> filters;
 	private List<Object[]> orders;
 	private List<Object[]> groups;
-	private List<QueryProvider> orProviders;
+	private List<Object[]> orProviders;
 	private Map<String, String> notFields;
 	private List<Object[]> leftJoinProviders;
 	private String joinTableName;
@@ -106,7 +107,7 @@ public class QueryProvider {
 		return groups;
 	}
 
-	public List<QueryProvider> getOrProviders() {
+	public List<Object[]> getOrProviders() {
 		return orProviders;
 	}
 
@@ -1905,9 +1906,22 @@ public class QueryProvider {
 	 * 添加 or 查询条件，比如 and (type = 1 or name = 2)，主要作用于拼接 and 后括号中的表达式，主要用于 or
 	 * 查询的表达式，不然没必要。 如果 多条件拼接 or 查询(类似 where id = ? or type = 1
 	 * 的条件)，or 条件查询不能被当成第一个条件放入(type属性 orFilter 方法不能在第一个加入)，否则会被解析为 and 条件查询。
+	 * 默认与主体表达式用 and 拼接
 	 * @param queryProvider
 	 */
 	public void orProvider(QueryProvider queryProvider) {
+		this.orProvider(queryProvider, JoinTypeEnum.AND);
+
+	}
+
+	/**
+	 * 添加 or 查询条件，比如 and (type = 1 or name = 2)，主要作用于拼接 and 后括号中的表达式，主要用于 or
+	 * 查询的表达式，不然没必要。 如果 多条件拼接 or 查询(类似 where id = ? or type = 1
+	 * 的条件)，or 条件查询不能被当成第一个条件放入(type属性 orFilter 方法不能在第一个加入)，否则会被解析为 and 条件查询。
+	 * 采用枚举的形式，灵活与主体拼接连接方式
+	 * @param queryProvider
+	 */
+	public void orProvider(QueryProvider queryProvider, JoinTypeEnum joinTypeEnum) {
 		if (queryProvider == null) {
 			throw new HandleException("error: queryProvider is null");
 		} else if (queryProvider == this) {
@@ -1918,7 +1932,8 @@ public class QueryProvider {
 			orProviders = new ArrayList<>();
 		}
 
-		this.orProviders.add(queryProvider);
+		Object[] obj = {queryProvider, joinTypeEnum};
+		this.orProviders.add(obj);
 
 	}
 
