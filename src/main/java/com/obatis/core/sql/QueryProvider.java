@@ -46,7 +46,7 @@ public class QueryProvider {
 	private List<Object[]> filters;
 	private List<Object[]> orders;
 	private List<Object[]> groups;
-	private List<Object[]> orProviders;
+	private List<Object[]> addProviders;
 	private Map<String, String> notFields;
 	private List<Object[]> leftJoinProviders;
 	private String joinTableName;
@@ -104,8 +104,8 @@ public class QueryProvider {
 		return groups;
 	}
 
-	public List<Object[]> getOrProviders() {
-		return orProviders;
+	public List<Object[]> getAddProviders() {
+		return addProviders;
 	}
 
 	public Map<String, String> getNotFields() {
@@ -1906,9 +1906,20 @@ public class QueryProvider {
 	 * 默认与主体表达式用 and 拼接
 	 * @param queryProvider
 	 */
+	@Deprecated
 	public void orProvider(QueryProvider queryProvider) {
-		this.orProvider(queryProvider, JoinTypeEnum.AND);
+		this.addProvider(queryProvider, JoinTypeEnum.AND);
+	}
 
+	/**
+	 * 添加 or 查询条件，比如 and (type = 1 or name = 2)，主要作用于拼接 and 后括号中的表达式，主要用于 or
+	 * 查询的表达式，不然没必要。 如果 多条件拼接 or 查询(类似 where id = ? or type = 1
+	 * 的条件)，or 条件查询不能被当成第一个条件放入(type属性 orFilter 方法不能在第一个加入)，否则会被解析为 and 条件查询。
+	 * 默认与主体表达式用 and 拼接
+	 * @param queryProvider
+	 */
+	public void addProvider(QueryProvider queryProvider) {
+		this.addProvider(queryProvider, JoinTypeEnum.AND);
 	}
 
 	/**
@@ -1918,19 +1929,19 @@ public class QueryProvider {
 	 * 采用枚举的形式，灵活与主体拼接连接方式
 	 * @param queryProvider
 	 */
-	public void orProvider(QueryProvider queryProvider, JoinTypeEnum joinTypeEnum) {
+	public void addProvider(QueryProvider queryProvider, JoinTypeEnum joinTypeEnum) {
 		if (queryProvider == null) {
 			throw new HandleException("error: queryProvider is null");
 		} else if (queryProvider == this) {
 			throw new HandleException("error: queryProvider is same");
 		}
 
-		if (this.orProviders == null) {
-			orProviders = new ArrayList<>();
+		if (this.addProviders == null) {
+			addProviders = new ArrayList<>();
 		}
 
 		Object[] obj = {queryProvider, joinTypeEnum};
-		this.orProviders.add(obj);
+		this.addProviders.add(obj);
 
 	}
 

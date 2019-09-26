@@ -81,7 +81,7 @@ public abstract class AbstractSqlHandleMethod {
 		sql.SET(getUpdateField(queryProvider.getFields(), columnMap, fieldMap, index + "_u", fieldValue));
 		List<Object[]> filters = queryProvider.getFilters();
 		if (filters != null && !filters.isEmpty()) {
-			sql.WHERE(getFilterSql(null, "", filters, queryProvider.getOrProviders(), filterValue, index + "_ut", columnMap,
+			sql.WHERE(getFilterSql(null, "", filters, queryProvider.getAddProviders(), filterValue, index + "_ut", columnMap,
 					fieldMap, NOT_FIND));
 		} else {
 			throw new HandleException("error：filters is empty");
@@ -146,7 +146,7 @@ public abstract class AbstractSqlHandleMethod {
 			Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 			Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 			Map<String, Object> value = new HashMap<>();
-			sql.WHERE(getFilterSql(null, "", filters, queryProvider.getOrProviders(), value, INDEX_DEFAULT + "_dt", columnMap,
+			sql.WHERE(getFilterSql(null, "", filters, queryProvider.getAddProviders(), value, INDEX_DEFAULT + "_dt", columnMap,
 					fieldMap, NOT_FIND));
 			// 放入值到map
 			param.put(SqlConstant.PROVIDER_FILTER, value);
@@ -179,7 +179,7 @@ public abstract class AbstractSqlHandleMethod {
 	 * @throws HandleException
 	 */
 	private String getFilterSql(TableIndexCache cache, String tableAliasName, List<Object[]> filters,
-			List<Object[]> orProviders, Map<String, Object> value, String index, Map<String, String> columnMap, Map<String, String> fieldMap,
+			List<Object[]> addProviders, Map<String, Object> value, String index, Map<String, String> columnMap, Map<String, String> fieldMap,
 			int findType) throws HandleException {
 		int filtersLen = 0;
 		if (filters != null && !filters.isEmpty()) {
@@ -289,11 +289,11 @@ public abstract class AbstractSqlHandleMethod {
 			}
 		}
 
-		if (orProviders != null && !orProviders.isEmpty()) {
-			for (int j = 0, l = orProviders.size(); j < l; j++) {
-				Object[] queryProviderObject = orProviders.get(j);
+		if (addProviders != null && !addProviders.isEmpty()) {
+			for (int j = 0, l = addProviders.size(); j < l; j++) {
+				Object[] queryProviderObject = addProviders.get(j);
 				QueryProvider queryProvider = (QueryProvider) queryProviderObject[0];
-				String orItemSql = getFilterSql(cache, tableAliasName, queryProvider.getFilters(), queryProvider.getOrProviders(), value, index + "_ot_" + j, columnMap, fieldMap, findType);
+				String orItemSql = getFilterSql(cache, tableAliasName, queryProvider.getFilters(), queryProvider.getAddProviders(), value, index + "_ot_" + j, columnMap, fieldMap, findType);
 				if (!ValidateTool.isEmpty(orItemSql)) {
 					if (ValidateTool.isEmpty(filterSql.toString())) {
 						filterSql.append("(" + orItemSql + ")");
@@ -446,7 +446,7 @@ public abstract class AbstractSqlHandleMethod {
 		StringBuffer filterSqlBuffer = new StringBuffer();
 		List<Object[]> filters = queryProvider.getFilters();
 		if (filters != null && !filters.isEmpty()) {
-			String filterSql = getFilterSql(cache, tableAliasName, filters, queryProvider.getOrProviders(), value,
+			String filterSql = getFilterSql(cache, tableAliasName, filters, queryProvider.getAddProviders(), value,
 					INDEX_DEFAULT + "_tl", columnMap, fieldMap, DEFAULT_FIND);
 			if(!ValidateTool.isEmpty(filterSql)) {
 				filterSqlBuffer.append(filterSql);
@@ -510,7 +510,7 @@ public abstract class AbstractSqlHandleMethod {
 		List<Object[]> filters = queryProvider.getFilters();
 		if ((filters != null && !filters.isEmpty())) {
 
-			String filterSql = getFilterSql(cache, tableAliasName, filters, queryProvider.getOrProviders(), value,
+			String filterSql = getFilterSql(cache, tableAliasName, filters, queryProvider.getAddProviders(), value,
 					INDEX_DEFAULT + "_tl", columnMap, fieldMap, DEFAULT_FIND);
 			if(!ValidateTool.isEmpty(filterSql)) {
 				filterSqlBuffer.append(filterSql);
@@ -1109,7 +1109,7 @@ public abstract class AbstractSqlHandleMethod {
 		List<Object[]> filters = queryProvider.getFilters();
 		if ((filters != null && !filters.isEmpty())) {
 
-			String filterSql = getFilterSql(cache, tableAliasName, filters, queryProvider.getOrProviders(), value,
+			String filterSql = getFilterSql(cache, tableAliasName, filters, queryProvider.getAddProviders(), value,
 					INDEX_DEFAULT + "_t", columnMap, fieldMap, DEFAULT_FIND);
 			if(!ValidateTool.isEmpty(filterSql)) {
 				filterSqlBuffer.append(filterSql);
