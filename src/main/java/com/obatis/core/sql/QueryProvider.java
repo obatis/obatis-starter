@@ -15,6 +15,7 @@ import com.obatis.core.result.ResultInfoOutput;
 import com.obatis.core.sql.mysql.HandleOrderMethod;
 import com.obatis.validate.ValidateTool;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +47,7 @@ public class QueryProvider {
 	private List<Object[]> filters;
 	private List<Object[]> orders;
 	private List<Object[]> groups;
+	private List<Object[]> havings;
 	private List<Object[]> addProviders;
 	private Map<String, String> notFields;
 	private List<Object[]> leftJoinProviders;
@@ -102,6 +104,10 @@ public class QueryProvider {
 
 	public List<Object[]> getGroups() {
 		return groups;
+	}
+
+	public List<Object[]> getHavings() {
+		return havings;
 	}
 
 	public List<Object[]> getAddProviders() {
@@ -2111,6 +2117,37 @@ public class QueryProvider {
 		}
 		Object[] group = {groupName, sqlHandleEnum, pattern};
 		this.groups.add(group);
+	}
+
+	/**
+	 * 常规的字段 having 判断
+	 * @param fieldName
+	 * @param value
+	 */
+	public void addHavingGreaterThan(String fieldName, Number value) {
+		this.addHaving(fieldName, SqlHandleEnum.HANDLE_DEFAULT, FilterEnum.GREATER_THAN, value);
+	}
+
+	/**
+	 * count 聚合函数的 having 判断
+	 */
+	public void addHavingCountGreaterThan(String fieldName, Number value) {
+		this.addHaving(fieldName, SqlHandleEnum.HANDLE_COUNT, FilterEnum.GREATER_THAN, value);
+	}
+
+	private void addHaving(String fieldName, SqlHandleEnum sqlHandleEnum, FilterEnum filterEnum, Number value) {
+		if (ValidateTool.isEmpty(fieldName)) {
+			throw new HandleException("error: having field is null");
+		}
+		if(value == null) {
+			throw new HandleException("error: having field value is null");
+		}
+		if(this.havings == null) {
+			this.havings = new ArrayList<>();
+		}
+
+		Object[] having = {fieldName, sqlHandleEnum, filterEnum, value};
+		this.havings.add(having);
 	}
 
 	/**

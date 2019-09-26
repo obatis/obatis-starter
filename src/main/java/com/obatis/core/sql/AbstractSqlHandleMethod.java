@@ -436,11 +436,16 @@ public abstract class AbstractSqlHandleMethod {
 
 		StringBuffer leftJoinFilterSql = new StringBuffer();
 		List<String> groups = new ArrayList<>();
+		StringBuffer havingFilterSql = new StringBuffer();
 		List<String> orders = new ArrayList<>();
-		sql.FROM(tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column, groups, orders));
+		sql.FROM(tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column, groups, havingFilterSql, orders));
 		sql.SELECT(String.join(",", column));
 		// 构建 group by 语句
 		this.addGroupBy(groups, tableAliasName, columnMap, queryProvider);
+		/**
+		 * 拼装 having 字句
+		 */
+		this.addHaving(havingFilterSql, queryProvider.getHavings(), cache, tableAliasName, INDEX_DEFAULT + "_gh", fieldMap, columnMap, value);
 		this.addOrder(orders, cache, tableAliasName, fieldMap, columnMap, queryProvider);
 
 		StringBuffer filterSqlBuffer = new StringBuffer();
@@ -456,11 +461,8 @@ public abstract class AbstractSqlHandleMethod {
 		if(!ValidateTool.isEmpty(leftJoinFilterSql.toString())) {
 			if(!ValidateTool.isEmpty(filterSqlBuffer.toString())) {
 				filterSqlBuffer.append(JoinTypeEnum.AND.getJoinTypeName() + leftJoinFilterSql.toString());
-//				filterSqlBuffer.append(" and " + leftJoinFilterSql.toString());
-//				filterSql += " and " + leftJoinFilterSql.toString();
 			} else {
 				filterSqlBuffer.append(leftJoinFilterSql);
-//				filterSql = leftJoinFilterSql.toString();
 			}
 		}
 		if (!ValidateTool.isEmpty(filterSqlBuffer.toString())) {
@@ -474,6 +476,9 @@ public abstract class AbstractSqlHandleMethod {
 
 		if (!groups.isEmpty()) {
 			sql.GROUP_BY(groups.toArray(new String[groups.size()]));
+		}
+		if(!ValidateTool.isEmpty(havingFilterSql.toString())) {
+			sql.HAVING(havingFilterSql.toString());
 		}
 
 		if (!orders.isEmpty()) {
@@ -500,11 +505,16 @@ public abstract class AbstractSqlHandleMethod {
 
 		StringBuffer leftJoinFilterSql = new StringBuffer();
 		List<String> groups = new ArrayList<>();
-		String table = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, null, groups, null);
+		StringBuffer havingFilterSql = new StringBuffer();
+		String table = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, null, groups, havingFilterSql, null);
 		sql.FROM(table);
 
 		// 处理 group by 语句
 		this.addGroupBy(groups, tableAliasName, columnMap, queryProvider);
+		/**
+		 * 拼装 having 字句
+		 */
+		this.addHaving(havingFilterSql, queryProvider.getHavings(), cache, tableAliasName, INDEX_DEFAULT + "_gh", fieldMap, columnMap, value);
 
 		StringBuffer filterSqlBuffer = new StringBuffer();
 		List<Object[]> filters = queryProvider.getFilters();
@@ -539,6 +549,10 @@ public abstract class AbstractSqlHandleMethod {
 		if (!groups.isEmpty()) {
 			sql.GROUP_BY(groups.toArray(new String[groups.size()]));
 		}
+		if(!ValidateTool.isEmpty(havingFilterSql.toString())) {
+			sql.HAVING(havingFilterSql.toString());
+		}
+
 		return sql.toString();
 	}
 
@@ -560,6 +574,38 @@ public abstract class AbstractSqlHandleMethod {
 				}
 
 
+			}
+		}
+	}
+
+	private void addHaving(StringBuffer havingFilterSql, List<Object[]> havings, TableIndexCache cache, String tableAsName, String index, Map<String, String> fieldMap, Map<String, String> columnMap, Map<String, Object> value) {
+		if(!tableAsName.endsWith(".")) {
+			tableAsName += ".";
+		}
+		if(havings != null && !havings.isEmpty()) {
+			for(int i = 0, j = havings.size(); i < j; i++) {
+				if(!ValidateTool.isEmpty(havingFilterSql.toString())) {
+					havingFilterSql.append(JoinTypeEnum.AND.getJoinTypeName());
+				}
+				Object[] obj = havings.get(i);
+				String field = (String) obj[0];
+				SqlHandleEnum sqlHandleEnum = (SqlHandleEnum) obj[1];
+				FilterEnum filterType = (FilterEnum) obj[2];
+				Number valueNumber = (Number) obj[3];
+				String key = SqlConstant.PROVIDER_FILTER + "_h" + index + "_" + i;
+
+				String expression = "#{request." + SqlConstant.PROVIDER_FILTER + "." + key + "}";
+				String havingSql = null;
+				switch (filterType) {
+					case GREATER_THAN:
+						havingSql = getAgFunction(cache, tableAsName, field, fieldMap, columnMap);
+				}
+
+				switch (sqlHandleEnum) {
+					case HANDLE_COUNT:
+						havingFilterSql.append("count(" + havingSql + ")" + getFilterType(filterType) + expression);
+				}
+				value.put(key, valueNumber);
 			}
 		}
 	}
@@ -603,7 +649,7 @@ public abstract class AbstractSqlHandleMethod {
 		}
 	}
 
-	private String getLeftJoinTable(TableIndexCache cache, String tableAliasName, List<Object[]> leftJoinProviders, Map<String, Object> value, String index, StringBuffer leftJoinFilterSql, List<String> column, List<String> groups, List<String> orders) {
+	private String getLeftJoinTable(TableIndexCache cache, String tableAliasName, List<Object[]> leftJoinProviders, Map<String, Object> value, String index, StringBuffer leftJoinFilterSql, List<String> column, List<String> groups, StringBuffer havingFilterSql, List<String> orders) {
 
 		if (leftJoinProviders == null || leftJoinProviders.isEmpty()) {
 			return "";
@@ -645,13 +691,17 @@ public abstract class AbstractSqlHandleMethod {
 			}
 
 			this.addGroupBy(groups, connectTableAliasName, childColumnMap, childParam);
+			/**
+			 * 解析 having 字句
+			 */
+			this.addHaving(havingFilterSql, childParam.getHavings(), cache, tableAliasName, index + "_gh_" + l, childFieldMap, childColumnMap, value);
 			if(orders != null) {
 				this.addOrder(orders, cache, connectTableAliasName, childFieldMap, childColumnMap, childParam);
 			}
 
 			List<Object[]> onFilters = childParam.getOnFilters();
 			if(onFilters != null && !onFilters.isEmpty()) {
-				String onFilterSql = this.getFilterSql(cache, connectTableAliasName, onFilters, value, index + "_" + l, childColumnMap, childFieldMap);
+				String onFilterSql = this.getFilterSql(cache, connectTableAliasName, onFilters, value, index + "_ofl_" + l, childColumnMap, childFieldMap);
 				if(!ValidateTool.isEmpty(onFilterSql)) {
 					sql.append(JoinTypeEnum.AND.getJoinTypeName() + onFilterSql);
 				}
@@ -668,7 +718,7 @@ public abstract class AbstractSqlHandleMethod {
 
 			List<Object[]> paramLeftJoinProviders = childParam.getLeftJoinProviders();
 			if (paramLeftJoinProviders != null && paramLeftJoinProviders.size() > 0) {
-				sql.append(getLeftJoinTable(cache, connectTableAliasName, paramLeftJoinProviders, value, index + "_" + l, leftJoinFilterSql, column, groups, orders));
+				sql.append(getLeftJoinTable(cache, connectTableAliasName, paramLeftJoinProviders, value, index + "_" + l, leftJoinFilterSql, column, groups, havingFilterSql, orders));
 			}
 
 		}
@@ -1092,9 +1142,10 @@ public abstract class AbstractSqlHandleMethod {
 		StringBuffer leftJoinFilterSql = new StringBuffer();
 		// 构造 group by 语句
 		List<String> groups = new ArrayList<>();
+		StringBuffer havingFilterSql = new StringBuffer();
 		// 构造order by 语句
 		List<String> orders = new ArrayList<>();
-		String fromTable = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column, groups, orders);
+		String fromTable = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column, groups, havingFilterSql, orders);
 		sql.SELECT(String.join(",", column));
 		sql.FROM(fromTable);
 		// 分页的语句
@@ -1103,6 +1154,10 @@ public abstract class AbstractSqlHandleMethod {
 		totalSql.FROM(fromTable);
 
 		this.addGroupBy(groups, tableAliasName, columnMap, queryProvider);
+		/**
+		 * 拼装 having 字句
+		 */
+		this.addHaving(havingFilterSql, queryProvider.getHavings(), cache, tableAliasName, INDEX_DEFAULT + "_gh", fieldMap, columnMap, value);
 		this.addOrder(orders, cache, tableAliasName, fieldMap, columnMap, queryProvider);
 
 		StringBuffer filterSqlBuffer = new StringBuffer();
@@ -1143,6 +1198,10 @@ public abstract class AbstractSqlHandleMethod {
 		if (!groups.isEmpty()) {
 			sql.GROUP_BY(groups.toArray(new String[groups.size()]));
 			totalSql.GROUP_BY(groups.toArray(new String[groups.size()]));
+		}
+
+		if(!ValidateTool.isEmpty(havingFilterSql.toString())) {
+			sql.HAVING(havingFilterSql.toString());
 		}
 
 		if (!orders.isEmpty()) {
