@@ -1202,6 +1202,7 @@ public abstract class AbstractSqlHandleMethod {
 
 		if(!ValidateTool.isEmpty(havingFilterSql.toString())) {
 			sql.HAVING(havingFilterSql.toString());
+			totalSql.HAVING(havingFilterSql.toString());
 		}
 
 		if (!orders.isEmpty()) {
