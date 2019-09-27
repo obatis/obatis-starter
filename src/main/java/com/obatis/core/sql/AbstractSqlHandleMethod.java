@@ -1004,8 +1004,8 @@ public abstract class AbstractSqlHandleMethod {
 				if (ValidateTool.isEmpty(name)) {
 					continue;
 				}
-				fieldNameTempMap.put(name.replace(" ", ""), name.replace(" ", ""));
-				cacheFieldNameTempMap.put(name.replace(" ", ""), name);
+				fieldNameTempMap.put(name.replaceAll(" ", ""), name.replaceAll(" ", ""));
+				cacheFieldNameTempMap.put(name.replaceAll(" ", ""), name);
 			}
 
 			for (Map.Entry<String, String> map : fieldNameTempMap.entrySet()) {
