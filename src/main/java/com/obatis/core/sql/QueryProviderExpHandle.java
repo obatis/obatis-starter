@@ -11,6 +11,11 @@ public class QueryProviderExpHandle {
         return exp.toString();
     }
 
+    public QueryProviderExpHandle nullToZero() {
+        exp.insert(0, "ifnull(" + exp + ", 0)");
+        return this;
+    }
+
     public QueryProviderExpHandle add(String...columns) {
         return handleColumn("+", columns);
     }
@@ -33,12 +38,8 @@ public class QueryProviderExpHandle {
         }
 
         if(!ValidateTool.isEmpty(exp.toString())) {
-//            exp.insert(0, "(");
-//            exp.append(")");
             exp.append(operator);
         }
-
-
 
         boolean itemAppendFlag = false;
         int columnLength = columns.length;
@@ -60,4 +61,5 @@ public class QueryProviderExpHandle {
 
         return this;
     }
+
 }
