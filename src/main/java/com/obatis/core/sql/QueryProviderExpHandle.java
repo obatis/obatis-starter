@@ -12,7 +12,7 @@ public class QueryProviderExpHandle {
     }
 
     public QueryProviderExpHandle nullToZero() {
-        exp.insert(0, "ifnull(" + exp + ", 0)");
+        exp.insert(0, "ifnull((" + exp + "), 0)");
         return this;
     }
 
