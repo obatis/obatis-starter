@@ -200,44 +200,44 @@ public abstract class AbstractSqlHandleMethod {
 
 			String sql;
 			String expression = "#{request." + SqlConstant.PROVIDER_FILTER + "." + key + "}";
-			Object vue = obj[2];
+			Object filterValue = obj[2];
 			switch (filterType) {
 			case LIKE:
 //				sql = tableAliasNamePrefix + field + getFilterType(filterType);
 				sql = getHandleField(cache, tableAliasNamePrefix, field, columnMap, fieldMap) + getFilterType(filterType);
 				sql += getLikeSql(expression);
-				value.put(key, vue);
+				value.put(key, filterValue);
 				break;
 			case LEFT_LIKE:
 				sql = getHandleField(cache, tableAliasNamePrefix, field, columnMap, fieldMap) + getFilterType(filterType);
 				sql += getLeftLikeSql(expression);
-				value.put(key, vue);
+				value.put(key, filterValue);
 				break;
 			case RIGHT_LIKE:
 				sql = getHandleField(cache, tableAliasNamePrefix, field, columnMap, fieldMap) + getFilterType(filterType);
 				sql += getRightLikeSql(expression);
-				value.put(key, vue);
+				value.put(key, filterValue);
 				break;
 			case IN:
 			case NOT_IN:
 				sql = getHandleField(cache, tableAliasNamePrefix, field, columnMap, fieldMap) + getFilterType(filterType);
-				sql += "(" + modifyInFilter(vue, key, value) + ")";
+				sql += "(" + modifyInFilter(filterValue, key, value) + ")";
 				break;
 			case UP_GREATER_THAN:
 				sql = getAgFunction(cache, tableAliasNamePrefix, field, fieldMap, columnMap) + " + " + expression + ">0";
-				value.put(key, vue);
+				value.put(key, filterValue);
 				break;
 			case UP_GREATER_EQUAL:
 				sql = getAgFunction(cache, tableAliasNamePrefix, field, fieldMap, columnMap) + " + " + expression + ">=0";
-				value.put(key, vue);
+				value.put(key, filterValue);
 				break;
 			case REDUCE_GREATER_THAN:
 				sql = getAgFunction(cache, tableAliasNamePrefix, field, fieldMap, columnMap) + " - " + expression + ">0";
-				value.put(key, vue);
+				value.put(key, filterValue);
 				break;
 			case REDUCE_GREATER_EQUAL:
 				sql = getAgFunction(cache, tableAliasNamePrefix, field, fieldMap, columnMap) + " - " + expression + ">=0";
-				value.put(key, vue);
+				value.put(key, filterValue);
 				break;
 			case IS_NULL:
 			case IS_NOT_NULL:
@@ -249,7 +249,7 @@ public abstract class AbstractSqlHandleMethod {
 			case LESS_EQUAL:
 				sql = getAgFunction(cache, tableAliasNamePrefix, field, fieldMap, columnMap) + getFilterType(filterType);
 				sql += expression;
-				value.put(key, vue);
+				value.put(key, filterValue);
 				break;
 			case EQUAL_FIELD:
 			case GREATER_THAN_FIELD:
@@ -258,7 +258,7 @@ public abstract class AbstractSqlHandleMethod {
 			case LESS_EQUAL_FIELD:
 			case NOT_EQUAL_FIELD:
 				sql = getAgFunction(cache, tableAliasNamePrefix, field, fieldMap, columnMap) + getFilterType(filterType);
-				sql += getAgFunction(cache, tableAliasNamePrefix, getField(value.toString(), columnMap), fieldMap, columnMap);
+				sql += getAgFunction(cache, tableAliasNamePrefix, getField(filterValue.toString(), columnMap), fieldMap, columnMap);
 				break;
 			case EQUAL_DATE_FORMAT:
 			case NOT_EQUAL_DATE_FORMAT:
@@ -269,12 +269,12 @@ public abstract class AbstractSqlHandleMethod {
 //				"DATE_FORMAT(" + tableAliasNamePrefix + field + ",'" + obj[4] + "')";
 				sql = "DATE_FORMAT(" + getHandleField(cache, tableAliasNamePrefix, field, columnMap, fieldMap) + ",'" + obj[4] + "')" + getFilterType(filterType);
 				sql += expression;
-				value.put(key, vue);
+				value.put(key, filterValue);
 				break;
 			default:
 				sql = getHandleField(cache, tableAliasNamePrefix, field, columnMap, fieldMap) + getFilterType(filterType);
 				sql += expression;
-				value.put(key, vue);
+				value.put(key, filterValue);
 				break;
 			}
 
@@ -438,7 +438,7 @@ public abstract class AbstractSqlHandleMethod {
 		List<String> groups = new ArrayList<>();
 		StringBuffer havingFilterSql = new StringBuffer();
 		List<String> orders = new ArrayList<>();
-		sql.FROM(tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column, groups, havingFilterSql, orders));
+		sql.FROM(tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column, groups, havingFilterSql, orders, fieldMap, columnMap));
 		sql.SELECT(String.join(",", column));
 		// 构建 group by 语句
 		this.addGroupBy(groups, tableAliasName, columnMap, queryProvider);
@@ -493,8 +493,8 @@ public abstract class AbstractSqlHandleMethod {
 
 	public String getValidateSql(Map<String, Object> param, String tableName) throws HandleException {
 		QueryProvider queryProvider = (QueryProvider) param.get(SqlConstant.PROVIDER_OBJ);
-		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
+		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 
 		TableIndexCache cache = new TableIndexCache();
 //		String tableAliasName = cache.getTableAsName();
@@ -506,7 +506,7 @@ public abstract class AbstractSqlHandleMethod {
 		StringBuffer leftJoinFilterSql = new StringBuffer();
 		List<String> groups = new ArrayList<>();
 		StringBuffer havingFilterSql = new StringBuffer();
-		String table = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, null, groups, havingFilterSql, null);
+		String table = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, null, groups, havingFilterSql, null, fieldMap, columnMap);
 		sql.FROM(table);
 
 		// 处理 group by 语句
@@ -649,7 +649,7 @@ public abstract class AbstractSqlHandleMethod {
 		}
 	}
 
-	private String getLeftJoinTable(TableIndexCache cache, String tableAliasName, List<Object[]> leftJoinProviders, Map<String, Object> value, String index, StringBuffer leftJoinFilterSql, List<String> column, List<String> groups, StringBuffer havingFilterSql, List<String> orders) {
+	private String getLeftJoinTable(TableIndexCache cache, String tableAliasName, List<Object[]> leftJoinProviders, Map<String, Object> value, String index, StringBuffer leftJoinFilterSql, List<String> column, List<String> groups, StringBuffer havingFilterSql, List<String> orders, Map<String, String> fieldMap, Map<String, String> columnMap) {
 
 		if (leftJoinProviders == null || leftJoinProviders.isEmpty()) {
 			return "";
@@ -669,6 +669,8 @@ public abstract class AbstractSqlHandleMethod {
 			Object paramFieldName = leftJoinArray[1];
 
 			sql.append(" left join " + connectTableName + " " + connectTableAliasName + " on ");
+			Map<String, String> childFieldMap = CacheInfoConstant.FIELD_CACHE.get(connectTableName);
+			Map<String, String> childColumnMap = CacheInfoConstant.COLUMN_CACHE.get(connectTableName);
 			if (fieldName instanceof String) {
 				// 说明是单个
 				sql.append(tableAliasName + "." + leftJoinArray[0] + "=" + connectTableAliasName + "." + paramFieldName);
@@ -677,15 +679,19 @@ public abstract class AbstractSqlHandleMethod {
 				String[] paramFieldArr = (String[]) paramFieldName;
 				// 说明是数组
 				for (int i = 0, j = fieldArr.length; i < j; i++) {
-					sql.append(tableAliasName + "." + fieldArr[i] + "=" + connectTableAliasName + "." + paramFieldArr[i]);
+//					sql.append(tableAliasName + "." + fieldArr[i] + "=" + connectTableAliasName + "." + paramFieldArr[i]);
+//					sql.append(tableAliasName + "." + fieldArr[i] + "=" + connectTableAliasName + "." + paramFieldArr[i]);
+
+					sql.append(getAgFunction(cache, tableAliasName, fieldArr[i], fieldMap, columnMap));
+					sql.append("=");
+					sql.append(getAgFunction(cache, connectTableAliasName, paramFieldArr[i], childFieldMap, childColumnMap));
 					if (i != j - 1) {
 						sql.append(JoinTypeEnum.AND.getJoinTypeName());
 					}
 				}
 			}
 
-			Map<String, String> childColumnMap = CacheInfoConstant.COLUMN_CACHE.get(connectTableName);
-			Map<String, String> childFieldMap = CacheInfoConstant.FIELD_CACHE.get(connectTableName);
+
 			if(column != null && childParam.getFields() != null && !childParam.getFields().isEmpty()) {
 				getSelectFieldColumns(childParam, cache, connectTableAliasName, childColumnMap, childFieldMap, column);
 			}
@@ -718,7 +724,7 @@ public abstract class AbstractSqlHandleMethod {
 
 			List<Object[]> paramLeftJoinProviders = childParam.getLeftJoinProviders();
 			if (paramLeftJoinProviders != null && paramLeftJoinProviders.size() > 0) {
-				sql.append(getLeftJoinTable(cache, connectTableAliasName, paramLeftJoinProviders, value, index + "_" + l, leftJoinFilterSql, column, groups, havingFilterSql, orders));
+				sql.append(getLeftJoinTable(cache, connectTableAliasName, paramLeftJoinProviders, value, index + "_" + l, leftJoinFilterSql, column, groups, havingFilterSql, orders, childFieldMap, childColumnMap));
 			}
 
 		}
@@ -1140,8 +1146,8 @@ public abstract class AbstractSqlHandleMethod {
 
 		SQL sql = new SQL();
 		QueryProvider queryProvider = (QueryProvider) providers.get(SqlConstant.PROVIDER_OBJ);
-		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
+		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		TableIndexCache cache = new TableIndexCache();
 		String tableAliasName = this.getTableAsName(cache, queryProvider.getTableAsNameSerialNumber());
 		List<String> column = new ArrayList<>();
@@ -1154,7 +1160,7 @@ public abstract class AbstractSqlHandleMethod {
 		StringBuffer havingFilterSql = new StringBuffer();
 		// 构造order by 语句
 		List<String> orders = new ArrayList<>();
-		String fromTable = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column, groups, havingFilterSql, orders);
+		String fromTable = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column, groups, havingFilterSql, orders, fieldMap, columnMap);
 		sql.SELECT(String.join(",", column));
 		sql.FROM(fromTable);
 		// 分页的语句
