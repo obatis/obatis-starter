@@ -682,9 +682,9 @@ public abstract class AbstractSqlHandleMethod {
 //					sql.append(tableAliasName + "." + fieldArr[i] + "=" + connectTableAliasName + "." + paramFieldArr[i]);
 //					sql.append(tableAliasName + "." + fieldArr[i] + "=" + connectTableAliasName + "." + paramFieldArr[i]);
 
-					sql.append(getAgFunction(cache, tableAliasName, fieldArr[i], fieldMap, columnMap));
+					sql.append(getAgFunction(cache, tableAliasName + ".", fieldArr[i], fieldMap, columnMap));
 					sql.append("=");
-					sql.append(getAgFunction(cache, connectTableAliasName, paramFieldArr[i], childFieldMap, childColumnMap));
+					sql.append(getAgFunction(cache, connectTableAliasName + ".", paramFieldArr[i], childFieldMap, childColumnMap));
 					if (i != j - 1) {
 						sql.append(JoinTypeEnum.AND.getJoinTypeName());
 					}
