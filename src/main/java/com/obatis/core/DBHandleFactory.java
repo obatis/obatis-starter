@@ -519,6 +519,19 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	}
 
 	/**
+	 * 根据传入的 QueryProvider 对象，返回 String 的类型值。 如果根据条件有多条数据符合，则抛出异常。
+	 * @param provider
+	 * @return
+	 */
+	public String findString(QueryProvider provider) {
+		Object obj = this.findObject(provider);
+		if(obj != null) {
+			return CommonConvert.toString(obj);
+		}
+		return null;
+	}
+
+	/**
 	 * 根据传入的 QueryProvider 对象，返回Object的类型值。
 	 * 如果根据条件有多条数据符合，则抛出异常。
 	 * @param provider
