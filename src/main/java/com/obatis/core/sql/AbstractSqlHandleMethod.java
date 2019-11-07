@@ -1006,7 +1006,8 @@ public abstract class AbstractSqlHandleMethod {
 		}
 
 //		fieldName = fieldName.replace(" ", "");
-
+		System.out.println("fieldName >>  " + fieldName);
+		System.out.println("fieldNameTemp >>>  " + fieldNameTemp);
 		if (replaceFlag) {
 			fieldName = "{" + fieldName + "}";
 			String[] fieldNameTempArr = fieldNameTemp.split(",");
@@ -1016,8 +1017,8 @@ public abstract class AbstractSqlHandleMethod {
 				if (ValidateTool.isEmpty(name)) {
 					continue;
 				}
-//				fieldNameTempMap.put(name.replace(" ", ""), name.replace(" ", ""));
-//				cacheFieldNameTempMap.put(name.replace(" ", ""), name);
+				fieldNameTempMap.put(name, name);
+				cacheFieldNameTempMap.put(name, name);
 			}
 
 			for (Map.Entry<String, String> map : fieldNameTempMap.entrySet()) {
