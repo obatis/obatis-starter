@@ -1006,8 +1006,6 @@ public abstract class AbstractSqlHandleMethod {
 		}
 
 //		fieldName = fieldName.replace(" ", "");
-		System.out.println("fieldName >>  " + fieldName);
-		System.out.println("fieldNameTemp >>>  " + fieldNameTemp);
 		if (replaceFlag) {
 			fieldName = "{" + fieldName + "}";
 			String[] fieldNameTempArr = fieldNameTemp.split(",");
