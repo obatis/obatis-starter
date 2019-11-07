@@ -1000,8 +1000,12 @@ public abstract class AbstractSqlHandleMethod {
 				replaceFlag = true;
 			}
 		}
+		if (replaceFlag && fieldName.contains(" ")) {
+			fieldName = fieldName.replace(" ", "} {");
+			fieldNameTemp = fieldNameTemp.replace(" ", ",");
+		}
 
-		fieldName = fieldName.replace(" ", "");
+//		fieldName = fieldName.replace(" ", "");
 
 		if (replaceFlag) {
 			fieldName = "{" + fieldName + "}";
@@ -1012,8 +1016,8 @@ public abstract class AbstractSqlHandleMethod {
 				if (ValidateTool.isEmpty(name)) {
 					continue;
 				}
-				fieldNameTempMap.put(name.replace(" ", ""), name.replace(" ", ""));
-				cacheFieldNameTempMap.put(name.replace(" ", ""), name);
+//				fieldNameTempMap.put(name.replace(" ", ""), name.replace(" ", ""));
+//				cacheFieldNameTempMap.put(name.replace(" ", ""), name);
 			}
 
 			for (Map.Entry<String, String> map : fieldNameTempMap.entrySet()) {
@@ -1045,9 +1049,30 @@ public abstract class AbstractSqlHandleMethod {
 
 			return fieldName.replaceAll("[{}]", "");
 		} else {
-			String tempFieldName = fieldName.replace(" ", "");
-			if(tempFieldName.startsWith(CacheInfoConstant.TABLE_AS_START_PREFIX)) {
-				String[] fieldArray = tempFieldName.split("[.]");
+//			String tempFieldName = fieldName.replace(" ", "");
+//			if(tempFieldName.startsWith(CacheInfoConstant.TABLE_AS_START_PREFIX)) {
+//				String[] fieldArray = tempFieldName.split("[.]");
+//				String tableAsNameSerialNumber = fieldArray[0].substring(fieldArray[0].indexOf("_") + 1);
+//				String expFieldName = fieldArray[1];
+//
+//				if(columnMap.containsKey(expFieldName)) {
+//					return getTableAsName(cache, tableAsNameSerialNumber) + "." + columnMap.get(expFieldName);
+//				} else {
+//					return getTableAsName(cache, tableAsNameSerialNumber) + "." + expFieldName;
+//				}
+//			}
+//
+//			if(fieldMap.containsKey(tempFieldName)) {
+//				return tableAliasName + tempFieldName;
+//			} else if (columnMap.containsKey(tempFieldName)) {
+//				return tableAliasName + columnMap.get(tempFieldName);
+//			} else {
+//				return fieldName;
+//			}
+
+
+			if(fieldName.startsWith(CacheInfoConstant.TABLE_AS_START_PREFIX)) {
+				String[] fieldArray = fieldName.split("[.]");
 				String tableAsNameSerialNumber = fieldArray[0].substring(fieldArray[0].indexOf("_") + 1);
 				String expFieldName = fieldArray[1];
 
@@ -1058,10 +1083,10 @@ public abstract class AbstractSqlHandleMethod {
 				}
 			}
 
-			if(fieldMap.containsKey(tempFieldName)) {
-				return tableAliasName + tempFieldName;
-			} else if (columnMap.containsKey(tempFieldName)) {
-				return tableAliasName + columnMap.get(tempFieldName);
+			if(fieldMap.containsKey(fieldName)) {
+				return tableAliasName + fieldName;
+			} else if (columnMap.containsKey(fieldName)) {
+				return tableAliasName + columnMap.get(fieldName);
 			} else {
 				return fieldName;
 			}
