@@ -390,6 +390,12 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 		return this.getBaseBeanSessionMapper().listString(paramMap, this.getTableName());
 	}
 
+	public List<Date> listDate(QueryProvider provider) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
+		return this.getBaseBeanSessionMapper().listDate(paramMap, this.getTableName());
+	}
+
 	/**
 	 * 根据传入的 QueryProvider 对象，返回BigDecimal的类型值。 该方法常用于查询金额字段。
 	 * 如果根据条件有多条数据符合，则抛出异常。
