@@ -95,6 +95,14 @@ public enum FilterEnum {
 	 */
 	IN,
 	/**
+	 * 表示 in 嵌套子查询
+	 */
+	IN_PROVIDER,
+	/**
+	 * "not in" 嵌套子查询，not in
+	 */
+	NOT_IN_PROVIDER,
+	/**
 	 * "not in" 查询，not in
 	 */
 	NOT_IN,

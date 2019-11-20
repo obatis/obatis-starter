@@ -223,6 +223,12 @@ public abstract class AbstractSqlHandleMethod {
 				sql = getHandleField(cache, tableAliasNamePrefix, field, columnMap, fieldMap) + getFilterType(filterType);
 				sql += "(" + modifyInFilter(filterValue, key, value) + ")";
 				break;
+			case IN_PROVIDER:
+			case NOT_IN_PROVIDER:
+				sql = getHandleField(cache, tableAliasNamePrefix, field, columnMap, fieldMap) + getFilterType(filterType);
+				QueryProvider childProvider = (QueryProvider) filterValue;
+				sql += "(" + this.getSelectSql(cache, childProvider, value, childProvider.getJoinTableName()) + ")";
+				break;
 			case UP_GREATER_THAN:
 				sql = getAgFunction(cache, tableAliasNamePrefix, field, fieldMap, columnMap) + " + " + expression + ">0";
 				value.put(key, filterValue);
@@ -424,15 +430,37 @@ public abstract class AbstractSqlHandleMethod {
 	public String getSelectSql(Map<String, Object> param, String tableName) throws HandleException {
 
 		QueryProvider queryProvider = (QueryProvider) param.get(SqlConstant.PROVIDER_OBJ);
+		TableIndexCache cache = new TableIndexCache();
+		Map<String, Object> value = new HashMap<>();
+		String sql = this.getSelectSql(cache, queryProvider, value, tableName);
+
+		if(!value.isEmpty()) {
+			// 放入值到map
+			param.put(SqlConstant.PROVIDER_FILTER, value);
+		}
+		return sql;
+	}
+
+	/**
+	 * 构造查询sql
+	 * @param cache
+	 * @param queryProvider
+	 * @param value
+	 * @param tableName
+	 * @return
+	 * @throws HandleException
+	 */
+	private String getSelectSql(TableIndexCache cache, QueryProvider queryProvider, Map<String, Object> value, String tableName) throws HandleException {
+
+//		QueryProvider queryProvider = (QueryProvider) param.get(SqlConstant.PROVIDER_OBJ);
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
 		Map<String, String> fieldMap = CacheInfoConstant.FIELD_CACHE.get(tableName);
 
-		TableIndexCache cache = new TableIndexCache();
 		String tableAliasName = this.getTableAsName(cache, queryProvider.getTableAsNameSerialNumber());
 		SQL sql = new SQL();
 		List<String> column = new ArrayList<>();
 		getSelectFieldColumns(queryProvider, cache, tableAliasName, columnMap, fieldMap, column);
-		Map<String, Object> value = new HashMap<>();
+//		Map<String, Object> value = new HashMap<>();
 
 		StringBuffer leftJoinFilterSql = new StringBuffer();
 		List<String> groups = new ArrayList<>();
@@ -469,10 +497,10 @@ public abstract class AbstractSqlHandleMethod {
 			sql.WHERE(filterSqlBuffer.toString());
 		}
 
-		if(!value.isEmpty()) {
-			// 放入值到map
-			param.put(SqlConstant.PROVIDER_FILTER, value);
-		}
+//		if(!value.isEmpty()) {
+//			// 放入值到map
+//			param.put(SqlConstant.PROVIDER_FILTER, value);
+//		}
 
 		if (!groups.isEmpty()) {
 			sql.GROUP_BY(groups.toArray(new String[groups.size()]));
@@ -1142,9 +1170,11 @@ public abstract class AbstractSqlHandleMethod {
 			filterType = " <> ";
 			break;
 		case IN:
+		case IN_PROVIDER:
 			filterType = " in ";
 			break;
 		case NOT_IN:
+		case NOT_IN_PROVIDER:
 			filterType = " not in ";
 			break;
 		case IS_NULL:

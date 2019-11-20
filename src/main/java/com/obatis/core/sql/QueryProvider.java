@@ -15,7 +15,6 @@ import com.obatis.core.result.ResultInfoOutput;
 import com.obatis.core.sql.mysql.HandleOrderMethod;
 import com.obatis.validate.ValidateTool;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -729,7 +728,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，模糊查询, like
+	 * and 查询条件，模糊查询, like
 	 * @param filterName
 	 * @param value
 	 */
@@ -738,7 +737,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 on 连接的 like 模糊查询
+	 * 连接查询 on 连接的 like 模糊查询
 	 * @param filterName
 	 * @param value
 	 */
@@ -747,7 +746,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询条件，模糊查询, like
+	 * or 查询条件，模糊查询, like
 	 * @param filterName
 	 * @param value
 	 */
@@ -756,7 +755,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询on 连接的 or 关系的模糊查询 like
+	 * 连接查询on 连接的 or 关系的模糊查询 like
 	 * @param filterName
 	 * @param value
 	 */
@@ -765,7 +764,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，左模糊查询, like
+	 * and 查询条件，左模糊查询, like
 	 * @param filterName
 	 * @param value
 	 */
@@ -774,7 +773,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and查询条件的左模糊查询 like
+	 * 连接查询 and查询条件的左模糊查询 like
 	 * @param filterName
 	 * @param value
 	 */
@@ -783,7 +782,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询条件，左模糊查询, like
+	 * or 查询条件，左模糊查询, like
 	 * @param filterName
 	 * @param value
 	 */
@@ -792,7 +791,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 查询条件左模糊查询， like
+	 * 连接查询 or 查询条件左模糊查询， like
 	 * @param filterName
 	 * @param value
 	 */
@@ -801,7 +800,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，右模糊查询, like
+	 * and 查询条件，右模糊查询, like
 	 * @param filterName
 	 * @param value
 	 */
@@ -810,7 +809,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 查询条件的右模糊查询，like
+	 * 连接查询 and 查询条件的右模糊查询，like
 	 * @param filterName
 	 * @param value
 	 */
@@ -819,7 +818,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询条件，右模糊查询, like
+	 * or 查询条件，右模糊查询, like
 	 * @param filterName
 	 * @param value
 	 */
@@ -828,7 +827,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or查询条件的右模糊查询， like
+	 * 连接查询 or查询条件的右模糊查询， like
 	 * @param filterName
 	 * @param value
 	 */
@@ -837,7 +836,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，等于查询，=
+	 * and 查询条件，等于查询，=
 	 * @param filterName
 	 * @param value
 	 */
@@ -846,7 +845,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，等于查询，=，针对时间格式化使用
+	 * and 查询条件，等于查询，=，针对时间格式化使用
 	 * @param filterName
 	 * @param value
 	 * @param pattern
@@ -856,7 +855,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 字段比较查询，等于查询，=，例如 a = b，a和b均为数据库字段
+	 * and 字段比较查询，等于查询，=，例如 a = b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -865,7 +864,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询且为and关系查询条件
+	 * 连接查询且为and关系查询条件
 	 * @param filterName
 	 * @param value
 	 */
@@ -874,7 +873,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询且为and关系查询条件，针对时间格式化使用
+	 * 连接查询且为and关系查询条件，针对时间格式化使用
 	 * @param filterName
 	 * @param value
 	 */
@@ -883,7 +882,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询且为and关系的字段值相等的查询条件，例如 a = b，a和b均为数据库字段
+	 * 连接查询且为and关系的字段值相等的查询条件，例如 a = b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -892,7 +891,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询条件，等于查询，=
+	 * or 查询条件，等于查询，=
 	 * @param filterName
 	 * @param value
 	 */
@@ -901,7 +900,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询条件，等于查询，= ， 针对时间格式化
+	 * or 查询条件，等于查询，= ， 针对时间格式化
 	 * @param filterName
 	 * @param value
 	 */
@@ -910,7 +909,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 关系的字段值相等的查询条件，例如 a = b，a和b均为数据库字段
+	 * or 关系的字段值相等的查询条件，例如 a = b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -919,7 +918,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 关系的查询条件，等于查询，=
+	 * 连接查询 or 关系的查询条件，等于查询，=
 	 * @param filterName
 	 * @param value
 	 */
@@ -928,7 +927,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 关系的查询条件，等于查询，=，针对时间格式化查询条件
+	 * 连接查询 or 关系的查询条件，等于查询，=，针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 */
@@ -937,7 +936,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 关系的字段值相等的查询条件，例如 a = b，a和b均为数据库字段
+	 * 连接查询 or 关系的字段值相等的查询条件，例如 a = b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -946,7 +945,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，大于查询，>
+	 * and 查询条件，大于查询，>
 	 * @param filterName
 	 * @param value
 	 */
@@ -955,7 +954,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，大于查询，>， 针对时间格式化查询条件
+	 * and 查询条件，大于查询，>， 针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 */
@@ -964,7 +963,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 字段比较查询条件，大于查询，>，例如 a > b，a和b均为数据库字段
+	 * and 字段比较查询条件，大于查询，>，例如 a > b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -973,7 +972,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 查询条件，大于查询，>
+	 * 连接查询 and 查询条件，大于查询，>
 	 * @param filterName
 	 * @param value
 	 */
@@ -982,7 +981,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 查询条件，大于查询，>，针对时间格式化查询条件
+	 * 连接查询 and 查询条件，大于查询，>，针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 */
@@ -991,7 +990,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，字段大于查询，>，例如 a > b，a和b均为数据库字段
+	 * and 查询条件，字段大于查询，>，例如 a > b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -1000,7 +999,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询条件，大于查询，>
+	 * or 查询条件，大于查询，>
 	 * @param filterName
 	 * @param value
 	 */
@@ -1009,7 +1008,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询条件，大于查询，>，针对时间格式化查询条件
+	 * or 查询条件，大于查询，>，针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 */
@@ -1018,7 +1017,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 字段比较查询条件，大于查询，>，例如 a > b，a和b均为数据库字段
+	 * or 字段比较查询条件，大于查询，>，例如 a > b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -1027,7 +1026,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 查询条件，大于查询，>
+	 * 连接查询 or 查询条件，大于查询，>
 	 * @param filterName
 	 * @param value
 	 */
@@ -1036,7 +1035,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 查询条件，大于查询，>，针对时间格式化查询条件
+	 * 连接查询 or 查询条件，大于查询，>，针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 */
@@ -1045,7 +1044,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 关系字段大于查询条件，大于查询，>，例如 a > b，a和b均为数据库字段
+	 * 连接查询 or 关系字段大于查询条件，大于查询，>，例如 a > b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -1054,7 +1053,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，大于等于查询，>=
+	 * and 查询条件，大于等于查询，>=
 	 * @param filterName
 	 * @param value
 	 */
@@ -1063,7 +1062,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，大于等于查询，>=，针对时间格式化查询条件
+	 * and 查询条件，大于等于查询，>=，针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 */
@@ -1072,7 +1071,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 字段比较查询条件，大于等于查询，>=，例如 a >= b，a和b均为数据库字段
+	 * and 字段比较查询条件，大于等于查询，>=，例如 a >= b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -1081,7 +1080,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 查询条件，大于等于查询，>=
+	 * 连接查询 and 查询条件，大于等于查询，>=
 	 * @param filterName
 	 * @param value
 	 */
@@ -1090,7 +1089,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 查询条件，大于等于查询，>=，针对时间格式化查询条件
+	 * 连接查询 and 查询条件，大于等于查询，>=，针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 */
@@ -1099,7 +1098,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 字段查询条件，大于等于查询，>=，例如 a >= b，a和b均为数据库字段
+	 * 连接查询 and 字段查询条件，大于等于查询，>=，例如 a >= b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -1108,7 +1107,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询条件，大于等于查询，>=
+	 * or 查询条件，大于等于查询，>=
 	 * @param filterName
 	 * @param value
 	 */
@@ -1117,7 +1116,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询条件，大于等于查询，>=,针对时间格式化查询条件
+	 * or 查询条件，大于等于查询，>=,针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 */
@@ -1126,7 +1125,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 字段比较查询条件，大于等于查询，>=，例如 a >= b，a和b均为数据库字段
+	 * or 字段比较查询条件，大于等于查询，>=，例如 a >= b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -1135,7 +1134,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 查询条件，大于等于查询，>=
+	 * 连接查询 or 查询条件，大于等于查询，>=
 	 * @param filterName
 	 * @param value
 	 */
@@ -1144,7 +1143,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 查询条件，大于等于查询，>=，针对时间格式化查询条件
+	 * 连接查询 or 查询条件，大于等于查询，>=，针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 */
@@ -1153,7 +1152,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 字段查询条件，大于等于查询，>=，例如 a >= b，a和b均为数据库字段
+	 * 连接查询 or 字段查询条件，大于等于查询，>=，例如 a >= b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -1162,7 +1161,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 大于等于0的条件表达式，传入字段名称即可
+	 * and 大于等于0的条件表达式，传入字段名称即可
 	 * @param filterName
 	 */
 	public void greaterEqualZero(String filterName) {
@@ -1170,7 +1169,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 大于等于0的条件表达式，传入字段名称即可,针对时间格式化查询条件
+	 * and 大于等于0的条件表达式，传入字段名称即可,针对时间格式化查询条件
 	 * @param filterName
 	 */
 	public void greaterEqualZeroDateFormat(String filterName, String pattern) {
@@ -1178,7 +1177,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 大于等于0的条件表达式，传入字段名称即可
+	 * 连接查询 and 大于等于0的条件表达式，传入字段名称即可
 	 * @param filterName
 	 */
 	public void onGreaterEqualZero(String filterName) {
@@ -1190,7 +1189,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 大于等于0的条件表达式，传入字段名称即可
+	 * or 大于等于0的条件表达式，传入字段名称即可
 	 * @param filterName
 	 */
 	public void orGreaterEqualZero(String filterName) {
@@ -1198,7 +1197,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 大于等于0的条件表达式, 针对时间格式化查询条件
+	 * or 大于等于0的条件表达式, 针对时间格式化查询条件
 	 * @param filterName
 	 */
 	public void orGreaterEqualZeroDateFormat(String filterName, String pattern) {
@@ -1206,7 +1205,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 大于等于0的条件表达式，传入字段名称即可
+	 * 连接查询 or 大于等于0的条件表达式，传入字段名称即可
 	 * @param filterName
 	 */
 	public void onOrGreaterEqualZero(String filterName) {
@@ -1214,7 +1213,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 大于等于0的条件表达式，传入字段名称即可,针对时间格式化查询条件
+	 * 连接查询 or 大于等于0的条件表达式，传入字段名称即可,针对时间格式化查询条件
 	 * @param filterName
 	 */
 	public void onOrGreaterEqualZeroDateFormat(String filterName, String pattern) {
@@ -1222,7 +1221,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，小于查询，<
+	 * and 查询条件，小于查询，<
 	 * @param filterName
 	 * @param value
 	 */
@@ -1231,7 +1230,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，小于查询，<,针对时间格式化查询条件
+	 * and 查询条件，小于查询，<,针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 * @param pattern
@@ -1241,7 +1240,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 字段比较查询条件，小于查询，<，例如 a < b，a和b均为数据库字段
+	 * and 字段比较查询条件，小于查询，<，例如 a < b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -1250,7 +1249,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 查询条件，小于查询，<
+	 * 连接查询 and 查询条件，小于查询，<
 	 * @param filterName
 	 * @param value
 	 */
@@ -1259,7 +1258,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 查询条件，小于查询，<，针对时间格式化查询条件
+	 * 连接查询 and 查询条件，小于查询，<，针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 */
@@ -1268,7 +1267,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 字段比较查询条件，小于查询，<，例如 a < b，a和b均为数据库字段
+	 * 连接查询 and 字段比较查询条件，小于查询，<，例如 a < b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -1277,7 +1276,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询条件，小于查询，<
+	 * or 查询条件，小于查询，<
 	 * @param filterName
 	 * @param value
 	 */
@@ -1286,7 +1285,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询条件，小于查询，<，针对时间格式化查询条件
+	 * or 查询条件，小于查询，<，针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 */
@@ -1295,7 +1294,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 字段比较查询条件，小于查询，<，例如 a < b，a和b均为数据库字段
+	 * or 字段比较查询条件，小于查询，<，例如 a < b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -1304,7 +1303,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 查询条件，小于查询，<
+	 * 连接查询 or 查询条件，小于查询，<
 	 * @param filterName
 	 * @param value
 	 */
@@ -1313,7 +1312,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 查询条件，小于查询 <，针对时间格式化查询条件
+	 * 连接查询 or 查询条件，小于查询 <，针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 */
@@ -1322,7 +1321,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 字段比较查询条件，小于查询，<，例如 a < b，a和b均为数据库字段
+	 * 连接查询 or 字段比较查询条件，小于查询，<，例如 a < b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -1331,7 +1330,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，小于等于查询，<=
+	 * and 查询条件，小于等于查询，<=
 	 * @param filterName
 	 * @param value
 	 */
@@ -1340,7 +1339,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，小于等于查询，<=，针对时间格式化查询条件
+	 * and 查询条件，小于等于查询，<=，针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 */
@@ -1349,7 +1348,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 字段比较查询条件，小于等于查询，<=，例如 a <= b，a和b均为数据库字段
+	 * and 字段比较查询条件，小于等于查询，<=，例如 a <= b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -1358,7 +1357,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 查询条件，小于等于查询，<=
+	 * 连接查询 and 查询条件，小于等于查询，<=
 	 * @param filterName
 	 * @param value
 	 */
@@ -1367,7 +1366,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 查询条件，小于等于查询，<= 针对时间格式化查询条件
+	 * 连接查询 and 查询条件，小于等于查询，<= 针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 * @param pattern
@@ -1377,7 +1376,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 字段比较查询条件，小于等于查询，<=，例如 a <= b，a和b均为数据库字段
+	 * 连接查询 and 字段比较查询条件，小于等于查询，<=，例如 a <= b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -1386,7 +1385,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询条件，小于等于查询，<=
+	 * or 查询条件，小于等于查询，<=
 	 * @param filterName
 	 * @param value
 	 */
@@ -1395,7 +1394,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询条件，小于等于查询，<= 针对时间格式化查询条件
+	 * or 查询条件，小于等于查询，<= 针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 * @param pattern
@@ -1405,7 +1404,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 字段比较查询条件，小于等于查询，<=，例如 a <= b，a和b均为数据库字段
+	 * or 字段比较查询条件，小于等于查询，<=，例如 a <= b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -1414,7 +1413,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 查询条件，小于等于查询，<=
+	 * 连接查询 or 查询条件，小于等于查询，<=
 	 * @param filterName
 	 * @param value
 	 */
@@ -1423,7 +1422,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 查询条件，小于等于查询，<=  针对时间格式化查询条件
+	 * 连接查询 or 查询条件，小于等于查询，<=  针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 * @param pattern
@@ -1433,7 +1432,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 字段比较查询条件，小于等于查询，<=，例如 a <= b，a和b均为数据库字段
+	 * 连接查询 or 字段比较查询条件，小于等于查询，<=，例如 a <= b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -1442,7 +1441,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询，不等于查询，<>
+	 * and 查询，不等于查询，<>
 	 * @param filterName
 	 * @param value
 	 */
@@ -1451,7 +1450,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询，不等于查询，<>  针对时间格式化查询条件
+	 * and 查询，不等于查询，<>  针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 * @param pattern
@@ -1461,7 +1460,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 字段比较查询，不等于查询，<>，例如 a <> b，a和b均为数据库字段
+	 * and 字段比较查询，不等于查询，<>，例如 a <> b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -1470,7 +1469,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 查询，不等于查询，<>
+	 * 连接查询 and 查询，不等于查询，<>
 	 * @param filterName
 	 * @param value
 	 */
@@ -1479,7 +1478,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 查询，不等于查询，<>  针对时间格式化查询条件
+	 * 连接查询 and 查询，不等于查询，<>  针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 * @param pattern
@@ -1489,7 +1488,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 查询，不等于查询，<>,例如 a <> b，a和b均为数据库字段
+	 * 连接查询 and 查询，不等于查询，<>,例如 a <> b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -1498,7 +1497,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询，不等于查询，<>
+	 * or 查询，不等于查询，<>
 	 * @param filterName
 	 * @param value
 	 */
@@ -1507,7 +1506,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询，不等于查询，<> 针对时间格式化查询条件
+	 * or 查询，不等于查询，<> 针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 * @param pattern
@@ -1517,7 +1516,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 字段比较查询，不等于查询，<>,例如 a <> b，a和b均为数据库字段
+	 * or 字段比较查询，不等于查询，<>,例如 a <> b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -1526,7 +1525,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 查询，不等于查询，<>
+	 * 连接查询 or 查询，不等于查询，<>
 	 * @param filterName
 	 * @param value
 	 */
@@ -1535,7 +1534,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 查询，不等于查询，<>  针对时间格式化查询条件
+	 * 连接查询 or 查询，不等于查询，<>  针对时间格式化查询条件
 	 * @param filterName
 	 * @param value
 	 * @param pattern
@@ -1545,7 +1544,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 字段比较查询，不等于查询，<>,例如 a <> b，a和b均为数据库字段
+	 * 连接查询 or 字段比较查询，不等于查询，<>,例如 a <> b，a和b均为数据库字段
 	 * @param filterName
 	 * @param fieldName
 	 */
@@ -1554,7 +1553,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，属于查询，in
+	 * and 查询条件，属于查询，in
 	 * @param filterName
 	 * @param value
 	 */
@@ -1563,7 +1562,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，属于查询，in >> 接收可变参数
+	 * and 查询条件，属于查询，in >> 接收可变参数
 	 * @param filterName
 	 * @param value
 	 */
@@ -1572,7 +1571,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 查询条件，属于查询，in
+	 * 连接查询 and 查询条件，属于查询，in
 	 * @param filterName
 	 * @param value
 	 */
@@ -1581,7 +1580,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 查询条件，属于查询，in >> 接收可变参数
+	 * 连接查询 and 查询条件，属于查询，in >> 接收可变参数
 	 * @param filterName
 	 * @param value
 	 */
@@ -1590,7 +1589,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询条件，属于查询，in
+	 * or 查询条件，属于查询，in
 	 * @param filterName
 	 * @param value
 	 */
@@ -1599,7 +1598,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询条件，属于查询，in >> 接收可变参数
+	 * or 查询条件，属于查询，in >> 接收可变参数
 	 * @param filterName
 	 * @param value
 	 */
@@ -1608,7 +1607,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 查询条件，属于查询，in
+	 * 连接查询 or 查询条件，属于查询，in
 	 * @param filterName
 	 * @param value
 	 */
@@ -1617,7 +1616,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 查询条件，属于查询，in >> 接收可变参数
+	 * 连接查询 or 查询条件，属于查询，in >> 接收可变参数
 	 * @param filterName
 	 * @param value
 	 */
@@ -1626,7 +1625,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，不属于查询，not in
+	 * and 查询条件，不属于查询，not in
 	 * @param filterName
 	 * @param value
 	 */
@@ -1635,7 +1634,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，不属于查询，not in >> 接收可变参数
+	 * and 查询条件，不属于查询，not in >> 接收可变参数
 	 * @param filterName
 	 * @param value
 	 */
@@ -1644,7 +1643,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 查询条件，不属于查询，not in
+	 * 连接查询 and 查询条件，不属于查询，not in
 	 * @param filterName
 	 * @param value
 	 */
@@ -1653,7 +1652,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 查询条件，不属于查询，not in  >> 接收可变参数
+	 * 连接查询 and 查询条件，不属于查询，not in  >> 接收可变参数
 	 * @param filterName
 	 * @param value
 	 */
@@ -1662,7 +1661,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询条件，不属于查询，not in
+	 * or 查询条件，不属于查询，not in
 	 * @param filterName
 	 * @param value
 	 */
@@ -1671,7 +1670,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询条件，不属于查询，not in  >>  接收可变参数
+	 * or 查询条件，不属于查询，not in  >>  接收可变参数
 	 * @param filterName
 	 * @param value
 	 */
@@ -1680,7 +1679,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 查询条件，不属于查询，not in
+	 * 连接查询 or 查询条件，不属于查询，not in
 	 * @param filterName
 	 * @param value
 	 */
@@ -1689,7 +1688,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 查询条件，不属于查询，not in  >>  接收可变参数
+	 * 连接查询 or 查询条件，不属于查询，not in  >>  接收可变参数
 	 * @param filterName
 	 * @param value
 	 */
@@ -1698,7 +1697,64 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，表示null值查询，is null
+	 * in 嵌套子查询
+	 * @param filterName
+	 * @param provider
+	 */
+	public void inProvider(String filterName, QueryProvider provider) {
+		this.andFilter(filterName, FilterEnum.IN_PROVIDER, provider);
+	}
+
+	/**
+	 * or 关系的 in 嵌套子查询
+	 * @param filterName
+	 * @param provider
+	 */
+	public void orInProvider(String filterName, QueryProvider provider) {
+		this.or(filterName, FilterEnum.IN_PROVIDER, provider);
+	}
+
+	/**
+	 * 连接查询 in 嵌套子查询
+	 * @param filterName
+	 * @param provider
+	 */
+	public void onInProvider(String filterName, QueryProvider provider) {
+		this.andOnFilter(filterName, FilterEnum.IN_PROVIDER, provider);
+	}
+
+	/**
+	 * or 关系的 in 嵌套子查询
+	 * @param filterName
+	 * @param provider
+	 */
+	public void onOrInProvider(String filterName, QueryProvider provider) {
+		this.onOr(filterName, FilterEnum.IN_PROVIDER, provider);
+	}
+
+	/**
+	 * not in 嵌套子查询
+	 * @param filterName
+	 * @param provider
+	 */
+	public void notInProvider(String filterName, QueryProvider provider) {
+		this.andFilter(filterName, FilterEnum.NOT_IN_PROVIDER, provider);
+	}
+
+	public void orNotInProvider(String filterName, QueryProvider provider) {
+		this.or(filterName, FilterEnum.NOT_IN_PROVIDER, provider);
+	}
+
+	public void onNotInProvider(String filterName, QueryProvider provider) {
+		this.andOnFilter(filterName, FilterEnum.NOT_IN_PROVIDER, provider);
+	}
+
+	public void onOrNotInProvider(String filterName, QueryProvider provider) {
+		this.onOr(filterName, FilterEnum.NOT_IN_PROVIDER, provider);
+	}
+
+	/**
+	 * and 查询条件，表示null值查询，is null
 	 * @param filterName
 	 */
 	public void isNull(String filterName) {
@@ -1706,7 +1762,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 查询条件，表示null值查询，is null
+	 * 连接查询 and 查询条件，表示null值查询，is null
 	 * @param filterName
 	 */
 	public void onIsNull(String filterName) {
@@ -1714,7 +1770,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询条件，表示null值查询，is null
+	 * or 查询条件，表示null值查询，is null
 	 * @param filterName
 	 */
 	public void orIsNull(String filterName) {
@@ -1722,7 +1778,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 查询条件，表示null值查询，is null
+	 * 连接查询 or 查询条件，表示null值查询，is null
 	 * @param filterName
 	 */
 	public void onOrIsNull(String filterName) {
@@ -1730,7 +1786,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 查询条件，表示null值查询，is not null
+	 * and 查询条件，表示null值查询，is not null
 	 * @param filterName
 	 */
 	public void isNotNull(String filterName) {
@@ -1738,7 +1794,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 查询条件，表示null值查询，is not null
+	 * 连接查询 and 查询条件，表示null值查询，is not null
 	 * @param filterName
 	 */
 	public void onIsNotNull(String filterName) {
@@ -1746,7 +1802,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 查询条件，表示null值查询，is not null
+	 * or 查询条件，表示null值查询，is not null
 	 * @param filterName
 	 */
 	public void orIsNotNull(String filterName) {
@@ -1754,7 +1810,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 查询条件，表示null值查询，is not null
+	 * 连接查询 or 查询条件，表示null值查询，is not null
 	 * @param filterName
 	 */
 	public void onOrIsNotNull(String filterName) {
@@ -1762,7 +1818,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 设定值后大于条件判断，比如count + 10 > 0
+	 * and 设定值后大于条件判断，比如count + 10 > 0
 	 * @param filterName
 	 * @param value
 	 */
@@ -1771,7 +1827,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 设定值后大于条件判断，比如count + 10 > 0
+	 * 连接查询 and 设定值后大于条件判断，比如count + 10 > 0
 	 * @param filterName
 	 * @param value
 	 */
@@ -1780,7 +1836,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 设定值后大于条件判断，比如count + 10 > 0
+	 * or 设定值后大于条件判断，比如count + 10 > 0
 	 * @param filterName
 	 * @param value
 	 */
@@ -1789,7 +1845,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 设定值后大于条件判断，比如count + 10 > 0
+	 * 连接查询 or 设定值后大于条件判断，比如count + 10 > 0
 	 * @param filterName
 	 * @param value
 	 */
@@ -1798,7 +1854,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 设定值后大于等于条件判断，比如count + 10 >= 0
+	 * and 设定值后大于等于条件判断，比如count + 10 >= 0
 	 * @param filterName
 	 * @param value
 	 */
@@ -1807,7 +1863,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 设定值后大于等于条件判断，比如count + 10 >= 0
+	 * 连接查询 and 设定值后大于等于条件判断，比如count + 10 >= 0
 	 * @param filterName
 	 * @param value
 	 */
@@ -1816,7 +1872,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 设定值后大于等于条件判断，比如count + 10 >= 0
+	 * or 设定值后大于等于条件判断，比如count + 10 >= 0
 	 * @param filterName
 	 * @param value
 	 */
@@ -1825,7 +1881,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 设定值后大于等于条件判断，比如count + 10 >= 0
+	 * 连接查询 or 设定值后大于等于条件判断，比如count + 10 >= 0
 	 * @param filterName
 	 * @param value
 	 */
@@ -1834,7 +1890,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 and 设定值后大于条件判断，比如count + 10 > 0
+	 * and 设定值后大于条件判断，比如count + 10 > 0
 	 * @param filterName
 	 * @param value
 	 */
@@ -1843,7 +1899,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 and 设定值后大于条件判断，比如count + 10 > 0
+	 * 连接查询 and 设定值后大于条件判断，比如count + 10 > 0
 	 * @param filterName
 	 * @param value
 	 */
@@ -1852,7 +1908,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加 or 设定值后大于条件判断，比如count + 10 > 0
+	 * or 设定值后大于条件判断，比如count + 10 > 0
 	 * @param filterName
 	 * @param value
 	 */
@@ -1861,7 +1917,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加连接查询 or 设定值后大于条件判断，比如count + 10 > 0
+	 * 连接查询 or 设定值后大于条件判断，比如count + 10 > 0
 	 * @param filterName
 	 * @param value
 	 */
@@ -2017,7 +2073,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加排序，参数分别为排序字段，排序值，排序值类型参考 QueryParam 中 ORDER 开头的常量
+	 * 排序，参数分别为排序字段，排序值，排序值类型参考 QueryParam 中 ORDER 开头的常量
 	 * @param orderName
 	 * @param orderType
 	 */
@@ -2053,7 +2109,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加排序，参数分别为排序字段，排序值，排序值类型参考 QueryParam 中 ORDER 开头的常量
+	 * 排序，参数分别为排序字段，排序值，排序值类型参考 QueryParam 中 ORDER 开头的常量
 	 * @param orderName
 	 * @param orderType
 	 */
@@ -2070,7 +2126,7 @@ public class QueryProvider {
 
 
 	/**
-	 * 增加分组，根据字段名称进行分组
+	 * 分组，根据字段名称进行分组
 	 * @param groupName
 	 */
 	public void setGroup(String groupName) {
@@ -2078,7 +2134,7 @@ public class QueryProvider {
 	}
 
 	/**
-	 * 增加分组，支持一次性传入多个分组字段
+	 * 分组，支持一次性传入多个分组字段
 	 * @param groupNames
 	 */
 	public void setGroup(String...groupNames) {

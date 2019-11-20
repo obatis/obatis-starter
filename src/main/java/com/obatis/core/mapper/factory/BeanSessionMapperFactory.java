@@ -10,7 +10,7 @@ public class BeanSessionMapperFactory {
 	private BeanSessionMapperFactory() {}
 
 	public static BaseBeanSessionMapper<?> getSessionMapper(String canonicalName) throws HandleException {
-		
+
 		if(CacheInfoConstant.BEAN_SESSION_MAPPER.containsKey(canonicalName)) {
 			return CacheInfoConstant.BEAN_SESSION_MAPPER.get(canonicalName);
 		}
@@ -21,7 +21,7 @@ public class BeanSessionMapperFactory {
 
 	
 	public static synchronized void compileMapper(SqlSession sqlSession, String canonicalName) {
-		
+
 		if(CacheInfoConstant.BEAN_SESSION_MAPPER.containsKey(canonicalName)) {
 			return;
 		}
