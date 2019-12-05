@@ -557,14 +557,25 @@ public class QueryProvider {
 	 * 添加不需要查询的字段，主要针对实体泛型返回的查询中，如果字段被加入，则会在 SQL 中过滤。
 	 * @param fieldName
 	 */
+	@Deprecated
 	public void setNotField(String fieldName) {
+		selectNotField(fieldName);
+	}
+
+	/**
+	 * 添加不需要查询的字段，主要针对实体泛型返回的查询中，如果字段被加入，则会在 SQL 中过滤。
+	 * @param fieldName
+	 */
+	public void selectNotField(String...fieldName) {
 		if (ValidateTool.isEmpty(fieldName)) {
 			throw new HandleException("error: field is null");
 		}
 		if (this.notFields == null) {
 			this.notFields = new HashMap<>();
 		}
-		this.notFields.put(fieldName, fieldName);
+		for(String field : fieldName) {
+			this.notFields.put(field, field);
+		}
 	}
 
 	/**
@@ -645,13 +656,21 @@ public class QueryProvider {
 		}
 	}
 
+	/**
+	 * 检测是否重复添加条件
+	 * @param filterList
+	 * @param filterName
+	 * @param filterType
+	 * @param value
+	 * @param joinTypeEnum
+	 */
 	private void checkFilter(List<Object[]> filterList, String filterName, FilterEnum filterType, Object value, JoinTypeEnum joinTypeEnum) {
 		for (int i = 0, j = filterList.size(); i < j; i++) {
 			Object[] filter = filterList.get(i);
 			if(filter[0].toString().equals(filterName) && filterType.equals(filter[1]) && joinTypeEnum.equals(filter[3])) {
 				if(FilterEnum.IS_NULL.equals(filterType) || FilterEnum.IS_NOT_NULL.equals(filterType)) {
-					break;
-				} else if (value.equals(filter[2])) {
+					filterList.remove(i);
+				} else if (!value.equals(filter[2])) {
 					break;
 				} else {
 					filterList.remove(i);
