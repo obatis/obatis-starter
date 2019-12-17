@@ -56,6 +56,27 @@ public class QueryProvider {
 	private String tableAsNameSerialNumber;
 	private boolean selectNothingFlag;
 
+	/**
+	 * 通过静态方法获取QueryProvider代理类，效果与 QueryProvider provider = new QueryProvider() 一样
+	 * @return
+	 */
+	public static QueryProvider create() {
+		return create(null);
+	}
+
+	/**
+	 * 通过静态方法获取QueryProvider代理类，需传入表名称，该方法主要用于关联查询的代理
+	 * @param joinTableName
+	 * @return
+	 */
+	public static QueryProvider create(String joinTableName) {
+		QueryProvider provider = new QueryProvider();
+		if(!ValidateTool.isEmpty(joinTableName)) {
+			provider.setJoinTableName(joinTableName);
+		}
+		return provider;
+	}
+
 	public String getTableAsNameSerialNumber() {
 		if(tableAsNameSerialNumber == null) {
 			tableAsNameSerialNumber = NumberGenerator.getNumber().toString();
