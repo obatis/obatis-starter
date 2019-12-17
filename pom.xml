@@ -27,7 +27,7 @@
     <distributionManagement>
         <repository>
             <id>private-oss</id>
-            <url>http://139.9.81.33:8089/nexus/content/repositories/releases/</url>
+            <url>http://maven.gclasp.com/nexus/content/repositories/releases/</url>
         </repository>
     </distributionManagement>
 
@@ -135,7 +135,7 @@
         <dependency>
             <groupId>com.obatis</groupId>
             <artifactId>obatis-web</artifactId>
-            <version>1.1.10.1</version>
+            <version>1.1.10.2</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>

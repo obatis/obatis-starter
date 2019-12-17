@@ -10,7 +10,6 @@ public class TableIndexCache {
     }
 
     private Map<String, String> tableAsNameMap = new HashMap<>();
-//    private Map<String, String> tableNameMap = new HashMap<>();
 
     private int index;
 
@@ -29,7 +28,6 @@ public class TableIndexCache {
         }
 
         setIndex(index + 1);
-//        return "t_" + getIndex();
 
         String tableAsName = "t_" + getIndex();
         tableAsNameMap.put(tableAsNameSerialNumber, tableAsName);
