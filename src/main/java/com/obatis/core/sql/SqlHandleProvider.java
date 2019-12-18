@@ -110,6 +110,14 @@ public class SqlHandleProvider {
 		return sqlHandleMethod.getSelectSql(providers, tableName);
 	}
 
+	/**
+	 * 查询数据，自动追加 limit 关键字
+	 * @param providers
+	 * @param top
+	 * @param tableName
+	 * @return
+	 * @throws HandleException
+	 */
 	public static String getSelectTopSql(Map<String, Object> providers, int top, String tableName) throws HandleException {
 		return sqlHandleMethod.getSelectSql(providers, tableName) + " limit " + top;
 	}

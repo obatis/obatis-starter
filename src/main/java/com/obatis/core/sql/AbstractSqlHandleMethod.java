@@ -6,8 +6,10 @@ import com.obatis.core.constant.SqlConstant;
 import com.obatis.core.constant.type.FilterEnum;
 import com.obatis.core.constant.type.JoinTypeEnum;
 import com.obatis.core.constant.type.SqlHandleEnum;
+import com.obatis.core.constant.type.UnionEnum;
 import com.obatis.core.exception.HandleException;
 import com.obatis.validate.ValidateTool;
+import com.sun.xml.internal.xsom.impl.UName;
 import org.apache.ibatis.jdbc.SQL;
 
 import java.lang.reflect.Array;
@@ -227,7 +229,7 @@ public abstract class AbstractSqlHandleMethod {
 			case NOT_IN_PROVIDER:
 				sql = getHandleField(cache, tableAliasNamePrefix, field, columnMap, fieldMap) + getFilterType(filterType);
 				QueryProvider childProvider = (QueryProvider) filterValue;
-				sql += "(" + this.getSelectSql(cache, childProvider, value, childProvider.getJoinTableName()) + ")";
+				sql += "(" + this.getSelectSql(cache, childProvider, value, childProvider.getJoinTableName(), index + "_s") + ")";
 				break;
 			case UP_GREATER_THAN:
 				sql = getAgFunction(cache, tableAliasNamePrefix, field, fieldMap, columnMap) + " + " + expression + ">0";
@@ -432,7 +434,7 @@ public abstract class AbstractSqlHandleMethod {
 		QueryProvider queryProvider = (QueryProvider) param.get(SqlConstant.PROVIDER_OBJ);
 		TableIndexCache cache = new TableIndexCache();
 		Map<String, Object> value = new HashMap<>();
-		String sql = this.getSelectSql(cache, queryProvider, value, tableName);
+		String sql = this.getSelectSql(cache, queryProvider, value, tableName, INDEX_DEFAULT);
 
 		if(!value.isEmpty()) {
 			// 放入值到map
@@ -450,7 +452,7 @@ public abstract class AbstractSqlHandleMethod {
 	 * @return
 	 * @throws HandleException
 	 */
-	private String getSelectSql(TableIndexCache cache, QueryProvider queryProvider, Map<String, Object> value, String tableName) throws HandleException {
+	private String getSelectSql(TableIndexCache cache, QueryProvider queryProvider, Map<String, Object> value, String tableName, String index) throws HandleException {
 
 //		QueryProvider queryProvider = (QueryProvider) param.get(SqlConstant.PROVIDER_OBJ);
 		Map<String, String> columnMap = CacheInfoConstant.COLUMN_CACHE.get(tableName);
@@ -466,21 +468,21 @@ public abstract class AbstractSqlHandleMethod {
 		List<String> groups = new ArrayList<>();
 		StringBuffer havingFilterSql = new StringBuffer();
 		List<String> orders = new ArrayList<>();
-		sql.FROM(tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column, groups, havingFilterSql, orders, fieldMap, columnMap));
+		sql.FROM(tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, index + "_cl", leftJoinFilterSql, column, groups, havingFilterSql, orders, fieldMap, columnMap));
 		sql.SELECT(String.join(",", column));
 		// 构建 group by 语句
 		this.addGroupBy(groups, tableAliasName, columnMap, queryProvider);
 		/**
 		 * 拼装 having 字句
 		 */
-		this.addHaving(havingFilterSql, queryProvider.getHavings(), cache, tableAliasName, INDEX_DEFAULT + "_gh", fieldMap, columnMap, value);
+		this.addHaving(havingFilterSql, queryProvider.getHavings(), cache, tableAliasName, index + "_gh", fieldMap, columnMap, value);
 		this.addOrder(orders, cache, tableAliasName, fieldMap, columnMap, queryProvider);
 
 		StringBuffer filterSqlBuffer = new StringBuffer();
 		List<Object[]> filters = queryProvider.getFilters();
 		if ((filters != null && !filters.isEmpty()) || (queryProvider.getAddProviders() != null && !queryProvider.getAddProviders().isEmpty())) {
 			String filterSql = getFilterSql(cache, tableAliasName, filters, queryProvider.getAddProviders(), value,
-					INDEX_DEFAULT + "_tl", columnMap, fieldMap, DEFAULT_FIND);
+					index + "_tl", columnMap, fieldMap, DEFAULT_FIND);
 			if(!ValidateTool.isEmpty(filterSql)) {
 				filterSqlBuffer.append(filterSql);
 			}
@@ -513,10 +515,22 @@ public abstract class AbstractSqlHandleMethod {
 			sql.ORDER_BY(orders.toArray(new String[orders.size()]));
 		}
 
+		if(queryProvider.getUnionProviders() != null && !queryProvider.getUnionProviders().isEmpty()) {
+			StringBuffer unionSql = new StringBuffer();
+			for (Object[] obj : queryProvider.getUnionProviders()) {
+				UnionEnum unionEnum = (UnionEnum) obj[0];
+				QueryProvider unionProvider = (QueryProvider) obj[1];
+				unionSql.append(unionEnum.getUnionType() + this.getSelectSql(cache, unionProvider, value, unionProvider.getJoinTableName(), index + "_un"));
+			}
+			return sql.toString() + unionSql.toString();
+		} else {
+			return sql.toString();
+		}
+
 //		if (PageEnum.IS_PAGE_TRUE == queryProvider.getIsPage()) {
 //			return appendPageSql(sql.toString(), queryProvider.getPageNumber(), queryProvider.getPageSize());
 //		}
-		return sql.toString();
+//		return sql.toString();
 	}
 
 	public String getValidateSql(Map<String, Object> param, String tableName) throws HandleException {

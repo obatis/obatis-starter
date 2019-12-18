@@ -4,10 +4,7 @@ import com.obatis.config.request.PageParam;
 import com.obatis.config.request.RequestConstant;
 import com.obatis.config.request.RequestParam;
 import com.obatis.core.constant.CacheInfoConstant;
-import com.obatis.core.constant.type.FilterEnum;
-import com.obatis.core.constant.type.JoinTypeEnum;
-import com.obatis.core.constant.type.OrderEnum;
-import com.obatis.core.constant.type.SqlHandleEnum;
+import com.obatis.core.constant.type.*;
 import com.obatis.core.convert.BeanCacheConvert;
 import com.obatis.core.exception.HandleException;
 import com.obatis.core.generator.NumberGenerator;
@@ -52,6 +49,8 @@ public class QueryProvider {
 	private List<Object[]> leftJoinProviders;
 	private String joinTableName;
 	private List<Object[]> onFilters;
+	// 连接查询 QueryProvider
+	private List<Object[]> unionProviders;
 
 	private String tableAsNameSerialNumber;
 	private boolean selectNothingFlag;
@@ -154,6 +153,10 @@ public class QueryProvider {
 		return selectNothingFlag;
 	}
 
+	public List<Object[]> getUnionProviders() {
+		return unionProviders;
+	}
+
 	/**
 	 * 设置连接查询时 QueryProvider 属性表名，如果只是简单常规单表查询，即使设置了也无效。 目前主要支持 left join
 	 * @param joinTableName
@@ -163,6 +166,37 @@ public class QueryProvider {
 			throw new HandleException("error: joinTableName is null");
 		}
 		this.joinTableName = joinTableName;
+	}
+
+	/**
+	 * 添加 union all 连接查询
+	 * @param queryProvider
+	 */
+	public void setUnionProvider(QueryProvider queryProvider) {
+		// 默认使用 union all 连接
+		this.setUnionProvider(queryProvider, UnionEnum.UNION_ALL);
+	}
+
+	/**
+	 * 添加 union all 连接查询
+	 * @param queryProvider
+	 */
+	public void setUnionProvider(QueryProvider queryProvider, UnionEnum unionEnum) {
+		if (queryProvider == null) {
+			throw new HandleException("error: union queryProvider can't null");
+		}
+		if (ValidateTool.isEmpty(queryProvider.getJoinTableName())) {
+			throw new HandleException("error: union queryProvider joinTableName is null");
+		}
+		if(queryProvider == this) {
+			throw new HandleException("error: union queryProvider is same");
+		}
+
+		if(this.unionProviders == null) {
+			this.unionProviders = new ArrayList<>();
+		}
+		Object[] unionProvider = {unionEnum, queryProvider};
+		this.unionProviders.add(unionProvider);
 	}
 
 	/**
@@ -224,7 +258,7 @@ public class QueryProvider {
 	 */
 	@Deprecated
 	public void addCount() {
-		this.selectCount("count");
+		this.selectCount();
 	}
 
 	/**
@@ -619,6 +653,13 @@ public class QueryProvider {
 		this.addFilter(filterName, filterType, value, JoinTypeEnum.AND);
 	}
 
+	/**
+	 * 添加查询条件，带表达式格式
+	 * @param filterName
+	 * @param filterType
+	 * @param value
+	 * @param pattern
+	 */
 	private void andFilter(String filterName, FilterEnum filterType, Object value, String pattern) {
 		this.addFilter(filterName, filterType, value, JoinTypeEnum.AND, pattern);
 	}
@@ -656,6 +697,14 @@ public class QueryProvider {
 		this.addFilter(filterName, filterType, value, joinTypeEnum, null);
 	}
 
+	/**
+	 * 添加 Filter 条件
+	 * @param filterName
+	 * @param filterType
+	 * @param value
+	 * @param joinTypeEnum
+	 * @param pattern
+	 */
 	private void addFilter(String filterName, FilterEnum filterType, Object value, JoinTypeEnum joinTypeEnum, String pattern) {
 		if (ValidateTool.isEmpty(filterName)) {
 			throw new HandleException("error: filter field is null");

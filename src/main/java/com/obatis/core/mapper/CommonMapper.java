@@ -37,13 +37,16 @@ public interface CommonMapper<R> {
     List<R> page(String sql, @Param("request") Map<String, Object> params);
 
     @SelectProvider(type = SqlProvider.class, method = "find")
+    List<Integer> listInteger(@Param("request") Map<String, Object> params, String tableName);
+
+    @SelectProvider(type = SqlProvider.class, method = "find")
     List<BigInteger> listBigInteger(@Param("request") Map<String, Object> params, String tableName);
 
     @SelectProvider(type = SqlProvider.class, method = "find")
-    List<BigDecimal> listBigDecimal(@Param("request") Map<String, Object> params, String tableName);
+    List<Long> listLong(@Param("request") Map<String, Object> params, String tableName);
 
     @SelectProvider(type = SqlProvider.class, method = "find")
-    List<Integer> listInteger(@Param("request") Map<String, Object> params, String tableName);
+    List<BigDecimal> listBigDecimal(@Param("request") Map<String, Object> params, String tableName);
 
     @SelectProvider(type = SqlProvider.class, method = "find")
     List<String> listString(@Param("request") Map<String, Object> params, String tableName);

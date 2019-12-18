@@ -366,30 +366,66 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 		return this.getBaseBeanSessionMapper().query(paramMap, this.getTableName());
 	}
 
-	public List<BigInteger> listBigInteger(QueryProvider provider) {
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().listBigInteger(paramMap, this.getTableName());
-	}
-
-	public List<BigDecimal> listBigDecimal(QueryProvider provider) {
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().listBigDecimal(paramMap, this.getTableName());
-	}
-
+	/**
+	 * 查询单个字段返回 List<Integer> 数据
+	 * @param provider
+	 * @return
+	 */
 	public List<Integer> listInteger(QueryProvider provider) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
 		return this.getBaseBeanSessionMapper().listInteger(paramMap, this.getTableName());
 	}
 
+	/**
+	 * 查询单个字段返回 List<BigInteger> 数据
+	 * @param provider
+	 * @return
+	 */
+	public List<BigInteger> listBigInteger(QueryProvider provider) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
+		return this.getBaseBeanSessionMapper().listBigInteger(paramMap, this.getTableName());
+	}
+
+	/**
+	 * 查询单个字段返回 List<Long> 数据
+	 * @param provider
+	 * @return
+	 */
+	public List<Long> listLong(QueryProvider provider) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
+		return this.getBaseBeanSessionMapper().listLong(paramMap, this.getTableName());
+	}
+
+	/**
+	 * 查询单个字段返回 List<BigDecimal> 数据
+	 * @param provider
+	 * @return
+	 */
+	public List<BigDecimal> listBigDecimal(QueryProvider provider) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
+		return this.getBaseBeanSessionMapper().listBigDecimal(paramMap, this.getTableName());
+	}
+
+	/**
+	 * 查询单个字段返回 List<String> 数据
+	 * @param provider
+	 * @return
+	 */
 	public List<String> listString(QueryProvider provider) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
 		return this.getBaseBeanSessionMapper().listString(paramMap, this.getTableName());
 	}
 
+	/**
+	 * 查询单个字段返回 List<Date> 数据
+	 * @param provider
+	 * @return
+	 */
 	public List<Date> listDate(QueryProvider provider) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
@@ -397,25 +433,23 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	}
 
 	/**
-	 * 根据传入的 QueryProvider 对象，返回BigDecimal的类型值。 该方法常用于查询金额字段。
+	 * 根据传入的 QueryProvider 对象，返回int的类型值。 该方法常用于查询count等类型的业务。
 	 * 如果根据条件有多条数据符合，则抛出异常。
 	 * @param provider
 	 * @return
 	 */
-	public BigDecimal findBigDecimal(QueryProvider provider) {
+	public int findInt(QueryProvider provider) {
 		Object obj = this.findObject(provider);
 		if (obj != null) {
-			if(obj instanceof BigDecimal) {
-				return (BigDecimal) obj;
-			} else if (obj instanceof String) {
-				return CommonConvert.convert((String) obj);
-			} else if (obj instanceof Integer) {
-				return CommonConvert.convert((Integer) obj);
+			if(obj instanceof Integer) {
+				return (int) obj;
+			} else if(obj instanceof Long) {
+				return ((Long) obj).intValue();
 			} else {
-				return CommonConvert.convert(obj.toString());
+				return Integer.parseInt(CommonConvert.toString(obj));
 			}
 		}
-		return BigDecimal.ZERO;
+		return 0;
 	}
 
 	/**
@@ -441,26 +475,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * 根据传入的 QueryProvider 对象，返回int的类型值。 该方法常用于查询count等类型的业务。
-	 * 如果根据条件有多条数据符合，则抛出异常。
-	 * @param provider
-	 * @return
-	 */
-	public int findInt(QueryProvider provider) {
-		Object obj = this.findObject(provider);
-		if (obj != null) {
-			if(obj instanceof Integer) {
-				return (int) obj;
-			} else if(obj instanceof Long) {
-				return ((Long) obj).intValue();
-			} else {
-				return Integer.parseInt(CommonConvert.toString(obj));
-			}
-		}
-		return 0;
 	}
 
 	/**
@@ -509,6 +523,28 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 			}
 		}
 		return 0D;
+	}
+
+	/**
+	 * 根据传入的 QueryProvider 对象，返回BigDecimal的类型值。 该方法常用于查询金额字段。
+	 * 如果根据条件有多条数据符合，则抛出异常。
+	 * @param provider
+	 * @return
+	 */
+	public BigDecimal findBigDecimal(QueryProvider provider) {
+		Object obj = this.findObject(provider);
+		if (obj != null) {
+			if(obj instanceof BigDecimal) {
+				return (BigDecimal) obj;
+			} else if (obj instanceof String) {
+				return CommonConvert.convert((String) obj);
+			} else if (obj instanceof Integer) {
+				return CommonConvert.convert((Integer) obj);
+			} else {
+				return CommonConvert.convert(obj.toString());
+			}
+		}
+		return BigDecimal.ZERO;
 	}
 
 	/**
@@ -631,7 +667,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 		return this.getBaseBeanSessionMapper().listMapBySql(sql, params);
 	}
 
-
 	/**
 	 * 主要实现于在前端查询时选中的页面超过总条数，非前端分页查询，不建议使用。
 	 * 分页查询，同时返回分页数据和总条数。
@@ -703,7 +738,6 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 		return page;
 	}
 
-
 	/**
 	 * 主要实现于在前端查询时选中的页面超过总条数，非前端分页查询，不建议使用。
 	 * 分页查询，同时返回分页数据和总条数。
@@ -735,7 +769,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * 分页查询，同时返回分页数据和总条数。
 	 * @param provider       封装的参数对象
 	 * @param resultCls      返回 预定义的 resultCls Bean 泛型数据类型
-	 * @return 
+	 * @return
 	 */
 	public <M extends ResultInfoOutput> PageInfo<M> page(QueryProvider provider, Class<M> resultCls) {
 		Map<String, Object> paramMap = new HashMap<>();
@@ -758,12 +792,12 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 		return page;
 	}
 
-	private long getPages(long total, int pageSize) {
-		long pages = total / pageSize;
-		if (total % pageSize != 0) {
-			pages += 1;
-		}
-		return pages;
-	}
+//	private long getPages(long total, int pageSize) {
+//		long pages = total / pageSize;
+//		if (total % pageSize != 0) {
+//			pages += 1;
+//		}
+//		return pages;
+//	}
 
 }
