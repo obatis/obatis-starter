@@ -10,7 +10,7 @@ import com.obatis.core.exception.HandleException;
 import com.obatis.core.generator.NumberGenerator;
 import com.obatis.core.result.ResultInfoOutput;
 import com.obatis.core.sql.mysql.HandleOrderMethod;
-import com.obatis.validate.ValidateTool;
+import com.obatis.tools.ValidateTool;
 
 import java.util.ArrayList;
 import java.util.HashMap;

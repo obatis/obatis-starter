@@ -12,7 +12,7 @@ import com.obatis.core.mapper.factory.ResultSessionMapperFactory;
 import com.obatis.core.result.ResultInfoOutput;
 import com.obatis.core.sql.QueryProvider;
 import com.obatis.core.sql.SqlHandleProvider;
-import com.obatis.validate.ValidateTool;
+import com.obatis.tools.ValidateTool;
 
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;

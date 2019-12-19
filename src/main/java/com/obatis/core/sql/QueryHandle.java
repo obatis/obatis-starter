@@ -7,7 +7,7 @@ import com.obatis.core.constant.type.DateHandleEnum;
 import com.obatis.core.constant.type.FilterEnum;
 import com.obatis.core.constant.type.SqlHandleEnum;
 import com.obatis.core.exception.HandleException;
-import com.obatis.validate.ValidateTool;
+import com.obatis.tools.ValidateTool;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

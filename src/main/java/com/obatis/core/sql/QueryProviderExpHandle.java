@@ -1,7 +1,7 @@
 package com.obatis.core.sql;
 
 import com.obatis.core.exception.HandleException;
-import com.obatis.validate.ValidateTool;
+import com.obatis.tools.ValidateTool;
 
 public class QueryProviderExpHandle {
 

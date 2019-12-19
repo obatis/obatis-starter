@@ -8,7 +8,7 @@ import com.obatis.core.constant.type.JoinTypeEnum;
 import com.obatis.core.constant.type.SqlHandleEnum;
 import com.obatis.core.constant.type.UnionEnum;
 import com.obatis.core.exception.HandleException;
-import com.obatis.validate.ValidateTool;
+import com.obatis.tools.ValidateTool;
 import org.apache.ibatis.jdbc.SQL;
 
 import java.lang.reflect.Array;

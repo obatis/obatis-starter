@@ -13,7 +13,7 @@ import com.obatis.core.annotation.NotColumn;
 import com.obatis.core.constant.CacheInfoConstant;
 import com.obatis.core.constant.SqlConstant;
 import com.obatis.core.exception.HandleException;
-import com.obatis.validate.ValidateTool;
+import com.obatis.tools.ValidateTool;
 
 /**
  * 初始化表对应实体的表名和属性对应字段

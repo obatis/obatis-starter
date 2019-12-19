@@ -9,7 +9,7 @@ import com.obatis.core.exception.HandleException;
 import com.obatis.core.generator.NumberGenerator;
 import com.obatis.core.sql.AbstractInsertMethod;
 import com.obatis.core.constant.CacheInfoConstant;
-import com.obatis.validate.ValidateTool;
+import com.obatis.tools.ValidateTool;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
