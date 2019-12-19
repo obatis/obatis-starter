@@ -9,7 +9,6 @@ import com.obatis.core.constant.type.SqlHandleEnum;
 import com.obatis.core.constant.type.UnionEnum;
 import com.obatis.core.exception.HandleException;
 import com.obatis.validate.ValidateTool;
-import com.sun.xml.internal.xsom.impl.UName;
 import org.apache.ibatis.jdbc.SQL;
 
 import java.lang.reflect.Array;
