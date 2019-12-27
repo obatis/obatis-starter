@@ -2252,7 +2252,7 @@ public class QueryProvider {
         /**
          *  判断传入的分组字段是否包含特殊字符
          */
-        String regExp = "[~!/@#$%^&*()=+\\|[{}];:\'\",<.>/?]+";
+        String regExp = "[~!/@$%^&*()=+\\|[{}];:\'\",<>/?]+";
         Pattern p = Pattern.compile(regExp);
         Matcher m = p.matcher(groupName);
         if(m.find()) {

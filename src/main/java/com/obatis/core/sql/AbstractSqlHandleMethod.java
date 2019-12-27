@@ -468,7 +468,7 @@ public abstract class AbstractSqlHandleMethod {
 		sql.FROM(tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, index + "_cl", leftJoinFilterSql, column, groups, havingFilterSql, orders, fieldMap, columnMap));
 		sql.SELECT(String.join(",", column));
 		// 构建 group by 语句
-		this.addGroupBy(groups, tableAliasName, columnMap, queryProvider);
+		this.addGroupBy(cache, groups, tableAliasName, columnMap, queryProvider);
 		/**
 		 * 拼装 having 字句
 		 */
@@ -549,7 +549,7 @@ public abstract class AbstractSqlHandleMethod {
 		sql.FROM(table);
 
 		// 处理 group by 语句
-		this.addGroupBy(groups, tableAliasName, columnMap, queryProvider);
+		this.addGroupBy(cache, groups, tableAliasName, columnMap, queryProvider);
 		/**
 		 * 拼装 having 字句
 		 */
@@ -595,18 +595,30 @@ public abstract class AbstractSqlHandleMethod {
 		return sql.toString();
 	}
 
-	private void addGroupBy(List<String> groups, String tableAsName, Map<String, String> columnMap, QueryProvider queryProvider) {
+	private void addGroupBy(TableIndexCache cache, List<String> groups, String tableAsName, Map<String, String> columnMap, QueryProvider queryProvider) {
 		List<Object[]> queryGroup = queryProvider.getGroups();
 		if (queryGroup != null && !queryGroup.isEmpty()) {
 			for (Object[] groupArray : queryGroup) {
 				SqlHandleEnum handleEnum = (SqlHandleEnum) groupArray[1];
 				String fieldName = getField(groupArray[0].toString(), columnMap);
+				String tempTableAsName;
+				String tempFieldName;
+				if(fieldName.startsWith(CacheInfoConstant.TABLE_AS_START_PREFIX)) {
+					// 说明带有自定义别名
+					// #tas_201919999.name
+					String[] fieldArray = fieldName.split("[.]");
+					tempTableAsName = getTableAsName(cache, fieldArray[0].substring(fieldArray[0].indexOf("_") + 1));
+					tempFieldName = fieldArray[1];
+				} else {
+					tempTableAsName = tableAsName;
+					tempFieldName = fieldName;
+				}
 				switch (handleEnum) {
 					case HANDLE_DEFAULT:
-						groups.add(tableAsName + "." + fieldName);
+						groups.add(tempTableAsName + "." + tempFieldName);
 						break;
 					case HANDLE_DATE_FORMAT:
-						groups.add("DATE_FORMAT(" + tableAsName + "." + fieldName + ",'" + groupArray[2] + "')");
+						groups.add("DATE_FORMAT(" + tempTableAsName + "." + tempFieldName + ",'" + groupArray[2] + "')");
 						break;
 					default:
 						break;
@@ -669,16 +681,29 @@ public abstract class AbstractSqlHandleMethod {
 					fieldName = orderArray[0].toString();
 				}
 
+				String tempTableAsName;
+				String tempFieldName;
+				if(fieldName.startsWith(CacheInfoConstant.TABLE_AS_START_PREFIX)) {
+					// 说明带有自定义别名
+					// #tas_201919999.name
+					String[] fieldArray = fieldName.split("[.]");
+					tempTableAsName = getTableAsName(cache, fieldArray[0].substring(fieldArray[0].indexOf("_") + 1));
+					tempFieldName = fieldArray[1];
+				} else {
+					tempTableAsName = tableAliasName;
+					tempFieldName = fieldName;
+				}
+
 				SqlHandleEnum sqlHandleEnum = (SqlHandleEnum) orderArray[2];
 				switch (sqlHandleEnum) {
 					case HANDLE_DEFAULT:
-						orders.add(tableAliasName + "." + fieldName + " " + orderArray[1]);
+						orders.add(tempTableAsName + "." + tempFieldName + " " + orderArray[1]);
 						break;
 					case HANDLE_SUM:
-						orders.add("sum(" + tableAliasName + "." + fieldName + ") " + orderArray[1]);
+						orders.add("sum(" + tempTableAsName + "." + tempFieldName + ") " + orderArray[1]);
 						break;
 					case HANDLE_AVG:
-						orders.add("avg(" + tableAliasName + "." + fieldName + ") " + orderArray[1]);
+						orders.add("avg(" + tempTableAsName + "." + tempFieldName + ") " + orderArray[1]);
 						break;
 					case HANDLE_EXP:
 						orders.add(getAgFunction(cache, tableAliasName, fieldName, fieldMap, columnMap) + " " + orderArray[1]);
@@ -735,7 +760,7 @@ public abstract class AbstractSqlHandleMethod {
 				getSelectFieldColumns(childParam, cache, connectTableAliasName, childColumnMap, childFieldMap, column);
 			}
 
-			this.addGroupBy(groups, connectTableAliasName, childColumnMap, childParam);
+			this.addGroupBy(cache, groups, connectTableAliasName, childColumnMap, childParam);
 			/**
 			 * 解析 having 字句
 			 */
@@ -1233,7 +1258,7 @@ public abstract class AbstractSqlHandleMethod {
 		totalSql.SELECT("count(1)");
 		totalSql.FROM(fromTable);
 
-		this.addGroupBy(groups, tableAliasName, columnMap, queryProvider);
+		this.addGroupBy(cache, groups, tableAliasName, columnMap, queryProvider);
 		/**
 		 * 拼装 having 字句
 		 */

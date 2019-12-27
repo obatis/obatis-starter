@@ -20,7 +20,7 @@ public class HandleOrderMethod extends AbstractOrder {
 	 */
 	@Override
 	protected void addOrder(List<Object[]> orders, String orderName, OrderEnum orderType, SqlHandleEnum sqlHandleEnum) {
-		Object[] order = {"`" + orderName + "` ", (OrderEnum.ORDER_ASC.equals(orderType) ? "asc" : "desc"), sqlHandleEnum};
+		Object[] order = {orderName, (OrderEnum.ORDER_ASC.equals(orderType) ? "asc" : "desc"), sqlHandleEnum};
 		orders.add(order);
 	}
 
