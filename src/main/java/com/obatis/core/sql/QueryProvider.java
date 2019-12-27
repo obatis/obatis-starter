@@ -201,9 +201,11 @@ public class QueryProvider {
 
 	/**
 	 * 添加字段方法，接收一个参数，此方法主要用于查询 传入的值表示为要查询的字段名称
+	 * 该方法于2019年12月25日标注过期，由新提供的select方法替代
 	 * @param fieldName
 	 * @throws HandleException
 	 */
+	@Deprecated
 	public void set(String fieldName) throws HandleException {
 		this.set(fieldName, null);
 	}

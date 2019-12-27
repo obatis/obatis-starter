@@ -168,8 +168,8 @@ public abstract class AbstractSqlHandleMethod {
 	 * @return
 	 * @throws HandleException
 	 */
-	private String getFilterSql(TableIndexCache cache, String tableAliasName, List<Object[]> filters, Map<String, Object> value, String index, Map<String, String> columnMap, Map<String, String> fieldMap) throws HandleException {
-		return getFilterSql(cache, tableAliasName, filters, null, value, index, columnMap, fieldMap, DEFAULT_FIND);
+	private String getFilterSql(TableIndexCache cache, String tableAliasName, List<Object[]> filters, List<Object[]> addProviders, Map<String, Object> value, String index, Map<String, String> columnMap, Map<String, String> fieldMap) throws HandleException {
+		return getFilterSql(cache, tableAliasName, filters, addProviders, value, index, columnMap, fieldMap, DEFAULT_FIND);
 	}
 
 	/**
@@ -179,9 +179,7 @@ public abstract class AbstractSqlHandleMethod {
 	 * @return
 	 * @throws HandleException
 	 */
-	private String getFilterSql(TableIndexCache cache, String tableAliasName, List<Object[]> filters,
-			List<Object[]> addProviders, Map<String, Object> value, String index, Map<String, String> columnMap, Map<String, String> fieldMap,
-			int findType) throws HandleException {
+	private String getFilterSql(TableIndexCache cache, String tableAliasName, List<Object[]> filters, List<Object[]> addProviders, Map<String, Object> value, String index, Map<String, String> columnMap, Map<String, String> fieldMap, int findType) throws HandleException {
 		int filtersLen = 0;
 		if (filters != null && !filters.isEmpty()) {
 			filtersLen = filters.size();
@@ -748,14 +746,14 @@ public abstract class AbstractSqlHandleMethod {
 
 			List<Object[]> onFilters = childParam.getOnFilters();
 			if((onFilters != null && !onFilters.isEmpty())) {
-				String onFilterSql = this.getFilterSql(cache, connectTableAliasName, onFilters, value, index + "_ofl_" + l, childColumnMap, childFieldMap);
+				String onFilterSql = this.getFilterSql(cache, connectTableAliasName, onFilters,  null, value, index + "_ofl_" + l, childColumnMap, childFieldMap);
 				if(!ValidateTool.isEmpty(onFilterSql)) {
 					sql.append(JoinTypeEnum.AND.getJoinTypeName() + onFilterSql);
 				}
 			}
 
 			if((childParam.getFilters() != null && !childParam.getFilters().isEmpty()) || (childParam.getAddProviders() != null && !childParam.getAddProviders().isEmpty())) {
-				String filterSql = this.getFilterSql(cache, connectTableAliasName, childParam.getFilters(), value, index + "_fl" + l, childColumnMap, childFieldMap);
+				String filterSql = this.getFilterSql(cache, connectTableAliasName, childParam.getFilters(), childParam.getAddProviders(), value, index + "_fl" + l, childColumnMap, childFieldMap);
 				if(ValidateTool.isEmpty(leftJoinFilterSql.toString())) {
 					leftJoinFilterSql.append(filterSql);
 				} else {
@@ -1221,12 +1219,12 @@ public abstract class AbstractSqlHandleMethod {
 		getSelectFieldColumns(queryProvider, cache, tableAliasName, columnMap, fieldMap, column);
 		Map<String, Object> value = new HashMap<>();
 
-		StringBuffer leftJoinFilterSql = new StringBuffer();
 		// 构造 group by 语句
 		List<String> groups = new ArrayList<>();
 		StringBuffer havingFilterSql = new StringBuffer();
 		// 构造order by 语句
 		List<String> orders = new ArrayList<>();
+		StringBuffer leftJoinFilterSql = new StringBuffer();
 		String fromTable = tableName + " " + tableAliasName + getLeftJoinTable(cache, tableAliasName, queryProvider.getLeftJoinProviders(), value, INDEX_DEFAULT + "_cl", leftJoinFilterSql, column, groups, havingFilterSql, orders, fieldMap, columnMap);
 		sql.SELECT(String.join(",", column));
 		sql.FROM(fromTable);
