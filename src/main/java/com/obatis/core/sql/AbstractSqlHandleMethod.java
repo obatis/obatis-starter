@@ -351,7 +351,7 @@ public abstract class AbstractSqlHandleMethod {
 	}
 
 	/**
-	 * in 查询参数处理
+	 * in 查询参数处理，目前in查询仅数组、集合、map、String，其他类型一律当String类型处理
 	 * @param obj
 	 * @param key
 	 * @param param
@@ -365,6 +365,7 @@ public abstract class AbstractSqlHandleMethod {
 
 		// 由于in查询能够接收多种类型的数据，需要做处理
 		if (obj.getClass().isArray()) {
+			// 表示是数组
 			return modifyArrInFilter(obj, key, param);
 		} else if (obj instanceof Collection<?>) {
 			// 表示为集合
@@ -378,6 +379,9 @@ public abstract class AbstractSqlHandleMethod {
 			} else {
 				return modifyOneInFilter(obj, key, param);
 			}
+		}  else if (obj instanceof Map) {
+			Object[] vue = ((Map) obj).values().toArray();
+			return modifyArrInFilter(vue, key, param);
 		} else {
 			// 其他
 			return modifyOneInFilter(obj, key, param);
