@@ -18,8 +18,8 @@ public interface CommonMapper<R> {
     @SelectProvider(type = SqlProvider.class, method = "findOne")
     R findOne(@Param("request") Map<String, Object> param, String tableName);
 
-    @SelectProvider(type = SqlProvider.class, method = "listTop")
-    List<R> listTop(@Param("request") Map<String, Object> param, int top, String tableName);
+    @SelectProvider(type = SqlProvider.class, method = "list")
+    List<R> listLimit(@Param("request") Map<String, Object> param, int limit, String tableName);
 
     @SelectProvider(type = SqlProvider.class, method = "find")
     List<R> list(@Param("request") Map<String, Object> param, String tableName);
@@ -36,21 +36,24 @@ public interface CommonMapper<R> {
     @SelectProvider(type = SqlProvider.class, method = "pageSql")
     List<R> page(String sql, @Param("request") Map<String, Object> params);
 
-    @SelectProvider(type = SqlProvider.class, method = "find")
-    List<Integer> listInteger(@Param("request") Map<String, Object> params, String tableName);
+    @SelectProvider(type = SqlProvider.class, method = "findLimit")
+    List<Integer> listInteger(@Param("request") Map<String, Object> params, int limit, String tableName);
 
-    @SelectProvider(type = SqlProvider.class, method = "find")
-    List<BigInteger> listBigInteger(@Param("request") Map<String, Object> params, String tableName);
+    @SelectProvider(type = SqlProvider.class, method = "findLimit")
+    List<BigInteger> listBigInteger(@Param("request") Map<String, Object> params, int limit, String tableName);
 
-    @SelectProvider(type = SqlProvider.class, method = "find")
-    List<Long> listLong(@Param("request") Map<String, Object> params, String tableName);
+    @SelectProvider(type = SqlProvider.class, method = "findLimit")
+    List<Long> listLong(@Param("request") Map<String, Object> params, int limit, String tableName);
 
-    @SelectProvider(type = SqlProvider.class, method = "find")
-    List<BigDecimal> listBigDecimal(@Param("request") Map<String, Object> params, String tableName);
+    @SelectProvider(type = SqlProvider.class, method = "findLimit")
+    List<Double> listDouble(@Param("request") Map<String, Object> params, int limit, String tableName);
 
-    @SelectProvider(type = SqlProvider.class, method = "find")
-    List<String> listString(@Param("request") Map<String, Object> params, String tableName);
+    @SelectProvider(type = SqlProvider.class, method = "findLimit")
+    List<BigDecimal> listBigDecimal(@Param("request") Map<String, Object> params, int limit, String tableName);
 
-    @SelectProvider(type = SqlProvider.class, method = "find")
-    List<Date> listDate(@Param("request") Map<String, Object> params, String tableName);
+    @SelectProvider(type = SqlProvider.class, method = "findLimit")
+    List<String> listString(@Param("request") Map<String, Object> params, int limit, String tableName);
+
+    @SelectProvider(type = SqlProvider.class, method = "findLimit")
+    List<Date> listDate(@Param("request") Map<String, Object> params, int limit, String tableName);
 }

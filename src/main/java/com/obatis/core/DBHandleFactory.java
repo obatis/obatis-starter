@@ -1,6 +1,7 @@
 package com.obatis.core;
 
 import com.obatis.config.response.result.PageInfo;
+import com.obatis.convert.BigDecimalConvert;
 import com.obatis.convert.CommonConvert;
 import com.obatis.core.constant.CacheInfoConstant;
 import com.obatis.core.constant.SqlConstant;
@@ -277,34 +278,60 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 
 	/**
 	 * 主要针对有多条记录符合查询条件时，获取自定义排在前面的数据(排序方式自行决定)
+	 * 该方法于2020-02-27弃用，由 list 方法替代
 	 * @param provider
-	 * @param top
+	 * @param limit
 	 * @return
 	 */
-	public List<T> listTop(QueryProvider provider, int top) throws HandleException {
-		if(top == 0) {
-			throw new HandleException("error: top must be greater than 0");
-		}
-		Map<String, Object> providerMap = new HashMap<>();
-		providerMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().listTop(providerMap, top, this.getTableName());
+	@Deprecated
+	public List<T> listTop(QueryProvider provider, int limit) throws HandleException {
+		return this.list(provider, limit);
 	}
 
 	/**
 	 * 主要针对有多条记录符合查询条件时，获取自定义排在前面的数据(排序方式自行决定)
 	 * @param provider
-	 * @param top
+	 * @param limit
+	 * @return
+	 * @throws HandleException
+	 */
+	public List<T> list(QueryProvider provider, int limit) throws HandleException {
+		if(limit == 0) {
+			throw new HandleException("error: limit must be greater than 0");
+		}
+		Map<String, Object> providerMap = new HashMap<>();
+		providerMap.put(SqlConstant.PROVIDER_OBJ, provider);
+		return this.getBaseBeanSessionMapper().listLimit(providerMap, limit, this.getTableName());
+	}
+
+	/**
+	 * 主要针对有多条记录符合查询条件时，获取自定义排在前面的数据(排序方式自行决定)
+	 * 该方法于2020-02-27弃用，由 list 方法替代
+	 * @param provider
+	 * @param limit
 	 * @param resultCls
 	 * @param <M>
 	 * @return
 	 */
-	public <M extends ResultInfoOutput> List<M> listTop(QueryProvider provider, int top, Class<M> resultCls) {
-		if(top == 0) {
+	public <M extends ResultInfoOutput> List<M> listTop(QueryProvider provider, int limit, Class<M> resultCls) {
+		return this.list(provider, limit, resultCls);
+	}
+
+	/**
+	 * 主要针对有多条记录符合查询条件时，获取自定义排在前面的数据(排序方式自行决定)
+	 * @param provider
+	 * @param limit
+	 * @param resultCls
+	 * @param <M>
+	 * @return
+	 */
+	public <M extends ResultInfoOutput> List<M> list(QueryProvider provider, int limit, Class<M> resultCls) {
+		if(limit == 0) {
 			throw new HandleException("error: top must be greater than 0");
 		}
 		Map<String, Object> providerMap = new HashMap<>();
 		providerMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseResultSessionMapper(resultCls).listTop(providerMap, top, this.getTableName());
+		return this.getBaseResultSessionMapper(resultCls).listLimit(providerMap, limit, this.getTableName());
 	}
 	
 	/**
@@ -372,9 +399,19 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public List<Integer> listInteger(QueryProvider provider) {
+		return this.listInteger(provider, 0);
+	}
+
+	/**
+	 * 查询单个字段返回 List<Integer> 数据
+	 * @param provider
+	 * @param limit
+	 * @return
+	 */
+	public List<Integer> listInteger(QueryProvider provider, int limit) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().listInteger(paramMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().listInteger(paramMap, limit, this.getTableName());
 	}
 
 	/**
@@ -383,9 +420,19 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public List<BigInteger> listBigInteger(QueryProvider provider) {
+		return listBigInteger(provider, 0);
+	}
+
+	/**
+	 * 查询单个字段返回 List<BigInteger> 数据
+	 * @param provider
+	 * @param limit
+	 * @return
+	 */
+	public List<BigInteger> listBigInteger(QueryProvider provider, int limit) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().listBigInteger(paramMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().listBigInteger(paramMap, limit, this.getTableName());
 	}
 
 	/**
@@ -394,9 +441,40 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public List<Long> listLong(QueryProvider provider) {
+		return this.listLong(provider, 0);
+	}
+
+	/**
+	 * 查询单个字段返回 List<Long> 数据
+	 * @param provider
+	 * @param limit
+	 * @return
+	 */
+	public List<Long> listLong(QueryProvider provider, int limit) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().listLong(paramMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().listLong(paramMap, limit, this.getTableName());
+	}
+
+	/**
+	 * 查询单个字段返回 List<Double> 数据
+	 * @param provider
+	 * @return
+	 */
+	public List<Double> listDouble(QueryProvider provider) {
+		return this.listDouble(provider, 0);
+	}
+
+	/**
+	 * 查询单个字段返回 List<Double> 数据
+	 * @param provider
+	 * @param limit
+	 * @return
+	 */
+	public List<Double> listDouble(QueryProvider provider, int limit) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
+		return this.getBaseBeanSessionMapper().listDouble(paramMap, limit, this.getTableName());
 	}
 
 	/**
@@ -405,9 +483,19 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public List<BigDecimal> listBigDecimal(QueryProvider provider) {
+		return listBigDecimal(provider, 0);
+	}
+
+	/**
+	 * 查询单个字段返回 List<BigDecimal> 数据
+	 * @param provider
+	 * @param limit
+	 * @return
+	 */
+	public List<BigDecimal> listBigDecimal(QueryProvider provider, int limit) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().listBigDecimal(paramMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().listBigDecimal(paramMap, limit, this.getTableName());
 	}
 
 	/**
@@ -416,9 +504,19 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public List<String> listString(QueryProvider provider) {
+		return listString(provider, 0);
+	}
+
+	/**
+	 * 查询单个字段返回 List<String> 数据
+	 * @param provider
+	 * @param limit
+	 * @return
+	 */
+	public List<String> listString(QueryProvider provider, int limit) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().listString(paramMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().listString(paramMap, limit, this.getTableName());
 	}
 
 	/**
@@ -427,9 +525,19 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public List<Date> listDate(QueryProvider provider) {
+		return listDate(provider, 0);
+	}
+
+	/**
+	 * 查询单个字段返回 List<Date> 数据
+	 * @param provider
+	 * @param limit
+	 * @return
+	 */
+	public List<Date> listDate(QueryProvider provider, int limit) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().listDate(paramMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().listDate(paramMap, limit, this.getTableName());
 	}
 
 	/**
@@ -448,6 +556,21 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 			} else {
 				return Integer.parseInt(CommonConvert.toString(obj));
 			}
+		}
+		return 0;
+	}
+
+	/**
+	 * 根据传入的 QueryProvider 对象，返回int的类型值。 该方法常用于查询count等类型的业务。
+	 * 该方法与 findInt 用法区别在于根据查询条件会返回多条数据，取第一条，可根据使用场景进行排序。
+	 * 如果能确保数据只有一条，建议使用 findInt 方法。
+	 * @param provider
+	 * @return
+	 */
+	public int findIntOne(QueryProvider provider) {
+		List<Integer> list = this.listInteger(provider, 1);
+		if(list != null && list.isEmpty()) {
+			return list.get(0);
 		}
 		return 0;
 	}
@@ -478,6 +601,21 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	}
 
 	/**
+	 * 根据传入的 QueryProvider 对象，返回 BigInteger 的类型值。 该方法常主要用于查询ID类型字段。
+	 * 该方法与 findBigInteger 用法区别在于根据查询条件会返回多条数据，取第一条，可根据使用场景进行排序。
+	 * 如果能确保数据只有一条，建议使用 findBigInteger 方法。
+	 * @param provider
+	 * @return
+	 */
+	public BigInteger findBigIntegerOne(QueryProvider provider) {
+		List<BigInteger> list = this.listBigInteger(provider, 1);
+		if(list != null && list.isEmpty()) {
+			return list.get(0);
+		}
+		return null;
+	}
+
+	/**
 	 * 根据传入的 QueryProvider 对象，返回int的类型值。
 	 * 如果根据条件有多条数据符合，则抛出异常。
 	 * @param provider
@@ -503,7 +641,23 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	}
 
 	/**
-	 * 根据传入的 QueryProvider 对象，返回Double的类型值。 如果根据条件有多条数据符合，则抛出异常。
+	 * 根据传入的 QueryProvider 对象，返回int的类型值。
+	 * 该方法与 findLong 用法区别在于根据查询条件会返回多条数据，取第一条，可根据使用场景进行排序。
+	 * 如果能确保数据只有一条，建议使用 findLong 方法。
+	 * @param provider
+	 * @return
+	 */
+	public Long findLongOne(QueryProvider provider) {
+		List<Long> list = this.listLong(provider, 1);
+		if(list != null && list.isEmpty()) {
+			return list.get(0);
+		}
+		return 0L;
+	}
+
+	/**
+	 * 根据传入的 QueryProvider 对象，返回Double的类型值。
+	 * 如果根据条件有多条数据符合，则抛出异常。
 	 * @param provider
 	 * @return
 	 */
@@ -526,6 +680,21 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	}
 
 	/**
+	 * 根据传入的 QueryProvider 对象，返回Double的类型值。
+	 * 该方法与 findDouble 用法区别在于根据查询条件会返回多条数据，取第一条，可根据使用场景进行排序。
+	 * 如果能确保数据只有一条，建议使用 findDouble 方法。
+	 * @param provider
+	 * @return
+	 */
+	public Double findDoubleOne(QueryProvider provider) {
+		List<Double> list = this.listDouble(provider, 1);
+		if(list != null && list.isEmpty()) {
+			return list.get(0);
+		}
+		return 0D;
+	}
+
+	/**
 	 * 根据传入的 QueryProvider 对象，返回BigDecimal的类型值。 该方法常用于查询金额字段。
 	 * 如果根据条件有多条数据符合，则抛出异常。
 	 * @param provider
@@ -537,18 +706,34 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 			if(obj instanceof BigDecimal) {
 				return (BigDecimal) obj;
 			} else if (obj instanceof String) {
-				return CommonConvert.convert((String) obj);
+				return BigDecimalConvert.convert((String) obj);
 			} else if (obj instanceof Integer) {
-				return CommonConvert.convert((Integer) obj);
+				return BigDecimalConvert.convert((Integer) obj);
 			} else {
-				return CommonConvert.convert(obj.toString());
+				return BigDecimalConvert.convert(obj.toString());
 			}
 		}
 		return BigDecimal.ZERO;
 	}
 
 	/**
-	 * 根据传入的 QueryProvider 对象，返回 Date 的类型值。 如果根据条件有多条数据符合，则抛出异常。
+	 * 根据传入的 QueryProvider 对象，返回BigDecimal的类型值。 该方法常用于查询金额字段。
+	 * 该方法与 findBigDecimal 用法区别在于根据查询条件会返回多条数据，取第一条，可根据使用场景进行排序。
+	 * 如果能确保数据只有一条，建议使用 findBigDecimal 方法。
+	 * @param provider
+	 * @return
+	 */
+	public BigDecimal findBigDecimalOne(QueryProvider provider) {
+		List<BigDecimal> list = this.listBigDecimal(provider, 1);
+		if(list != null && list.isEmpty()) {
+			return list.get(0);
+		}
+		return BigDecimal.ZERO;
+	}
+
+	/**
+	 * 根据传入的 QueryProvider 对象，返回 Date 的类型值。
+	 * 如果根据条件有多条数据符合，则抛出异常。
 	 * @param provider
 	 * @return
 	 */
@@ -561,7 +746,23 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	}
 
 	/**
-	 * 根据传入的 QueryProvider 对象，返回 String 的类型值。 如果根据条件有多条数据符合，则抛出异常。
+	 * 根据传入的 QueryProvider 对象，返回 Date 的类型值。
+	 * 该方法与 findDate 用法区别在于根据查询条件会返回多条数据，取第一条，可根据使用场景进行排序。
+	 * 如果能确保数据只有一条，建议使用 findDate 方法。
+	 * @param provider
+	 * @return
+	 */
+	public Date findDateOne(QueryProvider provider) {
+		List<Date> list = this.listDate(provider, 1);
+		if(list != null && list.isEmpty()) {
+			return list.get(0);
+		}
+		return null;
+	}
+
+	/**
+	 * 根据传入的 QueryProvider 对象，返回 String 的类型值。
+	 * 如果根据条件有多条数据符合，则抛出异常。
 	 * @param provider
 	 * @return
 	 */
@@ -569,6 +770,21 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 		Object obj = this.findObject(provider);
 		if(obj != null) {
 			return CommonConvert.toString(obj);
+		}
+		return null;
+	}
+
+	/**
+	 * 根据传入的 QueryProvider 对象，返回 String 的类型值。
+	 * 该方法与 findString 用法区别在于根据查询条件会返回多条数据，取第一条，可根据使用场景进行排序。
+	 * 如果能确保数据只有一条，建议使用 findString 方法。
+	 * @param provider
+	 * @return
+	 */
+	public String findStringOne(QueryProvider provider) {
+		List<String> list = this.listString(provider, 1);
+		if(list != null && list.isEmpty()) {
+			return list.get(0);
 		}
 		return null;
 	}
