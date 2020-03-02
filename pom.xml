@@ -5,23 +5,30 @@
 
     <groupId>com.obatis</groupId>
     <artifactId>obatis-core</artifactId>
-    <version>2.1.0-releases</version>
+    <version>2.1.0.1-beta</version>
     <packaging>jar</packaging>
     <name>obatis-core</name>
     <description>obatis-core, apply web and database project</description>
     <url>https://github.com/obatis/obatis-core</url>
 
-    <!-- 中央仓库 -->
+    <!-- 私有仓库地址 -->
     <distributionManagement>
-        <snapshotRepository>
-            <id>oss</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
         <repository>
-            <id>oss</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>private-oss</id>
+            <url>http://maven.gclasp.com/nexus/content/repositories/releases/</url>
         </repository>
     </distributionManagement>
+    <!-- 中央仓库 -->
+    <!--<distributionManagement>-->
+    <!--<snapshotRepository>-->
+    <!--<id>oss</id>-->
+    <!--<url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
+    <!--</snapshotRepository>-->
+    <!--<repository>-->
+    <!--<id>oss</id>-->
+    <!--<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
+    <!--</repository>-->
+    <!--</distributionManagement>-->
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -127,7 +134,7 @@
         <dependency>
             <groupId>com.obatis</groupId>
             <artifactId>obatis-web</artifactId>
-            <version>2.1.0-releases</version>
+            <version>2.1.0.1-beta</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
