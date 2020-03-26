@@ -235,7 +235,7 @@ public class QueryProvider {
             if(ValidateTool.isEmpty(column)) {
                 throw new HandleException("error: column is null");
             }
-            this.set(column);
+            this.set(column, null);
         }
     }
 
