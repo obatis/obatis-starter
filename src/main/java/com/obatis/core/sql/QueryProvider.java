@@ -87,19 +87,21 @@ public class QueryProvider {
 		return pageNumber;
 	}
 
-	public void setPageNumber(int pageNumber) {
+	public QueryProvider setPageNumber(int pageNumber) {
 		this.pageNumber = pageNumber;
+		return this;
 	}
 
 	public int getPageSize() {
 		return pageSize;
 	}
 
-	public void setPageSize(int pageSize) {
+	public QueryProvider setPageSize(int pageSize) {
 		this.pageSize = pageSize;
+		return this;
 	}
 
-	public void setPage(PageParam pageParam) {
+	public QueryProvider setPage(PageParam pageParam) {
 		this.setPageNumber(pageParam.getPage());
 		this.setPageSize(pageParam.getRows());
 
@@ -107,6 +109,7 @@ public class QueryProvider {
 		if (!ValidateTool.isEmpty(sort)) {
 			this.setOrder(sort, ORDER_TYPE_MAP.get(pageParam.getOrder()));
 		}
+		return this;
 	}
 
 	public List<Object[]> getFields() {
