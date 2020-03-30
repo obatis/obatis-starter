@@ -94,7 +94,7 @@ public class HandleInsertBatchMethod extends AbstractInsertMethod {
 					if (CommonField.FIELD_ID.equals(columnName)) {
 						field.set(obj, NumberGenerator.getNumber());
 					} else if (CommonField.FIELD_CREATE_TIME.equals(columnName)) {
-						field.set(obj, DateCommonConvert.getCurDate());
+						field.set(obj, DateCommonConvert.getCurrentDateTime());
 					}
 				}
 
