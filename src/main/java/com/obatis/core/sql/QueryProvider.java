@@ -2270,6 +2270,15 @@ public class QueryProvider {
 	}
 
 	/**
+	 * 常规的字段 having 判断，字段包括兼容表达式
+	 * @param fieldName
+	 * @param value
+	 */
+	public void addHaving(String fieldName, FilterEnum filterEnum, Number value) {
+		this.addHaving(fieldName, SqlHandleEnum.HANDLE_DEFAULT, filterEnum, value);
+	}
+
+	/**
 	 * 常规的字段 having 判断
 	 * @param fieldName
 	 * @param value

@@ -633,32 +633,36 @@ public abstract class AbstractSqlHandleMethod {
 		}
 	}
 
-	private void addHaving(StringBuffer havingFilterSql, List<Object[]> havings, TableIndexCache cache, String tableAsName, String index, Map<String, String> fieldMap, Map<String, String> columnMap, Map<String, Object> value) {
+	private void addHaving(StringBuffer havingFilterSql, List<Object[]> havingArray, TableIndexCache cache, String tableAsName, String index, Map<String, String> fieldMap, Map<String, String> columnMap, Map<String, Object> value) {
 		if(!tableAsName.endsWith(".")) {
 			tableAsName += ".";
 		}
-		if(havings != null && !havings.isEmpty()) {
-			for(int i = 0, j = havings.size(); i < j; i++) {
+		if(havingArray != null && !havingArray.isEmpty()) {
+			for(int i = 0, j = havingArray.size(); i < j; i++) {
 				if(!ValidateTool.isEmpty(havingFilterSql.toString())) {
 					havingFilterSql.append(JoinTypeEnum.AND.getJoinTypeName());
 				}
-				Object[] obj = havings.get(i);
+				Object[] obj = havingArray.get(i);
 				String field = (String) obj[0];
 				SqlHandleEnum sqlHandleEnum = (SqlHandleEnum) obj[1];
 				FilterEnum filterType = (FilterEnum) obj[2];
 				Number valueNumber = (Number) obj[3];
 				String key = SqlConstant.PROVIDER_FILTER + "_h" + index + "_" + i;
 
-				String expression = "#{request." + SqlConstant.PROVIDER_FILTER + "." + key + "}";
-				String havingSql = null;
-				switch (filterType) {
-					case GREATER_THAN:
-						havingSql = getAgFunction(cache, tableAsName, field, fieldMap, columnMap);
-				}
+//				String havingSql = null;
+//				switch (filterType) {
+//					case GREATER_THAN:
+//						havingSql = getAgFunction(cache, tableAsName, field, fieldMap, columnMap);
+//				}
 
+				String havingSql = getAgFunction(cache, tableAsName, field, fieldMap, columnMap);
+
+				String expression = "#{request." + SqlConstant.PROVIDER_FILTER + "." + key + "}";
 				switch (sqlHandleEnum) {
 					case HANDLE_COUNT:
 						havingFilterSql.append("count(" + havingSql + ")" + getFilterType(filterType) + expression);
+					default:
+						havingFilterSql.append(havingSql + getFilterType(filterType) + expression);
 				}
 				value.put(key, valueNumber);
 			}
