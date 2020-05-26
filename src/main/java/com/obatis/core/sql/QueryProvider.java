@@ -714,7 +714,7 @@ public class QueryProvider {
 		if (ValidateTool.isEmpty(filterName)) {
 			throw new HandleException("error: filter field is null");
 		} else if (!FilterEnum.IS_NULL.equals(filterType) && !FilterEnum.IS_NOT_NULL.equals(filterType) && null == value) {
-			throw new HandleException("error: filter value is null");
+			throw new HandleException("error: filter value<" + filterName + "> is null");
 		}
 
 		if (this.filters == null) {
@@ -770,7 +770,7 @@ public class QueryProvider {
 		if (ValidateTool.isEmpty(filterName)) {
 			throw new HandleException("error: on filter field is null");
 		} else if (!FilterEnum.IS_NULL.equals(filterType) && !FilterEnum.IS_NOT_NULL.equals(filterType) && null == value) {
-			throw new HandleException("error: on filter value is null");
+			throw new HandleException("error: on filter value<" + filterName + "> is null");
 		}
 		if (this.onFilters == null) {
 			this.onFilters = new ArrayList<>();
@@ -2209,7 +2209,7 @@ public class QueryProvider {
 	 */
 	private void setOrder(String orderName, OrderEnum orderType, SqlHandleEnum sqlHandleEnum) {
 		if (ValidateTool.isEmpty(orderName) && !sqlHandleEnum.equals(SqlHandleEnum.HANDLE_COUNT)) {
-			throw new HandleException("error: order field is null ！！！");
+			throw new HandleException("error: order field<" + orderName + "> is null ！！！");
 		}
 
 		if (this.orders == null) {
@@ -2240,7 +2240,7 @@ public class QueryProvider {
 
 	public void setGroupDateFormat(String groupName, String pattern) {
 		if (ValidateTool.isEmpty(pattern)) {
-			throw new HandleException("error: pattern is null");
+			throw new HandleException("error: pattern<" + groupName + "> is null");
 		}
 		this.setGroups(groupName, SqlHandleEnum.HANDLE_DATE_FORMAT, pattern);
 	}
@@ -2249,7 +2249,7 @@ public class QueryProvider {
 
 	private void setGroups(String groupName, SqlHandleEnum sqlHandleEnum, String pattern) {
 		if (ValidateTool.isEmpty(groupName)) {
-			throw new HandleException("error: group field is null");
+			throw new HandleException("error: group<" + groupName + "> field is null");
 		}
 
         /**
