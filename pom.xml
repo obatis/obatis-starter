@@ -5,7 +5,7 @@
 
     <groupId>com.obatis</groupId>
     <artifactId>obatis-core</artifactId>
-    <version>2.1.2.2-beta</version>
+    <version>2.1.2.3-beta</version>
     <packaging>jar</packaging>
     <name>obatis-core</name>
     <description>obatis-core, apply web and database project</description>
@@ -129,7 +129,7 @@
         <dependency>
             <groupId>com.obatis</groupId>
             <artifactId>obatis-web</artifactId>
-            <version>2.1.2.1-beta</version>
+            <version>2.1.2.2-beta</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
