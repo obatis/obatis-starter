@@ -6,9 +6,9 @@ import com.obatis.core.CommonField;
 import com.obatis.core.annotation.NotColumn;
 import com.obatis.core.constant.SqlConstant;
 import com.obatis.core.exception.HandleException;
-import com.obatis.core.generator.NumberGenerator;
 import com.obatis.core.sql.AbstractInsertMethod;
 import com.obatis.core.constant.CacheInfoConstant;
+import com.obatis.generator.NumberGenerator;
 import com.obatis.tools.ValidateTool;
 
 import java.lang.reflect.Field;

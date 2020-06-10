@@ -7,9 +7,9 @@ import com.obatis.core.constant.CacheInfoConstant;
 import com.obatis.core.constant.type.*;
 import com.obatis.core.convert.BeanCacheConvert;
 import com.obatis.core.exception.HandleException;
-import com.obatis.core.generator.NumberGenerator;
 import com.obatis.core.result.ResultInfoOutput;
 import com.obatis.core.sql.mysql.HandleOrderMethod;
+import com.obatis.generator.NumberGenerator;
 import com.obatis.tools.ValidateTool;
 
 import java.util.ArrayList;
