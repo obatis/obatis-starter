@@ -76,6 +76,10 @@ public class QueryProvider {
 		return provider;
 	}
 
+	/**
+	 * 获取表明序列号
+	 * @return
+	 */
 	public String getTableAsNameSerialNumber() {
 		if(tableAsNameSerialNumber == null) {
 			tableAsNameSerialNumber = NumberGenerator.getNumber().toString();
@@ -541,7 +545,7 @@ public class QueryProvider {
 	 */
 	public void selectExp(String fieldName, String  aliasName) {
 		if(ValidateTool.isEmpty(fieldName)) {
-			throw new HandleException("error: field is null");
+			throw new HandleException("error: selectExp field is null");
 		}
 		if(ValidateTool.isEmpty(aliasName)) {
 			aliasName = "exp_value";
