@@ -12,10 +12,16 @@
     <url>https://github.com/obatis/obatis-core</url>
 
     <!-- 中央仓库 -->
+    <!--<distributionManagement>-->
+        <!--<repository>-->
+            <!--<id>oss</id>-->
+            <!--<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
+        <!--</repository>-->
+    <!--</distributionManagement>-->
     <distributionManagement>
         <repository>
-            <id>oss</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>private-oss</id>
+            <url>http://maven.gclasp.com/nexus/content/repositories/releases/</url>
         </repository>
     </distributionManagement>
 
@@ -133,7 +139,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.48</version>
+            <version>8.0.16</version>
         </dependency>
     </dependencies>
 
