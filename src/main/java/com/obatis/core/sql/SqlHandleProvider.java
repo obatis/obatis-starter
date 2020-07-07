@@ -102,16 +102,12 @@ public class SqlHandleProvider {
 	/**
 	 * 根据map，拼接SQL
 	 * @param providers
-	 * @param limit 0 表示不执行limit 语句，其他的统一带上limit语句
 	 * @param tableName
 	 * @return
 	 * @throws HandleException
 	 */
-	public static String getSelectSql(Map<String, Object> providers, int limit, String tableName) throws HandleException {
-		/**
-		 * limit 使用说明：0 表示不执行limit 语句，其他的统一带上limit语句
-		 */
-		return sqlHandleMethod.getSelectSql(providers, tableName) + (limit == 0 ? "" : " limit " + limit);
+	public static String getSelectSql(Map<String, Object> providers, String tableName) throws HandleException {
+		return sqlHandleMethod.getSelectSql(providers, tableName);
 	}
 
 	/**

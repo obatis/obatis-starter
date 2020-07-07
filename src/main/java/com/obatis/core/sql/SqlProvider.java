@@ -41,19 +41,19 @@ public class SqlProvider<T> {
 	}
 	
 	public String find(@Param("request") Map<String, Object> providers, String tableName) throws HandleException {
-		return SqlHandleProvider.getSelectSql(providers, 0, tableName);
+		return SqlHandleProvider.getSelectSql(providers, tableName);
 	}
 
-	public String findLimit(@Param("request") Map<String, Object> providers, int limit, String tableName) throws HandleException {
-		return SqlHandleProvider.getSelectSql(providers, limit, tableName);
-	}
+//	public String findLimit(@Param("request") Map<String, Object> providers, int limit, String tableName) throws HandleException {
+//		return SqlHandleProvider.getSelectSql(providers, limit, tableName);
+//	}
 
-	public String findOne(@Param("request") Map<String, Object> providers, String tableName) throws HandleException {
-		return SqlHandleProvider.getSelectSql(providers, 1, tableName);
-	}
+//	public String findOne(@Param("request") Map<String, Object> providers, String tableName) throws HandleException {
+//		return SqlHandleProvider.getSelectSql(providers, tableName);
+//	}
 
-	public String list(@Param("request") Map<String, Object> providers, int limit, String tableName) throws HandleException {
-		return SqlHandleProvider.getSelectSql(providers, limit, tableName);
+	public String list(@Param("request") Map<String, Object> providers, String tableName) throws HandleException {
+		return SqlHandleProvider.getSelectSql(providers, tableName);
 	}
 	
 	public String validate(@Param("request") Map<String, Object> providers, String tableName) throws HandleException {

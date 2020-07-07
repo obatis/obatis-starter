@@ -54,6 +54,11 @@ public class QueryProvider {
 
 	private String tableAsNameSerialNumber;
 	private boolean selectNothingFlag;
+	/**
+	 * 默认为-1，表示不设置limit 函数
+	 * 如果是分页查询，则limit值失效
+	 */
+	private int limit = -1;
 
 	/**
 	 * 通过静态方法获取QueryProvider代理类，效果与 QueryProvider provider = new QueryProvider() 一样
@@ -98,6 +103,22 @@ public class QueryProvider {
 
 	public int getPageSize() {
 		return pageSize;
+	}
+
+	/**
+	 * 用于设置获取条数，不是分页哦
+	 * @param limit
+	 */
+	public void setLimit(int limit) {
+		if(limit < 1) {
+			throw new HandleException("method setLimit value >>" + limit + " is error");
+		}
+
+		this.limit = limit;
+	}
+
+	public int getLimit() {
+		return this.limit;
 	}
 
 	public QueryProvider setPageSize(int pageSize) {

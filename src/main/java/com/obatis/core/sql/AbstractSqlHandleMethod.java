@@ -441,7 +441,7 @@ public abstract class AbstractSqlHandleMethod {
 			// 放入值到map
 			param.put(SqlConstant.PROVIDER_FILTER, value);
 		}
-		return sql;
+		return sql + (queryProvider.getLimit() != -1 ? " limit " + queryProvider.getLimit()  : "");
 	}
 
 	/**
