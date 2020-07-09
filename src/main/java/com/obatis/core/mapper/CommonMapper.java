@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.SelectProvider;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -56,4 +58,10 @@ public interface CommonMapper<R> {
 
     @SelectProvider(type = SqlProvider.class, method = "find")
     List<Date> listDate(@Param("request") Map<String, Object> params, String tableName);
+
+    @SelectProvider(type = SqlProvider.class, method = "find")
+    List<LocalDate> listLocalDate(@Param("request") Map<String, Object> params, String tableName);
+
+    @SelectProvider(type = SqlProvider.class, method = "find")
+    List<LocalDateTime> listLocalDateTime(@Param("request") Map<String, Object> params, String tableName);
 }

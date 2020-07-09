@@ -18,6 +18,8 @@ import com.obatis.tools.ValidateTool;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -415,6 +417,28 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	}
 
 	/**
+	 * 查询单个字段返回 List<LocalDate> 数据
+	 * @param provider
+	 * @return
+	 */
+	public List<LocalDate> listLocalDate(QueryProvider provider) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
+		return this.getBaseBeanSessionMapper().listLocalDate(paramMap, this.getTableName());
+	}
+
+	/**
+	 * 查询单个字段返回 List<LocalDateTime> 数据
+	 * @param provider
+	 * @return
+	 */
+	public List<LocalDateTime> listLocalDateTime(QueryProvider provider) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
+		return this.getBaseBeanSessionMapper().listLocalDateTime(paramMap, this.getTableName());
+	}
+
+	/**
 	 * 根据传入的 QueryProvider 对象，返回int的类型值。 该方法常用于查询count等类型的业务。
 	 * 如果根据条件有多条数据符合，则抛出异常。
 	 * @param provider
@@ -443,11 +467,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 */
 	public int findIntOne(QueryProvider provider) {
 		provider.setLimit(1);
-		List<Integer> list = this.listInteger(provider);
-		if(list != null && list.isEmpty()) {
-			return list.get(0);
-		}
-		return 0;
+		return this.findInt(provider);
 	}
 
 	/**
@@ -484,11 +504,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 */
 	public BigInteger findBigIntegerOne(QueryProvider provider) {
 		provider.setLimit(1);
-		List<BigInteger> list = this.listBigInteger(provider);
-		if(list != null && list.isEmpty()) {
-			return list.get(0);
-		}
-		return null;
+		return this.findBigInteger(provider);
 	}
 
 	/**
@@ -525,11 +541,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 */
 	public Long findLongOne(QueryProvider provider) {
 		provider.setLimit(1);
-		List<Long> list = this.listLong(provider);
-		if(list != null && list.isEmpty()) {
-			return list.get(0);
-		}
-		return 0L;
+		return this.findLong(provider);
 	}
 
 	/**
@@ -565,11 +577,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 */
 	public Double findDoubleOne(QueryProvider provider) {
 		provider.setLimit(1);
-		List<Double> list = this.listDouble(provider);
-		if(list != null && list.isEmpty()) {
-			return list.get(0);
-		}
-		return 0D;
+		return this.findDouble(provider);
 	}
 
 	/**
@@ -603,11 +611,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 */
 	public BigDecimal findBigDecimalOne(QueryProvider provider) {
 		provider.setLimit(1);
-		List<BigDecimal> list = this.listBigDecimal(provider);
-		if(list != null && list.isEmpty()) {
-			return list.get(0);
-		}
-		return BigDecimal.ZERO;
+		return this.findBigDecimal(provider);
 	}
 
 	/**
@@ -633,11 +637,59 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 */
 	public Date findDateOne(QueryProvider provider) {
 		provider.setLimit(1);
-		List<Date> list = this.listDate(provider);
-		if(list != null && list.isEmpty()) {
-			return list.get(0);
+		return this.findDate(provider);
+	}
+
+	/**
+	 * 根据传入的 QueryProvider 对象，返回 LocalDate 的类型值。
+	 * 如果根据条件有多条数据符合，则抛出异常。
+	 * @param provider
+	 * @return
+	 */
+	public LocalDate findLocalDate(QueryProvider provider) {
+		Object obj = this.findObject(provider);
+		if (obj != null && obj instanceof LocalDate) {
+			return (LocalDate) obj;
 		}
 		return null;
+	}
+
+	/**
+	 * 根据传入的 QueryProvider 对象，返回 LocalDate 的类型值。
+	 * 该方法与 findDate 用法区别在于根据查询条件会返回多条数据，取第一条，可根据使用场景进行排序。
+	 * 如果能确保数据只有一条，建议使用 findLocalDate 方法。
+	 * @param provider
+	 * @return
+	 */
+	public LocalDate findLocalDateOne(QueryProvider provider) {
+		provider.setLimit(1);
+		return this.findLocalDate(provider);
+	}
+
+	/**
+	 * 根据传入的 QueryProvider 对象，返回 LocalDateTime 的类型值。
+	 * 如果根据条件有多条数据符合，则抛出异常。
+	 * @param provider
+	 * @return
+	 */
+	public LocalDateTime findLocalDateTime(QueryProvider provider) {
+		Object obj = this.findObject(provider);
+		if (obj != null && obj instanceof LocalDateTime) {
+			return (LocalDateTime) obj;
+		}
+		return null;
+	}
+
+	/**
+	 * 根据传入的 QueryProvider 对象，返回 LocalDateTime 的类型值。
+	 * 该方法与 findDate 用法区别在于根据查询条件会返回多条数据，取第一条，可根据使用场景进行排序。
+	 * 如果能确保数据只有一条，建议使用 findLocalDateTime 方法。
+	 * @param provider
+	 * @return
+	 */
+	public LocalDateTime findLocalDateTimeOne(QueryProvider provider) {
+		provider.setLimit(1);
+		return this.findLocalDateTime(provider);
 	}
 
 	/**
@@ -663,11 +715,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 */
 	public String findStringOne(QueryProvider provider) {
 		provider.setLimit(1);
-		List<String> list = this.listString(provider);
-		if(list != null && list.isEmpty()) {
-			return list.get(0);
-		}
-		return null;
+		return this.findString(provider);
 	}
 
 	/**
