@@ -4,7 +4,7 @@ import com.obatis.core.annotation.Column;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 公共基础实体，所有定义的实体都需要继承此类
@@ -21,7 +21,7 @@ public class CommonModel implements Serializable {
 	 * 创建时间
 	 */
 	@Column(name = CommonField.FIELD_CREATE_TIME)
-	private Date createTime;
+	private LocalDateTime createTime;
 
 	public BigInteger getId() {
 		return id;
@@ -29,10 +29,10 @@ public class CommonModel implements Serializable {
 	public void setId(BigInteger id) {
 		this.id = id;
 	}
-	public Date getCreateTime() {
+	public LocalDateTime getCreateTime() {
 		return createTime;
 	}
-	public void setCreateTime(Date createTime) {
+	public void setCreateTime(LocalDateTime createTime) {
 		this.createTime = createTime;
 	}
 

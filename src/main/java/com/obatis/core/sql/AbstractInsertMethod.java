@@ -80,7 +80,7 @@ public abstract class AbstractInsertMethod {
 						field.set(obj, NumberGenerator.getNumber());
 						addFlag = true;
 					} else if (CommonField.FIELD_CREATE_TIME.equals(columnName)) {
-						field.set(obj, DateCommonConvert.getCurrentDateTime());
+						field.set(obj, DateCommonConvert.getDateTime());
 						addFlag = true;
 					}
 				} else {

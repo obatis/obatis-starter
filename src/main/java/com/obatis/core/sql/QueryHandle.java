@@ -11,6 +11,9 @@ import com.obatis.tools.ValidateTool;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 public class QueryHandle {
@@ -62,9 +65,21 @@ public class QueryHandle {
 		DateHandleEnum dateHandle = queryFilter.datetype();
 		if(value instanceof Date) {
 			if(DateHandleEnum.BEGIN_HANDLE.equals(dateHandle)) {
-				value = DateCommonConvert.formatBeginDateTime((Date) value);
+				value = DateCommonConvert.formatBeginDateTime(((Date) value).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 			} else if (DateHandleEnum.END_HANDLE.equals(dateHandle)) {
-				value = DateCommonConvert.formatEndDateTime((Date) value);
+				value = DateCommonConvert.formatEndDateTime(((Date) value).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+			}
+		} else if(value instanceof LocalDate) {
+			if(DateHandleEnum.BEGIN_HANDLE.equals(dateHandle)) {
+				value = DateCommonConvert.formatBeginDateTime((LocalDate) value);
+			} else if (DateHandleEnum.END_HANDLE.equals(dateHandle)) {
+				value = DateCommonConvert.formatEndDateTime((LocalDate) value);
+			}
+		} else if(value instanceof LocalDateTime) {
+			if(DateHandleEnum.BEGIN_HANDLE.equals(dateHandle)) {
+				value = DateCommonConvert.formatBeginDateTime((LocalDateTime) value);
+			} else if (DateHandleEnum.END_HANDLE.equals(dateHandle)) {
+				value = DateCommonConvert.formatEndDateTime((LocalDateTime) value);
 			}
 		}
 
