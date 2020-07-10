@@ -3,6 +3,8 @@ package com.obatis.core;
 import com.obatis.config.response.result.PageInfo;
 import com.obatis.convert.BigDecimalConvert;
 import com.obatis.convert.CommonConvert;
+import com.obatis.convert.date.DateCommonConvert;
+import com.obatis.convert.date.DefaultDateConstant;
 import com.obatis.core.constant.CacheInfoConstant;
 import com.obatis.core.constant.SqlConstant;
 import com.obatis.core.exception.HandleException;
@@ -936,13 +938,5 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 		page.setList(this.getBaseResultSessionMapper(resultCls).page(querySql, paramMap));
 		return page;
 	}
-
-//	private long getPages(long total, int pageSize) {
-//		long pages = total / pageSize;
-//		if (total % pageSize != 0) {
-//			pages += 1;
-//		}
-//		return pages;
-//	}
 
 }
