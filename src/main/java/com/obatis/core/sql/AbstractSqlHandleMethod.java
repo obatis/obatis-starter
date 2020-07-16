@@ -114,7 +114,7 @@ public abstract class AbstractSqlHandleMethod {
 				columnName = fieldName;
 			}
 			if (ValidateTool.isEmpty(columnName)) {
-				throw new HandleException("error：fieldName is invalid");
+				throw new HandleException("error：fieldName<" + fieldName + "> is invalid");
 			}
 			String name = columnName;
 			if (SqlHandleEnum.HANDLE_UP.equals(fieldType)) {
