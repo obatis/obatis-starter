@@ -17,11 +17,13 @@ import com.obatis.core.sql.QueryProvider;
 import com.obatis.core.sql.SqlHandleProvider;
 import com.obatis.tools.ValidateTool;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -176,9 +178,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public int delete(QueryProvider provider) throws HandleException {
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().delete(paramMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().delete(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -238,9 +238,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public T find(QueryProvider provider) {
-		Map<String, Object> providerMap = new HashMap<>();
-		providerMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().find(providerMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().find(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -251,9 +249,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public <M extends ResultInfoOutput> M find(QueryProvider provider, Class<M> resultCls) {
-		Map<String, Object> providerMap = new HashMap<>();
-		providerMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseResultSessionMapper(resultCls).find(providerMap, this.getTableName());
+		return this.getBaseResultSessionMapper(resultCls).find(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -262,10 +258,8 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public T findOne(QueryProvider provider) {
-		Map<String, Object> providerMap = new HashMap<>();
 		provider.setLimit(1);
-		providerMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().find(providerMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().find(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -276,10 +270,8 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public <M extends ResultInfoOutput> M findOne(QueryProvider provider, Class<M> resultCls) {
-		Map<String, Object> providerMap = new HashMap<>();
 		provider.setLimit(1);
-		providerMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseResultSessionMapper(resultCls).find(providerMap, this.getTableName());
+		return this.getBaseResultSessionMapper(resultCls).find(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 	
 	/**
@@ -289,9 +281,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public boolean validate(QueryProvider provider) {
-		Map<String, Object> providerMap = new HashMap<>();
-		providerMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().validate(providerMap, this.getTableName()) > 0;
+		return this.getBaseBeanSessionMapper().validate(getProviderParamsMapInfo(provider), this.getTableName()) > 0;
 	}
 
 	/**
@@ -300,9 +290,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public Map<String, Object> findConvertMap(QueryProvider provider) {
-		Map<String, Object> providerMap = new HashMap<>();
-		providerMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().findToMap(providerMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().findToMap(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -312,9 +300,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public List<T> list(QueryProvider provider) {
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().list(paramMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().list(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -324,9 +310,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public <M extends ResultInfoOutput> List<M> list(QueryProvider provider, Class<M> resultCls) {
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseResultSessionMapper(resultCls).list(paramMap, this.getTableName());
+		return this.getBaseResultSessionMapper(resultCls).list(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -336,9 +320,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public List<Map<String, Object>> listConvertMap(QueryProvider provider) {
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().query(paramMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().query(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -347,9 +329,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public List<Integer> listInteger(QueryProvider provider) {
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().listInteger(paramMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().listInteger(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -358,9 +338,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public List<BigInteger> listBigInteger(QueryProvider provider) {
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().listBigInteger(paramMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().listBigInteger(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -369,9 +347,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public List<Long> listLong(QueryProvider provider) {
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().listLong(paramMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().listLong(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -380,9 +356,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public List<Double> listDouble(QueryProvider provider) {
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().listDouble(paramMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().listDouble(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -391,9 +365,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public List<BigDecimal> listBigDecimal(QueryProvider provider) {
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().listBigDecimal(paramMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().listBigDecimal(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -402,9 +374,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public List<String> listString(QueryProvider provider) {
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().listString(paramMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().listString(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -413,9 +383,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public List<Date> listDate(QueryProvider provider) {
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().listDate(paramMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().listDate(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -424,9 +392,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public List<LocalDate> listLocalDate(QueryProvider provider) {
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().listLocalDate(paramMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().listLocalDate(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -435,9 +401,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public List<LocalDateTime> listLocalDateTime(QueryProvider provider) {
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().listLocalDateTime(paramMap, this.getTableName());
+		return this.getBaseBeanSessionMapper().listLocalDateTime(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -447,17 +411,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public int findInt(QueryProvider provider) {
-		Object obj = this.findObject(provider);
-		if (obj != null) {
-			if(obj instanceof Integer) {
-				return (int) obj;
-			} else if(obj instanceof Long) {
-				return ((Long) obj).intValue();
-			} else {
-				return Integer.parseInt(CommonConvert.toString(obj));
-			}
-		}
-		return 0;
+		return this.getBaseBeanSessionMapper().findInt(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -478,23 +432,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public BigInteger findBigInteger(QueryProvider provider) {
-		Object obj = this.findObject(provider);
-		if(obj != null) {
-			if(obj instanceof BigInteger) {
-				return (BigInteger) obj;
-			} else if (obj instanceof BigDecimal) {
-				return ((BigDecimal) obj).toBigInteger();
-			} else if (obj instanceof Double) {
-				return BigInteger.valueOf(((Double) obj).longValue());
-			} else if (obj instanceof Long) {
-				return BigInteger.valueOf((Long) obj);
-			} else if (obj instanceof Integer) {
-				return BigInteger.valueOf((Integer) obj);
-			} else {
-				return new BigInteger(obj.toString());
-			}
-		}
-		return null;
+		return this.getBaseBeanSessionMapper().findBigInteger(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -516,22 +454,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public Long findLong(QueryProvider provider) {
-		Object obj = this.findObject(provider);
-		if (obj != null) {
-			if(obj instanceof Long) {
-				return (Long) obj;
-			} else if (obj instanceof BigDecimal) {
-				return ((BigDecimal) obj).longValue();
-			} else if (obj instanceof Double) {
-				return ((Double) obj).longValue();
-			} else if (obj instanceof Float) {
-				return ((Float) obj).longValue();
-			} else {
-				return Long.parseLong(CommonConvert.toString(obj));
-			}
-
-		}
-		return 0L;
+		return this.getBaseBeanSessionMapper().findLong(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -553,21 +476,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public Double findDouble(QueryProvider provider) {
-		Object obj = this.findObject(provider);
-		if (obj != null) {
-			if(obj instanceof Double) {
-				return (Double) obj;
-			} else if (obj instanceof BigDecimal) {
-				return ((BigDecimal) obj).doubleValue();
-			} else if (obj instanceof Float) {
-				return ((Float) obj).doubleValue();
-			} else if (obj instanceof Long) {
-				return ((Long) obj).doubleValue();
-			} else if (obj instanceof Integer) {
-				return ((Integer) obj).doubleValue();
-			}
-		}
-		return 0D;
+		return this.getBaseBeanSessionMapper().findDouble(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -589,19 +498,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public BigDecimal findBigDecimal(QueryProvider provider) {
-		Object obj = this.findObject(provider);
-		if (obj != null) {
-			if(obj instanceof BigDecimal) {
-				return (BigDecimal) obj;
-			} else if (obj instanceof String) {
-				return BigDecimalConvert.convert((String) obj);
-			} else if (obj instanceof Integer) {
-				return BigDecimalConvert.convert((Integer) obj);
-			} else {
-				return BigDecimalConvert.convert(obj.toString());
-			}
-		}
-		return BigDecimal.ZERO;
+		return this.getBaseBeanSessionMapper().findBigDecimal(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -623,11 +520,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public Date findDate(QueryProvider provider) {
-		Object obj = this.findObject(provider);
-		if(obj != null && obj instanceof Date) {
-			return (Date) obj;
-		}
-		return null;
+		return this.getBaseBeanSessionMapper().findDate(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -649,11 +542,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public LocalDate findLocalDate(QueryProvider provider) {
-		Object obj = this.findObject(provider);
-		if (obj != null && obj instanceof LocalDate) {
-			return (LocalDate) obj;
-		}
-		return null;
+		return this.getBaseBeanSessionMapper().findLocalDate(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -675,11 +564,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 */
 	public LocalDateTime findLocalDateTime(QueryProvider provider) {
-		Object obj = this.findObject(provider);
-		if (obj != null && obj instanceof LocalDateTime) {
-			return (LocalDateTime) obj;
-		}
-		return null;
+		return this.getBaseBeanSessionMapper().findLocalDateTime(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -695,17 +580,35 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	}
 
 	/**
+	 * 根据传入的 QueryProvider 对象，返回 LocalDateTime 的类型值。
+	 * 如果根据条件有多条数据符合，则抛出异常。
+	 * @param provider
+	 * @return
+	 */
+	public LocalTime findLocalTime(QueryProvider provider) {
+		return this.getBaseBeanSessionMapper().findLocalTime(getProviderParamsMapInfo(provider), this.getTableName());
+	}
+
+	/**
+	 * 根据传入的 QueryProvider 对象，返回 LocalTime 的类型值。
+	 * 该方法与 findDate 用法区别在于根据查询条件会返回多条数据，取第一条，可根据使用场景进行排序。
+	 * 如果能确保数据只有一条，建议使用 LocalTime 方法。
+	 * @param provider
+	 * @return
+	 */
+	public LocalTime findTimeOne(QueryProvider provider) {
+		provider.setLimit(1);
+		return this.findLocalTime(provider);
+	}
+
+	/**
 	 * 根据传入的 QueryProvider 对象，返回 String 的类型值。
 	 * 如果根据条件有多条数据符合，则抛出异常。
 	 * @param provider
 	 * @return
 	 */
 	public String findString(QueryProvider provider) {
-		Object obj = this.findObject(provider);
-		if(obj != null) {
-			return CommonConvert.toString(obj);
-		}
-		return null;
+		return this.getBaseBeanSessionMapper().findString(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
 	/**
@@ -726,10 +629,19 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param provider
 	 * @return
 	 */
-	private Object findObject(QueryProvider provider) {
+	public Object findObject(QueryProvider provider) {
+		return this.getBaseBeanSessionMapper().findObject(getProviderParamsMapInfo(provider), this.getTableName());
+	}
+
+	/**
+	 * 封装常规参数map处理方法
+	 * @param provider
+	 * @return
+	 */
+	private Map<String, Object> getProviderParamsMapInfo(QueryProvider provider) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
-		return this.getBaseBeanSessionMapper().findObject(paramMap, this.getTableName());
+		return paramMap;
 	}
 
 	/**

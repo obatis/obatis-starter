@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -17,11 +18,35 @@ public interface CommonMapper<R> {
     @SelectProvider(type = SqlProvider.class, method = "find")
     R find(@Param("request") Map<String, Object> param, String tableName);
 
-//    @SelectProvider(type = SqlProvider.class, method = "findOne")
-//    R findOne(@Param("request") Map<String, Object> param, String tableName);
+    @SelectProvider(type = SqlProvider.class, method = "find")
+    int findInt(@Param("request") Map<String, Object> param, String tableName);
 
-//    @SelectProvider(type = SqlProvider.class, method = "list")
-//    List<R> listLimit(@Param("request") Map<String, Object> param, int limit, String tableName);
+    @SelectProvider(type = SqlProvider.class, method = "find")
+    BigInteger findBigInteger(@Param("request") Map<String, Object> param, String tableName);
+
+    @SelectProvider(type = SqlProvider.class, method = "find")
+    Long findLong(@Param("request") Map<String, Object> param, String tableName);
+
+    @SelectProvider(type = SqlProvider.class, method = "find")
+    Double findDouble(@Param("request") Map<String, Object> param, String tableName);
+
+    @SelectProvider(type = SqlProvider.class, method = "find")
+    BigDecimal findBigDecimal(@Param("request") Map<String, Object> param, String tableName);
+
+    @SelectProvider(type = SqlProvider.class, method = "find")
+    Date findDate(@Param("request") Map<String, Object> param, String tableName);
+
+    @SelectProvider(type = SqlProvider.class, method = "find")
+    LocalDate findLocalDate(@Param("request") Map<String, Object> param, String tableName);
+
+    @SelectProvider(type = SqlProvider.class, method = "find")
+    LocalDateTime findLocalDateTime(@Param("request") Map<String, Object> param, String tableName);
+
+    @SelectProvider(type = SqlProvider.class, method = "find")
+    LocalTime findLocalTime(@Param("request") Map<String, Object> param, String tableName);
+
+    @SelectProvider(type = SqlProvider.class, method = "find")
+    String findString(@Param("request") Map<String, Object> param, String tableName);
 
     @SelectProvider(type = SqlProvider.class, method = "find")
     List<R> list(@Param("request") Map<String, Object> param, String tableName);
