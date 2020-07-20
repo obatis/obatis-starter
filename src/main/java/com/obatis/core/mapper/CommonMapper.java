@@ -19,7 +19,7 @@ public interface CommonMapper<R> {
     R find(@Param("request") Map<String, Object> param, String tableName);
 
     @SelectProvider(type = SqlProvider.class, method = "find")
-    int findInt(@Param("request") Map<String, Object> param, String tableName);
+    Integer findInt(@Param("request") Map<String, Object> param, String tableName);
 
     @SelectProvider(type = SqlProvider.class, method = "find")
     BigInteger findBigInteger(@Param("request") Map<String, Object> param, String tableName);

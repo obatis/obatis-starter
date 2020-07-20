@@ -410,7 +410,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param provider
 	 * @return
 	 */
-	public int findInt(QueryProvider provider) {
+	public Integer findInt(QueryProvider provider) {
 		return this.getBaseBeanSessionMapper().findInt(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
@@ -421,7 +421,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param provider
 	 * @return
 	 */
-	public int findIntOne(QueryProvider provider) {
+	public Integer findIntOne(QueryProvider provider) {
 		provider.setLimit(1);
 		return this.findInt(provider);
 	}
