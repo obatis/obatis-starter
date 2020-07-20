@@ -416,7 +416,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param provider
 	 * @return
 	 */
-	public Integer findIntOne(QueryProvider provider) {
+	public Integer findIntegerOne(QueryProvider provider) {
 		provider.setLimit(1);
 		return this.findInteger(provider);
 	}
