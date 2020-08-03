@@ -39,6 +39,10 @@ public enum SqlHandleEnum {
 	 */
 	HANDLE_AVG,
 	/**
+	 * 去除重复
+	 */
+	HANDLE_DISTINCT,
+	/**
 	 * 运算表达式
 	 */
 	HANDLE_EXP,

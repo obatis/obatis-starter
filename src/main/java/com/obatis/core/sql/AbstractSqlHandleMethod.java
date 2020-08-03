@@ -713,6 +713,9 @@ public abstract class AbstractSqlHandleMethod {
 					case HANDLE_AVG:
 						orders.add("avg(" + tempTableAsName + "." + tempFieldName + ") " + orderArray[1]);
 						break;
+					case HANDLE_DISTINCT:
+						orders.add("distinct(" + tempTableAsName + "." + tempFieldName + ") " + orderArray[1]);
+						break;
 					case HANDLE_EXP:
 						orders.add(getAgFunction(cache, tableAliasName, fieldName, fieldMap, columnMap) + " " + orderArray[1]);
 						break;
@@ -989,6 +992,9 @@ public abstract class AbstractSqlHandleMethod {
 			case HANDLE_AVG:
 				columnName = "avg(ifnull(" + getAgFunction(cache, tableAliasName, fieldTemp, fieldMap, columnMap) + ", 0))";
 				column.add(columnName + fieldAsTemp);
+				break;
+			case HANDLE_DISTINCT:
+				column.add("distinct(" + fieldTemp + ")" + fieldAsTemp);
 				break;
 			case HANDLE_EXP:
 				columnName = getAgFunction(cache, tableAliasName, fieldTemp, fieldMap, columnMap);

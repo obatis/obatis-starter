@@ -529,6 +529,29 @@ public class QueryProvider {
 		}
 		this.addValue(fieldName, SqlHandleEnum.HANDLE_AVG, aliasName);
 	}
+
+	/**
+	 * distinct 去除重复值函数 >> distinct('fieldName')，默认别名为 'fieldName'
+	 * @param fieldName
+	 */
+	public void selectDistinct(String fieldName) {
+		this.selectAvg(fieldName, fieldName.matches("[0-9A-Za-z_]*") ? fieldName : "distinctValue");
+	}
+
+	/**
+	 * distinct 去除重复值函数 >> distinct('fieldName') as 'aliasName'
+	 * @param fieldName
+	 * @param aliasName
+	 */
+	public void selectDistinct(String fieldName, String  aliasName) {
+		if(ValidateTool.isEmpty(fieldName)) {
+			throw new HandleException("error: field is null");
+		}
+		if(ValidateTool.isEmpty(aliasName)) {
+			aliasName = fieldName;
+		}
+		this.addValue(fieldName, SqlHandleEnum.HANDLE_DISTINCT, aliasName);
+	}
 	
 	/**
 	 * 表达式函数，非聚合函数时使用，如需聚合，直接使用提供的聚合函数方法即可，同等原理。
