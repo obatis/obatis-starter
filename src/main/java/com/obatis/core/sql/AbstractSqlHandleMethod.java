@@ -781,8 +781,8 @@ public abstract class AbstractSqlHandleMethod {
 			}
 
 			List<Object[]> onFilters = childParam.getOnFilters();
-			if((onFilters != null && !onFilters.isEmpty())) {
-				String onFilterSql = this.getFilterSql(cache, connectTableAliasName, onFilters,  null, value, index + "_ofl_" + l, childColumnMap, childFieldMap);
+			if((onFilters != null && !onFilters.isEmpty())  || (childParam.getAddProviders() != null && !childParam.getAddProviders().isEmpty())) {
+				String onFilterSql = this.getFilterSql(cache, connectTableAliasName, onFilters,  childParam.getAddProviders(), value, index + "_ofl_" + l, childColumnMap, childFieldMap);
 				if(!ValidateTool.isEmpty(onFilterSql)) {
 					sql.append(JoinTypeEnum.AND.getJoinTypeName() + onFilterSql);
 				}
