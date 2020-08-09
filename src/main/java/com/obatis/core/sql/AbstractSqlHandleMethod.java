@@ -11,6 +11,7 @@ import com.obatis.core.exception.HandleException;
 import com.obatis.tools.ValidateTool;
 import org.apache.ibatis.jdbc.SQL;
 
+import javax.validation.Valid;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.*;
@@ -740,32 +741,46 @@ public abstract class AbstractSqlHandleMethod {
 			}
 //			String connectTableAliasName = cache.getTableAsName();
 			String connectTableAliasName = this.getTableAsName(cache, childParam.getTableAsNameSerialNumber());
+
+			sql.append(" left join " + connectTableName + " " + connectTableAliasName);
+			StringBuffer onFilterSql = new StringBuffer();
+			Map<String, String> childFieldMap = CacheInfoConstant.FIELD_CACHE.get(connectTableName);
+			Map<String, String> childColumnMap = CacheInfoConstant.COLUMN_CACHE.get(connectTableName);
+
 			Object fieldName = leftJoinArray[0];
 			Object paramFieldName = leftJoinArray[1];
 
-			sql.append(" left join " + connectTableName + " " + connectTableAliasName + " on ");
-			Map<String, String> childFieldMap = CacheInfoConstant.FIELD_CACHE.get(connectTableName);
-			Map<String, String> childColumnMap = CacheInfoConstant.COLUMN_CACHE.get(connectTableName);
-			if (fieldName instanceof String) {
-				// 说明是单个
-				sql.append(tableAliasName + "." + leftJoinArray[0] + "=" + connectTableAliasName + "." + paramFieldName);
-			} else {
-				String[] fieldArr = (String[]) fieldName;
-				String[] paramFieldArr = (String[]) paramFieldName;
-				// 说明是数组
-				for (int i = 0, j = fieldArr.length; i < j; i++) {
+			if(fieldName != null && paramFieldName != null) {
+				if (fieldName instanceof String) {
+					// 说明是单个
+					onFilterSql.append(tableAliasName + "." + leftJoinArray[0] + "=" + connectTableAliasName + "." + paramFieldName);
+//				sql.append(tableAliasName + "." + leftJoinArray[0] + "=" + connectTableAliasName + "." + paramFieldName);
+				} else {
+					String[] fieldArr = (String[]) fieldName;
+					String[] paramFieldArr = (String[]) paramFieldName;
+					// 说明是数组
+					for (int i = 0, j = fieldArr.length; i < j; i++) {
 //					sql.append(tableAliasName + "." + fieldArr[i] + "=" + connectTableAliasName + "." + paramFieldArr[i]);
 //					sql.append(tableAliasName + "." + fieldArr[i] + "=" + connectTableAliasName + "." + paramFieldArr[i]);
 
-					sql.append(getAgFunction(cache, tableAliasName + ".", fieldArr[i], fieldMap, columnMap));
-					sql.append("=");
-					sql.append(getAgFunction(cache, connectTableAliasName + ".", paramFieldArr[i], childFieldMap, childColumnMap));
-					if (i != j - 1) {
-						sql.append(JoinTypeEnum.AND.getJoinTypeName());
+//					sql.append(getAgFunction(cache, tableAliasName + ".", fieldArr[i], fieldMap, columnMap));
+//					sql.append("=");
+//					sql.append(getAgFunction(cache, connectTableAliasName + ".", paramFieldArr[i], childFieldMap, childColumnMap));
+//					if (i != j - 1) {
+//						sql.append(JoinTypeEnum.AND.getJoinTypeName());
+//					}
+
+						onFilterSql.append(getAgFunction(cache, tableAliasName + ".", fieldArr[i], fieldMap, columnMap));
+						onFilterSql.append("=");
+						onFilterSql.append(getAgFunction(cache, connectTableAliasName + ".", paramFieldArr[i], childFieldMap, childColumnMap));
+						if (i != j - 1) {
+							onFilterSql.append(JoinTypeEnum.AND.getJoinTypeName());
+						}
 					}
 				}
+			} else {
+				throw new HandleException("invalid left join on fieldName<" + fieldName + ">, paramFieldName<" + paramFieldName + ">");
 			}
-
 
 			if(column != null && childParam.getFields() != null && !childParam.getFields().isEmpty()) {
 				getSelectFieldColumns(childParam, cache, connectTableAliasName, childColumnMap, childFieldMap, column);
@@ -782,10 +797,15 @@ public abstract class AbstractSqlHandleMethod {
 
 			List<Object[]> onFilters = childParam.getOnFilters();
 			if((onFilters != null && !onFilters.isEmpty())  || (childParam.getAddProviders() != null && !childParam.getAddProviders().isEmpty())) {
-				String onFilterSql = this.getFilterSql(cache, connectTableAliasName, onFilters,  childParam.getAddProviders(), value, index + "_ofl_" + l, childColumnMap, childFieldMap);
-				if(!ValidateTool.isEmpty(onFilterSql)) {
-					sql.append(JoinTypeEnum.AND.getJoinTypeName() + onFilterSql);
+				String onFilterCacheSql = this.getFilterSql(cache, connectTableAliasName, onFilters,  childParam.getAddProviders(), value, index + "_ofl_" + l, childColumnMap, childFieldMap);
+				if(!ValidateTool.isEmpty(onFilterCacheSql)) {
+					onFilterSql.append(JoinTypeEnum.AND.getJoinTypeName() + onFilterCacheSql);
 				}
+			}
+
+			// 拼接主条件到 left join表中
+			if(!ValidateTool.isEmpty(onFilterSql.toString())) {
+				sql.append(onFilterSql.toString());
 			}
 
 			if((childParam.getFilters() != null && !childParam.getFilters().isEmpty()) || (childParam.getAddProviders() != null && !childParam.getAddProviders().isEmpty())) {

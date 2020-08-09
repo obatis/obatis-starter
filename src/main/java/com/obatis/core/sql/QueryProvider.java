@@ -2192,6 +2192,30 @@ public class QueryProvider {
 
 	/**
 	 * 添加 left join 查询，会被拼接到left join 的连体SQL。 当使用这个属性时，必须设置 joinTableName的连接表名。
+	 * 该方式下无需设置on字段，如果要设置，可另外构造
+	 * @param queryProvider    被left join的封装对象。
+	 */
+	public void setleftJoin(QueryProvider queryProvider) {
+		if (queryProvider == null) {
+			throw new HandleException("error: queryProvider can't null");
+		}
+		if (ValidateTool.isEmpty(queryProvider.getJoinTableName())) {
+			throw new HandleException("error: queryProvider joinTableName is null");
+		}
+		if(queryProvider == this) {
+			throw new HandleException("error: queryProvider is same");
+		}
+
+		if (this.leftJoinProviders == null) {
+			leftJoinProviders = new ArrayList<>();
+		}
+
+		Object[] obj = { null, null, queryProvider };
+		this.leftJoinProviders.add(obj);
+	}
+
+	/**
+	 * 添加 left join 查询，会被拼接到left join 的连体SQL。 当使用这个属性时，必须设置 joinTableName的连接表名。
 	 * @param fieldName        表示left join 前面一张关联字段。
 	 * @param paramFieldName   表示left join 后紧跟表的关联字段。
 	 * @param queryProvider    被left join的封装对象。
