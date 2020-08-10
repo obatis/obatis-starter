@@ -11,7 +11,6 @@ import com.obatis.core.exception.HandleException;
 import com.obatis.tools.ValidateTool;
 import org.apache.ibatis.jdbc.SQL;
 
-import javax.validation.Valid;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.*;
@@ -170,7 +169,22 @@ public abstract class AbstractSqlHandleMethod {
 	 * @throws HandleException
 	 */
 	private String getFilterSql(TableIndexCache cache, String tableAliasName, List<Object[]> filters, List<Object[]> addProviders, Map<String, Object> value, String index, Map<String, String> columnMap, Map<String, String> fieldMap) throws HandleException {
-		return getFilterSql(cache, tableAliasName, filters, addProviders, value, index, columnMap, fieldMap, DEFAULT_FIND);
+		return getFilterSql(cache, tableAliasName, filters, addProviders, value, index, columnMap, fieldMap, DEFAULT_FIND, false);
+	}
+
+	/**
+	 * 拼接查询条件，主要针对left join连表
+	 * @param tableAliasName
+	 * @param filters
+	 * @param value
+	 * @param index
+	 * @param columnMap
+	 * @param fieldMap
+	 * @return
+	 * @throws HandleException
+	 */
+	private String getFilterSql(TableIndexCache cache, String tableAliasName, List<Object[]> filters, List<Object[]> addProviders, Map<String, Object> value, String index, Map<String, String> columnMap, Map<String, String> fieldMap, boolean onFilterConnect) throws HandleException {
+		return getFilterSql(cache, tableAliasName, filters, addProviders, value, index, columnMap, fieldMap, DEFAULT_FIND, onFilterConnect);
 	}
 
 	/**
@@ -181,6 +195,17 @@ public abstract class AbstractSqlHandleMethod {
 	 * @throws HandleException
 	 */
 	private String getFilterSql(TableIndexCache cache, String tableAliasName, List<Object[]> filters, List<Object[]> addProviders, Map<String, Object> value, String index, Map<String, String> columnMap, Map<String, String> fieldMap, int findType) throws HandleException {
+		return getFilterSql(cache, tableAliasName, filters, addProviders, value, index, columnMap, fieldMap, findType, false);
+	}
+
+	/**
+	 * 根据传入的filter，获取条件filter的数组
+	 * @author HuangLongPu
+	 * @param filters
+	 * @return
+	 * @throws HandleException
+	 */
+	private String getFilterSql(TableIndexCache cache, String tableAliasName, List<Object[]> filters, List<Object[]> addProviders, Map<String, Object> value, String index, Map<String, String> columnMap, Map<String, String> fieldMap, int findType, boolean onFilterConnect) throws HandleException {
 		int filtersLen = 0;
 		if (filters != null && !filters.isEmpty()) {
 			filtersLen = filters.size();
@@ -193,6 +218,11 @@ public abstract class AbstractSqlHandleMethod {
 		StringBuffer filterSql = new StringBuffer();
 
 		for (int i = 0; i < filtersLen; i++) {
+
+//			if (onFilterConnect && ValidateTool.isEmpty(filterSql.toString())) {
+//				filterSql.append(JoinTypeEnum.AND.getJoinTypeName());
+//			}
+
 			Object[] obj = filters.get(i);
 			String key = SqlConstant.PROVIDER_FILTER + "_v" + index + "_" + i;
 			FilterEnum filterType = (FilterEnum) obj[1];
@@ -299,9 +329,31 @@ public abstract class AbstractSqlHandleMethod {
 			for (int j = 0, l = addProviders.size(); j < l; j++) {
 				Object[] queryProviderObject = addProviders.get(j);
 				QueryProvider queryProvider = (QueryProvider) queryProviderObject[0];
-				String orItemSql = getFilterSql(cache, tableAliasName, queryProvider.getFilters(), queryProvider.getAddProviders(), value, index + "_ot_" + j, columnMap, fieldMap, findType);
+				List<Object[]> childFilters = queryProvider.getFilters();
+				List<Object[]> childProviders = queryProvider.getAddProviders();
+				if(onFilterConnect) {
+					if (queryProvider.getOnFilters() != null && !queryProvider.getOnFilters().isEmpty()) {
+						if(childFilters == null) {
+							childFilters = new ArrayList<>();
+						}
+						childFilters.addAll(queryProvider.getOnFilters());
+					}
+
+					if (queryProvider.getAddOnProviders() != null && !queryProvider.getAddOnProviders().isEmpty()) {
+						if(childProviders == null) {
+							childProviders = new ArrayList<>();
+						}
+						childProviders.addAll(queryProvider.getAddOnProviders());
+					}
+				}
+
+				String orItemSql = getFilterSql(cache, tableAliasName, childFilters, childProviders, value, index + "_ot_" + j, columnMap, fieldMap, findType, onFilterConnect);
 				if (!ValidateTool.isEmpty(orItemSql)) {
 					if (ValidateTool.isEmpty(filterSql.toString())) {
+						if(onFilterConnect) {
+							JoinTypeEnum joinTypeEnum = (JoinTypeEnum) queryProviderObject[1];
+							filterSql.append(joinTypeEnum.getJoinTypeName());
+						}
 						filterSql.append("(" + orItemSql + ")");
 					} else {
 						JoinTypeEnum joinTypeEnum = (JoinTypeEnum) queryProviderObject[1];
@@ -742,45 +794,45 @@ public abstract class AbstractSqlHandleMethod {
 //			String connectTableAliasName = cache.getTableAsName();
 			String connectTableAliasName = this.getTableAsName(cache, childParam.getTableAsNameSerialNumber());
 
-			sql.append(" left join " + connectTableName + " " + connectTableAliasName);
-			StringBuffer onFilterSql = new StringBuffer();
+			sql.append(" left join " + connectTableName + " " + connectTableAliasName + " on ");
+//			StringBuffer onFilterSql = new StringBuffer();
 			Map<String, String> childFieldMap = CacheInfoConstant.FIELD_CACHE.get(connectTableName);
 			Map<String, String> childColumnMap = CacheInfoConstant.COLUMN_CACHE.get(connectTableName);
 
 			Object fieldName = leftJoinArray[0];
 			Object paramFieldName = leftJoinArray[1];
 
-			if(fieldName != null && paramFieldName != null) {
+//			if(fieldName != null && paramFieldName != null) {
 				if (fieldName instanceof String) {
 					// 说明是单个
-					onFilterSql.append(tableAliasName + "." + leftJoinArray[0] + "=" + connectTableAliasName + "." + paramFieldName);
-//				sql.append(tableAliasName + "." + leftJoinArray[0] + "=" + connectTableAliasName + "." + paramFieldName);
+//					onFilterSql.append(tableAliasName + "." + leftJoinArray[0] + "=" + connectTableAliasName + "." + paramFieldName);
+					sql.append(tableAliasName + "." + leftJoinArray[0] + "=" + connectTableAliasName + "." + paramFieldName);
 				} else {
 					String[] fieldArr = (String[]) fieldName;
 					String[] paramFieldArr = (String[]) paramFieldName;
 					// 说明是数组
 					for (int i = 0, j = fieldArr.length; i < j; i++) {
-//					sql.append(tableAliasName + "." + fieldArr[i] + "=" + connectTableAliasName + "." + paramFieldArr[i]);
-//					sql.append(tableAliasName + "." + fieldArr[i] + "=" + connectTableAliasName + "." + paramFieldArr[i]);
+						sql.append(tableAliasName + "." + fieldArr[i] + "=" + connectTableAliasName + "." + paramFieldArr[i]);
+						sql.append(tableAliasName + "." + fieldArr[i] + "=" + connectTableAliasName + "." + paramFieldArr[i]);
 
-//					sql.append(getAgFunction(cache, tableAliasName + ".", fieldArr[i], fieldMap, columnMap));
-//					sql.append("=");
-//					sql.append(getAgFunction(cache, connectTableAliasName + ".", paramFieldArr[i], childFieldMap, childColumnMap));
-//					if (i != j - 1) {
-//						sql.append(JoinTypeEnum.AND.getJoinTypeName());
-//					}
-
-						onFilterSql.append(getAgFunction(cache, tableAliasName + ".", fieldArr[i], fieldMap, columnMap));
-						onFilterSql.append("=");
-						onFilterSql.append(getAgFunction(cache, connectTableAliasName + ".", paramFieldArr[i], childFieldMap, childColumnMap));
+						sql.append(getAgFunction(cache, tableAliasName + ".", fieldArr[i], fieldMap, columnMap));
+						sql.append("=");
+						sql.append(getAgFunction(cache, connectTableAliasName + ".", paramFieldArr[i], childFieldMap, childColumnMap));
 						if (i != j - 1) {
-							onFilterSql.append(JoinTypeEnum.AND.getJoinTypeName());
+							sql.append(JoinTypeEnum.AND.getJoinTypeName());
 						}
+
+//						onFilterSql.append(getAgFunction(cache, tableAliasName + ".", fieldArr[i], fieldMap, columnMap));
+//						onFilterSql.append("=");
+//						onFilterSql.append(getAgFunction(cache, connectTableAliasName + ".", paramFieldArr[i], childFieldMap, childColumnMap));
+//						if (i != j - 1) {
+//							onFilterSql.append(JoinTypeEnum.AND.getJoinTypeName());
+//						}
 					}
 				}
-			} else {
-				throw new HandleException("invalid left join on fieldName<" + fieldName + ">, paramFieldName<" + paramFieldName + ">");
-			}
+//			} else {
+//				throw new HandleException("invalid left join on fieldName<" + fieldName + ">, paramFieldName<" + paramFieldName + ">");
+//			}
 
 			if(column != null && childParam.getFields() != null && !childParam.getFields().isEmpty()) {
 				getSelectFieldColumns(childParam, cache, connectTableAliasName, childColumnMap, childFieldMap, column);
@@ -791,22 +843,26 @@ public abstract class AbstractSqlHandleMethod {
 			 * 解析 having 字句
 			 */
 			this.addHaving(havingFilterSql, childParam.getHavings(), cache, tableAliasName, index + "_gh_" + l, childFieldMap, childColumnMap, value);
-			if(orders != null) {
+			if(orders != null && !orders.isEmpty()) {
 				this.addOrder(orders, cache, connectTableAliasName, childFieldMap, childColumnMap, childParam);
 			}
 
 			List<Object[]> onFilters = childParam.getOnFilters();
-			if((onFilters != null && !onFilters.isEmpty())  || (childParam.getAddProviders() != null && !childParam.getAddProviders().isEmpty())) {
-				String onFilterCacheSql = this.getFilterSql(cache, connectTableAliasName, onFilters,  childParam.getAddProviders(), value, index + "_ofl_" + l, childColumnMap, childFieldMap);
+			if((onFilters != null && !onFilters.isEmpty())  || (childParam.getAddOnProviders() != null && !childParam.getAddOnProviders().isEmpty())) {
+				String onFilterCacheSql = this.getFilterSql(cache, connectTableAliasName, onFilters,  childParam.getAddOnProviders(), value, index + "_ofl_" + l, childColumnMap, childFieldMap, true);
 				if(!ValidateTool.isEmpty(onFilterCacheSql)) {
-					onFilterSql.append(JoinTypeEnum.AND.getJoinTypeName() + onFilterCacheSql);
+//					sql.append(JoinTypeEnum.AND.getJoinTypeName() + onFilterCacheSql);
+					if(!onFilterCacheSql.startsWith(JoinTypeEnum.AND.getJoinTypeName()) && !onFilterCacheSql.startsWith(JoinTypeEnum.OR.getJoinTypeName())) {
+						onFilterCacheSql = JoinTypeEnum.AND.getJoinTypeName() + onFilterCacheSql;
+					}
+					sql.append(onFilterCacheSql);
 				}
 			}
 
 			// 拼接主条件到 left join表中
-			if(!ValidateTool.isEmpty(onFilterSql.toString())) {
-				sql.append(onFilterSql.toString());
-			}
+//			if(!ValidateTool.isEmpty(onFilterSql.toString())) {
+//				sql.append(onFilterSql.toString());
+//			}
 
 			if((childParam.getFilters() != null && !childParam.getFilters().isEmpty()) || (childParam.getAddProviders() != null && !childParam.getAddProviders().isEmpty())) {
 				String filterSql = this.getFilterSql(cache, connectTableAliasName, childParam.getFilters(), childParam.getAddProviders(), value, index + "_fl" + l, childColumnMap, childFieldMap);
