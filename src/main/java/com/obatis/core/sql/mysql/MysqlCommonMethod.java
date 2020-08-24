@@ -20,12 +20,12 @@ public class MysqlCommonMethod extends AbstractSqlHandleMethod {
 
 	@Override
 	protected String getLeftLikeSql(String expression) {
-		return expression + "\"%\"";
+		return "\"%\"" + expression;
 	}
 
 	@Override
 	protected String getRightLikeSql(String expression) {
-		return "\"%\"" + expression;
+		return expression + "\"%\"";
 	}
 
 	@Override
