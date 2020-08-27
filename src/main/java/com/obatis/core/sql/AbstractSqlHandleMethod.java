@@ -812,8 +812,8 @@ public abstract class AbstractSqlHandleMethod {
 					String[] paramFieldArr = (String[]) paramFieldName;
 					// 说明是数组
 					for (int i = 0, j = fieldArr.length; i < j; i++) {
-						sql.append(tableAliasName + "." + fieldArr[i] + "=" + connectTableAliasName + "." + paramFieldArr[i]);
-						sql.append(tableAliasName + "." + fieldArr[i] + "=" + connectTableAliasName + "." + paramFieldArr[i]);
+//						sql.append(tableAliasName + "." + fieldArr[i] + "=" + connectTableAliasName + "." + paramFieldArr[i]);
+//						sql.append(tableAliasName + "." + fieldArr[i] + "=" + connectTableAliasName + "." + paramFieldArr[i]);
 
 						sql.append(getAgFunction(cache, tableAliasName + ".", fieldArr[i], fieldMap, columnMap));
 						sql.append("=");
