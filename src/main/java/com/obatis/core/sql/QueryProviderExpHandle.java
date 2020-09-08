@@ -11,24 +11,48 @@ public class QueryProviderExpHandle {
         return exp.toString();
     }
 
+    /**
+     * 主要提供将表达式结果为null时，转化为0返回
+     * @return
+     */
     public QueryProviderExpHandle nullToZero() {
         exp.insert(0, "IFNULL((");
         exp.append("), 0)");
         return this;
     }
 
+    /**
+     * 主要提供字段间相加的表达式，例如：field1 + field2 + field3
+     * @param columns
+     * @return
+     */
     public QueryProviderExpHandle add(String...columns) {
         return handleColumn("+", columns);
     }
 
+    /**
+     * 主要提供字段间相减的表达式，例如：field1 - field2 - field3
+     * @param columns
+     * @return
+     */
     public QueryProviderExpHandle sub(String...columns) {
         return handleColumn("-", columns);
     }
 
+    /**
+     * 主要提供字段间相乘的表达式，例如：field1 * field2 * field3
+     * @param columns
+     * @return
+     */
     public QueryProviderExpHandle multiply(String...columns) {
         return handleColumn("*", columns);
     }
 
+    /**
+     * 主要提供字段间相除的表达式，例如：field1 / field2 / field3
+     * @param columns
+     * @return
+     */
     public QueryProviderExpHandle divide(String...columns) {
         return handleColumn("/", columns);
     }
