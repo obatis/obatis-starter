@@ -5,7 +5,7 @@ import com.obatis.core.annotation.Table;
 import com.obatis.core.convert.BeanCacheConvert;
 import com.obatis.core.mapper.factory.BeanSessionMapperFactory;
 import com.obatis.core.mapper.factory.ResultSessionMapperFactory;
-import com.obatis.core.result.ResultInfoOutput;
+import com.obatis.core.result.ResultInfo;
 import org.apache.ibatis.session.SqlSession;
 import org.reflections.Reflections;
 import org.springframework.context.annotation.Bean;
@@ -35,8 +35,8 @@ public class AnnotationBeanHandle {
 			BeanSessionMapperFactory.compileMapper(sqlSession, cls.getCanonicalName());
 		}
 
-		Set<Class<? extends ResultInfoOutput>> resultOutputClass = reflections.getSubTypesOf(ResultInfoOutput.class);
-		for (Class<? extends ResultInfoOutput> cls : resultOutputClass) {
+		Set<Class<? extends ResultInfo>> resultOutputClass = reflections.getSubTypesOf(ResultInfo.class);
+		for (Class<? extends ResultInfo> cls : resultOutputClass) {
 			ResultSessionMapperFactory.compileMapper(sqlSession, cls.getCanonicalName());
 		}
 

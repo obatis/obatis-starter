@@ -1,7 +1,7 @@
 package com.obatis.core.mapper;
 
-import com.obatis.core.result.ResultInfoOutput;
+import com.obatis.core.result.ResultInfo;
 
-public interface BaseResultSessionMapper<R extends ResultInfoOutput> extends CommonMapper<R> {
+public interface BaseResultSessionMapper<R extends ResultInfo> extends CommonMapper<R> {
 
 }

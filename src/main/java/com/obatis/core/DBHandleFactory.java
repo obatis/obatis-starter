@@ -8,7 +8,7 @@ import com.obatis.core.mapper.BaseBeanSessionMapper;
 import com.obatis.core.mapper.BaseResultSessionMapper;
 import com.obatis.core.mapper.factory.BeanSessionMapperFactory;
 import com.obatis.core.mapper.factory.ResultSessionMapperFactory;
-import com.obatis.core.result.ResultInfoOutput;
+import com.obatis.core.result.ResultInfo;
 import com.obatis.core.sql.QueryProvider;
 import com.obatis.core.sql.SqlHandleProvider;
 import com.obatis.tools.ValidateTool;
@@ -63,7 +63,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @return
 	 * @throws HandleException
 	 */
-	private <M extends ResultInfoOutput> BaseResultSessionMapper<M> getBaseResultSessionMapper(Class<M> resultCls) throws HandleException {
+	private <M extends ResultInfo> BaseResultSessionMapper<M> getBaseResultSessionMapper(Class<M> resultCls) throws HandleException {
 		if (resultCls == null) {
 			throw new HandleException("error: resultCls is null");
 		}
@@ -196,7 +196,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param resultCls
 	 * @return
 	 */
-	public <M extends ResultInfoOutput> M findById(BigInteger id, Class<M> resultCls) {
+	public <M extends ResultInfo> M findById(BigInteger id, Class<M> resultCls) {
 		QueryProvider param = new QueryProvider();
 		param.equals(CommonField.FIELD_ID, id);
 		return this.find(param, resultCls);
@@ -222,7 +222,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param resultCls
 	 * @return
 	 */
-	public <M extends ResultInfoOutput> M findById(QueryProvider provider, BigInteger id, Class<M> resultCls) {
+	public <M extends ResultInfo> M findById(QueryProvider provider, BigInteger id, Class<M> resultCls) {
 		provider.equals(CommonField.FIELD_ID, id);
 		return this.find(provider, resultCls);
 	}
@@ -244,7 +244,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param resultCls
 	 * @return
 	 */
-	public <M extends ResultInfoOutput> M find(QueryProvider provider, Class<M> resultCls) {
+	public <M extends ResultInfo> M find(QueryProvider provider, Class<M> resultCls) {
 		return this.getBaseResultSessionMapper(resultCls).find(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
@@ -265,7 +265,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param <M>
 	 * @return
 	 */
-	public <M extends ResultInfoOutput> M findOne(QueryProvider provider, Class<M> resultCls) {
+	public <M extends ResultInfo> M findOne(QueryProvider provider, Class<M> resultCls) {
 		provider.setLimit(1);
 		return this.getBaseResultSessionMapper(resultCls).find(getProviderParamsMapInfo(provider), this.getTableName());
 	}
@@ -305,7 +305,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param provider
 	 * @return
 	 */
-	public <M extends ResultInfoOutput> List<M> list(QueryProvider provider, Class<M> resultCls) {
+	public <M extends ResultInfo> List<M> list(QueryProvider provider, Class<M> resultCls) {
 		return this.getBaseResultSessionMapper(resultCls).list(getProviderParamsMapInfo(provider), this.getTableName());
 	}
 
@@ -677,7 +677,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param resultCls    返回类型
 	 * @return
 	 */
-	public <M extends ResultInfoOutput> M findBySql(String sql, List<Object> params, Class<M> resultCls) {
+	public <M extends ResultInfo> M findBySql(String sql, List<Object> params, Class<M> resultCls) {
 		return this.getBaseResultSessionMapper(resultCls).findBySql(sql, params);
 	}
 
@@ -708,7 +708,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param resultCls    返回bean类型
 	 * @return
 	 */
-	public <M extends ResultInfoOutput> List<M> listBySql(String sql, List<Object> params, Class<M> resultCls) {
+	public <M extends ResultInfo> List<M> listBySql(String sql, List<Object> params, Class<M> resultCls) {
 		return this.getBaseResultSessionMapper(resultCls).listBySql(sql, params);
 	}
 
@@ -757,7 +757,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param resultCls     resultCls 返回 预定义的 resultCls Bean 泛型数据类型
 	 * @return
 	 */
-	public <M extends ResultInfoOutput> PageInfo<M> page(String sql, String totalSql, List<Object> params, int pageNumber, int pageSize, Class<M> resultCls) {
+	public <M extends ResultInfo> PageInfo<M> page(String sql, String totalSql, List<Object> params, int pageNumber, int pageSize, Class<M> resultCls) {
 		int total = this.findTotal(totalSql, params);
 		PageInfo<M> page = new PageInfo<>();
 		page.setTotal(total);
@@ -826,7 +826,7 @@ public abstract class DBHandleFactory<T extends CommonModel> {
 	 * @param resultCls      返回 预定义的 resultCls Bean 泛型数据类型
 	 * @return
 	 */
-	public <M extends ResultInfoOutput> PageInfo<M> page(QueryProvider provider, Class<M> resultCls) {
+	public <M extends ResultInfo> PageInfo<M> page(QueryProvider provider, Class<M> resultCls) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put(SqlConstant.PROVIDER_OBJ, provider);
 		// 拼装SQL语句
