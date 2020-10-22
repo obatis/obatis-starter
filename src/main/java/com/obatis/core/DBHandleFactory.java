@@ -26,6 +26,7 @@ import java.util.Map;
 
 /**
  * DBHandleFactory 数据库操作类，提供对数据库操作的入口，并进行简要封装
+ * 2020-10-17日调整为 serviceImpl 实现直接继承实现，无需再新建 dao 层包结构
  * @author HuangLongPu
  * @param <T>
  */
