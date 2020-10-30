@@ -5,10 +5,19 @@ import com.obatis.core.mapper.BaseBeanSessionMapper;
 import com.obatis.core.constant.CacheInfoConstant;
 import org.apache.ibatis.session.SqlSession;
 
+/**
+ * 构建 bean mappper 类
+ */
 public class BeanSessionMapperFactory {
 	
 	private BeanSessionMapperFactory() {}
 
+	/**
+	 * 根据构建的bean，获取 mapper
+	 * @param canonicalName
+	 * @return
+	 * @throws HandleException
+	 */
 	public static BaseBeanSessionMapper<?> getSessionMapper(String canonicalName) throws HandleException {
 
 		if(CacheInfoConstant.BEAN_SESSION_MAPPER.containsKey(canonicalName)) {
@@ -18,8 +27,11 @@ public class BeanSessionMapperFactory {
 		throw new HandleException("error: sessionMapper is null");
 	}
 
-
-	
+	/**
+	 * 动态构建 mapper 类
+	 * @param sqlSession
+	 * @param canonicalName
+	 */
 	public static synchronized void compileMapper(SqlSession sqlSession, String canonicalName) {
 
 		if(CacheInfoConstant.BEAN_SESSION_MAPPER.containsKey(canonicalName)) {
@@ -28,6 +40,11 @@ public class BeanSessionMapperFactory {
 		compileMapperHandle(sqlSession, canonicalName);
 	}
 
+	/**
+	 * 动态构建 mapper 类实现
+	 * @param sqlSession
+	 * @param canonicalName
+	 */
 	private static synchronized void compileMapperHandle(SqlSession sqlSession, String canonicalName) {
 
 		if(CacheInfoConstant.BEAN_SESSION_MAPPER.containsKey(canonicalName)) {
