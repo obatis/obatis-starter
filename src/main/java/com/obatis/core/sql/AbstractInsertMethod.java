@@ -1,6 +1,6 @@
 package com.obatis.core.sql;
 
-import com.obatis.convert.date.DateCommonConvert;
+import com.obatis.convert.date.DateConvert;
 import com.obatis.core.CommonField;
 import com.obatis.core.annotation.NotColumn;
 import com.obatis.core.constant.SqlConstant;
@@ -80,7 +80,7 @@ public abstract class AbstractInsertMethod {
 						field.set(obj, NumberGenerator.getNumber());
 						addFlag = true;
 					} else if (CommonField.FIELD_CREATE_TIME.equals(columnName)) {
-						field.set(obj, DateCommonConvert.getDateTime());
+						field.set(obj, DateConvert.getDateTime());
 						addFlag = true;
 					}
 				} else {

@@ -1,6 +1,6 @@
 package com.obatis.core.sql.mysql;
 
-import com.obatis.convert.date.DateCommonConvert;
+import com.obatis.convert.date.DateConvert;
 import com.obatis.core.CommonModel;
 import com.obatis.core.CommonField;
 import com.obatis.core.annotation.NotColumn;
@@ -94,7 +94,7 @@ public class HandleInsertBatchMethod extends AbstractInsertMethod {
 					if (CommonField.FIELD_ID.equals(columnName)) {
 						field.set(obj, NumberGenerator.getNumber());
 					} else if (CommonField.FIELD_CREATE_TIME.equals(columnName)) {
-						field.set(obj, DateCommonConvert.getDateTime());
+						field.set(obj, DateConvert.getDateTime());
 					}
 				}
 

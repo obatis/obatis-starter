@@ -1,6 +1,6 @@
 package com.obatis.core.sql;
 
-import com.obatis.convert.date.DateCommonConvert;
+import com.obatis.convert.date.DateConvert;
 import com.obatis.core.annotation.request.QueryFilter;
 import com.obatis.core.annotation.request.UpdateField;
 import com.obatis.core.constant.type.DateHandleEnum;
@@ -65,21 +65,21 @@ public class QueryHandle {
 		DateHandleEnum dateHandle = queryFilter.datetype();
 		if(value instanceof Date) {
 			if(DateHandleEnum.BEGIN_HANDLE.equals(dateHandle)) {
-				value = DateCommonConvert.formatBeginDateTime(((Date) value).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+				value = DateConvert.formatBeginDateTime(((Date) value).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 			} else if (DateHandleEnum.END_HANDLE.equals(dateHandle)) {
-				value = DateCommonConvert.formatEndDateTime(((Date) value).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+				value = DateConvert.formatEndDateTime(((Date) value).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 			}
 		} else if(value instanceof LocalDate) {
 			if(DateHandleEnum.BEGIN_HANDLE.equals(dateHandle)) {
-				value = DateCommonConvert.formatBeginDateTime((LocalDate) value);
+				value = DateConvert.formatBeginDateTime((LocalDate) value);
 			} else if (DateHandleEnum.END_HANDLE.equals(dateHandle)) {
-				value = DateCommonConvert.formatEndDateTime((LocalDate) value);
+				value = DateConvert.formatEndDateTime((LocalDate) value);
 			}
 		} else if(value instanceof LocalDateTime) {
 			if(DateHandleEnum.BEGIN_HANDLE.equals(dateHandle)) {
-				value = DateCommonConvert.formatBeginDateTime((LocalDateTime) value);
+				value = DateConvert.formatBeginDateTime((LocalDateTime) value);
 			} else if (DateHandleEnum.END_HANDLE.equals(dateHandle)) {
-				value = DateCommonConvert.formatEndDateTime((LocalDateTime) value);
+				value = DateConvert.formatEndDateTime((LocalDateTime) value);
 			}
 		}
 
