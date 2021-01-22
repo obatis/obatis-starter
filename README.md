@@ -54,5 +54,5 @@ spring.datasource.url = jdbc:mysql://127.0.0.1:3306/test_data?serverTimezone=Asi
 
 ### 关于捐助
 如果你感觉Obatis项目对您有帮助，欢迎给我打赏 ———— 以激励我们快速完善新特性，感谢您对我们的肯定。
-<img src="https://www.obatis.com/static/img/accept_money/weixin_accept_money.png" width = "300" height = "420">
+<img src="https://www.obatis.com/static/img/accept_money/weixin_accept_money.png" width = "290" height = "420">
 
