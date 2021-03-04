@@ -5,8 +5,7 @@
 
     <groupId>com.obatis</groupId>
     <artifactId>obatis-core</artifactId>
-    <version>2.2.2-release</version>
-    <packaging>jar</packaging>
+    <version>3.0.1-release</version>
     <name>obatis-core</name>
     <description>obatis-core, apply web and database project</description>
     <url>https://github.com/obatis/obatis-core</url>
@@ -49,20 +48,10 @@
             <name>黄龙普</name>
             <email>huanglongpu@126.com</email>
         </developer>
-        <developer>
-            <id>ChenShunMu</id>
-            <name>陈舜木</name>
-            <email>2099028187@qq.com</email>
-        </developer>
     </developers>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
@@ -72,35 +61,6 @@
                     <useReleaseProfile>false</useReleaseProfile>
                     <arguments>-Psonatype-oss-release</arguments>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <additionalJOption>-Xdoclint:none</additionalJOption>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -123,17 +83,12 @@
         <dependency>
             <groupId>com.obatis</groupId>
             <artifactId>obatis-web</artifactId>
-            <version>2.2.1-release</version>
+            <version>3.0.1-release</version>
         </dependency>
         <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.16</version>
+            <groupId>com.obatis</groupId>
+            <artifactId>obatis-db</artifactId>
+            <version>1.0-release</version>
         </dependency>
     </dependencies>
 
