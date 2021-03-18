@@ -12,7 +12,7 @@ Obatis开源框架于2020年08月26日发布的最新版本为 2.2.1-release，O
 ```
 <dependency>
     <groupId>com.obatis</groupId>
-    <artifactId>obatis-core</artifactId>
+    <artifactIdobatis-starter</artifactId>
     <version>2.2.1-release</version>
 </dependency>
 ```

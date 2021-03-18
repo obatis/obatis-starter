@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.obatis</groupId>
-    <artifactId>obatis-core</artifactId>
-    <version>3.0.1-release</version>
-    <name>obatis-core</name>
-    <description>obatis-core, apply web and database project</description>
-    <url>https://github.com/obatis/obatis-core</url>
+    <artifactId>obatis-starter</artifactId>
+    <version>1.0-release</version>
+    <name>obatis-starter</name>
+    <description>obatis-starter, apply web and database project</description>
+    <url>https://github.com/obatis/obatis-starter</url>
 
     <!-- 中央仓库 -->
     <distributionManagement>
@@ -26,8 +26,8 @@
     </properties>
 
     <scm>
-        <url>https://github.com/obatis/obatis-core</url>
-        <connection>scm:git:https://github.com/obatis/obatis-core.git</connection>
+        <url>https://github.com/obatis/obatis-starter</url>
+        <connection>scm:git:https://github.com/obatis/obatis-starter.git</connection>
     </scm>
 
     <organization>
