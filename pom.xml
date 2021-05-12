@@ -87,7 +87,7 @@
         </dependency>
         <dependency>
             <groupId>com.obatis</groupId>
-            <artifactId>obatis-db</artifactId>
+            <artifactId>obatis-orm</artifactId>
             <version>1.0-release</version>
         </dependency>
     </dependencies>
